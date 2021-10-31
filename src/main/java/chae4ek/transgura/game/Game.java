@@ -1,14 +1,15 @@
 package chae4ek.transgura.game;
 
 import chae4ek.transgura.game.scenes.MainMenu;
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 
-public final class Game {
+public final class Game extends ApplicationAdapter {
 
   public static final float fixedDeltaTime = 1f / 25f;
   private static float time;
 
-  private static Scene scene = new MainMenu();
+  private static Scene scene;
 
   /** @return the current scene */
   public static Scene getScene() {
@@ -24,20 +25,27 @@ public final class Game {
    *     multithreading
    */
   public static void setScene(final Scene scene) throws SceneExit {
-    if (Game.scene != null) Game.scene.close();
+    if (Game.scene != null) Game.scene.dispose();
     Game.scene = scene;
     if (scene == null) Gdx.app.exit();
     throw new SceneExit(); // fast exit whatever
   }
 
-  public void close() {
+  @Override
+  public void create() {
+    scene = new MainMenu();
+  }
+
+  @Override
+  public void dispose() {
     if (scene != null) {
-      scene.close();
+      scene.dispose();
       scene = null;
     }
   }
 
-  public void loop() {
+  @Override
+  public void render() {
     final float deltaTime = Gdx.graphics.getDeltaTime();
     time += deltaTime;
 
@@ -57,6 +65,7 @@ public final class Game {
     scene.render();
   }
 
+  @Override
   public void resize(final int width, final int height) {
     if (scene != null) scene.resize(width, height);
   }

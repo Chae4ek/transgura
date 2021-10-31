@@ -10,9 +10,9 @@ public abstract class Scene {
   protected final EntityManager entityManager = new EntityManager();
   protected final RenderManager renderManager = new RenderManager();
 
-  /** Close the scene and clean the resources */
-  public final void close() {
-    renderManager.close();
+  /** Dispose the scene and clean the resources */
+  public final void dispose() {
+    renderManager.dispose();
   }
 
   /** Update this scene */

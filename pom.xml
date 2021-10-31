@@ -8,109 +8,24 @@
   <artifactId>transgura</artifactId>
   <version>1.0.0</version>
 
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>prebuild</module>
+    <module>core</module>
+  </modules>
+
   <properties>
     <gdx.version>1.10.0</gdx.version>
     <gdx-openal.version>0.9.9</gdx-openal.version>
     <junit.version>5.8.1</junit.version>
     <slf4j-api.version>1.7.32</slf4j-api.version>
     <logback-classic.version>1.2.6</logback-classic.version>
-    <java.version>14</java.version>
 
+    <java.version>14</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <dependencies>
-    <!-- LibGDX -->
-    <dependency>
-      <groupId>com.badlogicgames.gdx</groupId>
-      <artifactId>gdx</artifactId>
-      <version>${gdx.version}</version>
-    </dependency>
-    <!-- LibGDX for desktop -->
-    <dependency>
-      <groupId>com.badlogicgames.gdx</groupId>
-      <artifactId>gdx-platform</artifactId>
-      <version>${gdx.version}</version>
-      <classifier>natives-desktop</classifier>
-    </dependency>
-    <dependency>
-      <groupId>com.badlogicgames.gdx</groupId>
-      <artifactId>gdx-backend-lwjgl3</artifactId>
-      <version>${gdx.version}</version>
-    </dependency>
-    <!-- LibGDX Box2D -->
-    <dependency>
-      <groupId>com.badlogicgames.gdx</groupId>
-      <artifactId>gdx-box2d</artifactId>
-      <version>${gdx.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.badlogicgames.gdx</groupId>
-      <artifactId>gdx-box2d-platform</artifactId>
-      <version>${gdx.version}</version>
-      <classifier>natives-desktop</classifier>
-    </dependency>
-    <!-- LibGDX OpenAL -->
-    <dependency>
-      <groupId>com.badlogicgames.gdx</groupId>
-      <artifactId>gdx-openal</artifactId>
-      <version>${gdx-openal.version}</version>
-    </dependency>
-    <!-- Junit -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- Logger -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4j-api.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>${logback-classic.version}</version>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>chae4ek.transgura.Main</mainClass>
-            </manifest>
-          </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <id>make-assembly</id>
-            <phase>package</phase>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>3.3.0</version>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

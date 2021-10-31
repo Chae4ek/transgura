@@ -1,8 +1,8 @@
 package chae4ek.transgura.render;
 
 public enum TextureType {
-  TEST_BLOCK("textures/test_block.png"),
-  WOOD("textures/wood.png");
+  TEST_BLOCK("rawTextures/test_block.png"),
+  WOOD("rawTextures/wood.png");
 
   public final String path;
 

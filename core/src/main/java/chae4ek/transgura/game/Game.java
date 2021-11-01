@@ -1,6 +1,7 @@
 package chae4ek.transgura.game;
 
 import chae4ek.transgura.game.scenes.MainMenu;
+import chae4ek.transgura.render.ResourceLoader;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 
@@ -25,7 +26,10 @@ public final class Game extends ApplicationAdapter {
    *     multithreading
    */
   public static void setScene(final Scene scene) throws SceneExit {
-    if (Game.scene != null) Game.scene.dispose();
+    if (Game.scene != null) {
+      Game.scene.dispose();
+      ResourceLoader.unloadAllResources();
+    }
     Game.scene = scene;
     if (scene == null) Gdx.app.exit();
     throw new SceneExit(); // fast exit whatever
@@ -34,6 +38,7 @@ public final class Game extends ApplicationAdapter {
   @Override
   public void create() {
     scene = new MainMenu();
+    scene.start();
   }
 
   @Override
@@ -42,6 +47,7 @@ public final class Game extends ApplicationAdapter {
       scene.dispose();
       scene = null;
     }
+    ResourceLoader.dispose();
   }
 
   @Override
@@ -59,6 +65,7 @@ public final class Game extends ApplicationAdapter {
       for (; updateCount > 0; --updateCount) scene.fixedUpdate();
       scene.update(deltaTime);
     } catch (final SceneExit exit) {
+      if (scene != null) scene.start();
       return;
     }
 

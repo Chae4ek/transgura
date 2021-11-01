@@ -1,14 +1,22 @@
 package chae4ek.transgura.game;
 
-import chae4ek.transgura.ecs.entity.EntityManager;
-import chae4ek.transgura.ecs.system.SystemManager;
-import chae4ek.transgura.render.RenderManager;
+import chae4ek.transgura.ecs.EntityManager;
+import chae4ek.transgura.ecs.RenderManager;
+import chae4ek.transgura.ecs.SystemManager;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 public abstract class Scene {
 
-  protected final SystemManager systemManager = new SystemManager();
-  protected final EntityManager entityManager = new EntityManager();
-  protected final RenderManager renderManager = new RenderManager();
+  private static final ExtendViewport viewport =
+      new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+  public final EntityManager entityManager = new EntityManager();
+  public final SystemManager systemManager = new SystemManager();
+  public final RenderManager renderManager = new RenderManager(viewport);
+
+  /** Start a scene */
+  public abstract void start();
 
   /** Dispose the scene and clean the resources */
   public final void dispose() {
@@ -32,6 +40,6 @@ public abstract class Scene {
 
   /** Re-render this scene when resizing the window */
   public final void resize(final int width, final int height) {
-    renderManager.resize(width, height);
+    viewport.update(width, height, true);
   }
 }

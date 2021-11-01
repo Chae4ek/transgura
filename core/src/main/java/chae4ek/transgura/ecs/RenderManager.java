@@ -1,0 +1,82 @@
+package chae4ek.transgura.ecs;
+
+import chae4ek.transgura.exceptions.GameAlert;
+import chae4ek.transgura.exceptions.GameErrorType;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+public final class RenderManager {
+
+  private static final transient GameAlert gameAlert = new GameAlert(RenderManager.class);
+
+  private final ExtendViewport viewport;
+
+  private final Map<Entity, Set<RenderComponent>> renderComponents = new HashMap<>();
+  // TODO: clean this
+  private final SpriteBatch defaultSpriteBatch = new SpriteBatch();
+
+  public RenderManager(final ExtendViewport viewport) {
+    this.viewport = viewport;
+  }
+
+  /** Add a render component to this render manager */
+  void addRenderComponent(final Entity parentEntity, final RenderComponent renderComponent) {
+    final Set<RenderComponent> renderComponents =
+        this.renderComponents.computeIfAbsent(parentEntity, id -> new HashSet<>(5));
+    if (!renderComponents.add(renderComponent)) {
+      gameAlert.warn(
+          GameErrorType.RENDER_COMPONENT_HAS_BEEN_REPLACED,
+          "parentEntity: " + parentEntity + ", render component: " + renderComponent);
+    }
+  }
+
+  /** Remove all render components of this render manager if they present */
+  void removeAllRenderComponentsIfPresent(final Entity parentEntity) {
+    renderComponents.remove(parentEntity);
+  }
+
+  /** Remove the render component of this render manager */
+  void removeRenderComponent(final Entity parentEntity, final RenderComponent renderComponent) {
+    final Set<RenderComponent> renderComponents = this.renderComponents.get(parentEntity);
+    if (renderComponents == null) {
+      gameAlert.warn(
+          GameErrorType.ENTITY_HAS_NOT_RENDER_COMPONENT, "parentEntity: " + parentEntity);
+    } else {
+      if (!renderComponents.remove(renderComponent)) {
+        gameAlert.warn(
+            GameErrorType.RENDER_COMPONENT_DOES_NOT_EXIST,
+            "parentEntity: " + parentEntity + ", renderComponents: " + renderComponents);
+      }
+    }
+  }
+
+  /** Render all render components */
+  public void renderAll() {
+    Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1f);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+    final Matrix4 projection = viewport.getCamera().combined;
+    defaultSpriteBatch.setProjectionMatrix(projection);
+    defaultSpriteBatch.begin();
+
+    for (final Set<RenderComponent> renderComponents : renderComponents.values()) {
+      for (final RenderComponent renderComponent : renderComponents) {
+        if (renderComponent.isEnabled()) renderComponent.draw(projection);
+      }
+    }
+
+    defaultSpriteBatch.end();
+  }
+
+  /** Clean all resources */
+  public void dispose() {
+    defaultSpriteBatch.dispose();
+  }
+}

@@ -1,12 +1,34 @@
 package chae4ek.transgura.render;
 
 public enum TextureType {
-  TEST_BLOCK("rawTextures/test_block.png"),
-  WOOD("rawTextures/wood.png");
+  TEST_BLOCK(AtlasType.TEST, "test_block"),
+  WOOD(AtlasType.TEST, "wood");
 
-  public final String path;
+  public final AtlasType atlas;
+  public final String regionName;
 
-  TextureType(final String path) {
-    this.path = path;
+  TextureType(final AtlasType atlas, final String regionName) {
+    this.atlas = atlas;
+    this.regionName = regionName;
+  }
+
+  @Override
+  public String toString() {
+    return "atlas: [" + atlas + "], regionName: " + regionName;
+  }
+
+  public enum AtlasType {
+    TEST("atlas/all_textures.atlas");
+
+    public final String atlasPath;
+
+    AtlasType(final String atlasPath) {
+      this.atlasPath = atlasPath;
+    }
+
+    @Override
+    public String toString() {
+      return "atlasPath: " + atlasPath;
+    }
   }
 }

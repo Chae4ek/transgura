@@ -1,6 +1,6 @@
-package chae4ek.transgura.ecs.system.systems;
+package chae4ek.transgura.ecs.system;
 
-import chae4ek.transgura.ecs.system.System;
+import chae4ek.transgura.ecs.System;
 import chae4ek.transgura.game.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;

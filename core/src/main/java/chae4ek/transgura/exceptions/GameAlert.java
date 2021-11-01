@@ -18,6 +18,17 @@ public class GameAlert {
     throw new GameException(type);
   }
 
+  /** @throws GameException always, but after log with ERROR level */
+  public void error(final GameErrorType type, final String debugInfo, final Throwable cause)
+      throws GameException {
+    logger.error(
+        "error: [{}]; debug info: [{}]; cause:\n\n{}",
+        type.toString(),
+        debugInfo,
+        cause.getMessage());
+    throw new GameException(type, cause);
+  }
+
   /** Log with WARN level */
   public void warn(final GameErrorType type, final String debugInfo) {
     logger.warn("warn: [{}]; debug info: [{}]", type.toString(), debugInfo);

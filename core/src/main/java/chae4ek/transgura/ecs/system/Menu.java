@@ -12,7 +12,14 @@ public class Menu extends System {
   }
 
   @Override
-  public void update(final float deltaTime) {
+  public void update() {
     if (Gdx.input.isKeyPressed(Keys.ESCAPE)) Game.setScene(null);
+  }
+
+  /** @deprecated only for testing */
+  @Deprecated(forRemoval = true)
+  @Override
+  public void fixedUpdate() {
+    if (Gdx.input.isKeyPressed(Keys.ENTER)) Game.setScene(null);
   }
 }

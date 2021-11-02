@@ -7,34 +7,43 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class RenderManager {
 
   private static final transient GameAlert gameAlert = new GameAlert(RenderManager.class);
 
-  private final ExtendViewport viewport;
+  // TODO: clean up this
+  private static final SpriteBatch defaultSpriteBatch = new SpriteBatch();
 
-  private final Map<Entity, Set<RenderComponent>> renderComponents = new HashMap<>();
-  // TODO: clean this
-  private final SpriteBatch defaultSpriteBatch = new SpriteBatch();
+  private final ExtendViewport viewport;
+  private final Map<Entity, Set<RenderComponent>> renderComponents = new ConcurrentHashMap<>();
 
   public RenderManager(final ExtendViewport viewport) {
     this.viewport = viewport;
   }
 
+  /** Clean all resources */
+  public static void dispose() {
+    defaultSpriteBatch.dispose();
+  }
+
   /** Add a render component to this render manager */
   void addRenderComponent(final Entity parentEntity, final RenderComponent renderComponent) {
-    final Set<RenderComponent> renderComponents =
-        this.renderComponents.computeIfAbsent(parentEntity, id -> new HashSet<>(5));
-    if (!renderComponents.add(renderComponent)) {
-      gameAlert.warn(
-          GameErrorType.RENDER_COMPONENT_HAS_BEEN_REPLACED,
-          "parentEntity: " + parentEntity + ", render component: " + renderComponent);
-    }
+    renderComponents.compute(
+        parentEntity,
+        (parent, components) -> {
+          if (components == null) components = new HashSet<>(5);
+          if (!components.add(renderComponent)) {
+            gameAlert.warn(
+                GameErrorType.RENDER_COMPONENT_HAS_BEEN_REPLACED,
+                "parentEntity: " + parentEntity + ", render component: " + renderComponent);
+          }
+          return components;
+        });
   }
 
   /** Remove all render components of this render manager if they present */
@@ -49,6 +58,7 @@ public final class RenderManager {
       gameAlert.warn(
           GameErrorType.ENTITY_HAS_NOT_RENDER_COMPONENT, "parentEntity: " + parentEntity);
     } else {
+      // too late, but it's deferred, so it's ok
       if (!renderComponents.remove(renderComponent)) {
         gameAlert.warn(
             GameErrorType.RENDER_COMPONENT_DOES_NOT_EXIST,
@@ -73,10 +83,5 @@ public final class RenderManager {
     }
 
     defaultSpriteBatch.end();
-  }
-
-  /** Clean all resources */
-  public void dispose() {
-    defaultSpriteBatch.dispose();
   }
 }

@@ -1,30 +1,25 @@
 package chae4ek.transgura.ecs;
 
-import chae4ek.transgura.ecs.util.NullObjects;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 import chae4ek.transgura.game.Game;
 import chae4ek.transgura.game.Scene;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Entity {
 
   private static final transient GameAlert gameAlert = new GameAlert(Entity.class);
 
-  private static int lastId;
-  /** The unique identifier of this entity on the scene */
-  public final int id;
   /** The scene where this entity was created */
   public final Scene scene;
 
-  private Map<Class<? extends MultipleComponent>, MultipleComponent> components;
+  private final Map<Class<? extends MultipleComponent>, MultipleComponent> components;
 
   protected Entity() {
-    id = ++lastId;
-    scene = Game.getScene();
+    components = new ConcurrentHashMap<>(8);
+    scene = Game.getScene(); // probably this will delete
     scene.entityManager.addEntity(this);
-    components = new HashMap<>(8);
   }
 
   /** Remove a component */
@@ -41,6 +36,7 @@ public abstract class Entity {
    */
   public final void addComponents(final MultipleComponent... components) {
     for (final MultipleComponent component : components) {
+      component.bind(this);
       final MultipleComponent old = this.components.put(component.getClass(), component);
       if (old != null) {
         gameAlert.warn(
@@ -51,7 +47,6 @@ public abstract class Entity {
               "entity: " + this + ", component: " + old);
         }
       }
-      component.bind(this);
     }
   }
 
@@ -61,6 +56,7 @@ public abstract class Entity {
    * @param componentClass the class of the component to get
    * @return the component or null if it doesn't exist
    */
+  @SuppressWarnings("unchecked")
   public final <T extends MultipleComponent> T getComponent(final Class<T> componentClass) {
     final MultipleComponent component = components.get(componentClass);
     if (component == null) {
@@ -79,25 +75,25 @@ public abstract class Entity {
   }
 
   /**
-   * Destroy this entity and all associated with it components on its scene. Don't use that entity
-   * after this method
+   * Destroy this entity and all associated with it components on its scene. This method adds
+   * deferred event, so this entity will destroy after the current loop
    */
   public final void destroy() {
+    scene.systemManager.addDeferredEvent(this::destroyThis);
+  }
+
+  /** Destroy this entity */
+  private void destroyThis() {
     scene.entityManager.removeEntity(this);
     scene.systemManager.removeAllSystemsIfPresent(this);
     scene.renderManager.removeAllRenderComponentsIfPresent(this);
-    components = NullObjects.nullComponentsMap;
   }
 
   @Override
   public String toString() {
-    return new StringBuilder(400)
+    return new StringBuilder(320)
         .append("class: [")
         .append(getClass().getName())
-        .append("], id: [")
-        .append(id)
-        .append("], lastId: [")
-        .append(lastId)
         .append("], scene: [")
         .append(scene.getClass().getName())
         .append("], components: ")
@@ -105,13 +101,14 @@ public abstract class Entity {
         .toString();
   }
 
+  /** Each instance of an entity is unique. An entity cannot exist outside of RAM */
   @Override
   public final boolean equals(final Object o) {
-    return this == o || o != null && getClass() == o.getClass() && id == ((Entity) o).id;
+    return this == o;
   }
 
   @Override
   public final int hashCode() {
-    return id;
+    return super.hashCode();
   }
 }

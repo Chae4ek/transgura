@@ -18,19 +18,13 @@ public abstract class Scene {
   /** Start a scene */
   public abstract void start();
 
-  /** Dispose the scene and clean the resources */
-  public final void dispose() {
-    renderManager.dispose();
-  }
-
-  /** Update this scene */
-  public final void update(final float deltaTime) {
-    systemManager.updateAll(deltaTime);
-  }
-
-  /** Fixed update this scene */
-  public final void fixedUpdate() {
-    systemManager.fixedUpdateAll();
+  /**
+   * Update and fixed update this scene
+   *
+   * @param updateCount the count of fixed updates
+   */
+  public final void updateAndFixedUpdate(final int updateCount) {
+    systemManager.updateAndFixedUpdate(updateCount);
   }
 
   /** Render this scene */

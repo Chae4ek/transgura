@@ -1,5 +1,6 @@
 package chae4ek.transgura.game;
 
+import chae4ek.transgura.ecs.RenderManager;
 import chae4ek.transgura.game.scenes.MainMenu;
 import chae4ek.transgura.render.ResourceLoader;
 import com.badlogic.gdx.ApplicationAdapter;
@@ -11,6 +12,7 @@ public final class Game extends ApplicationAdapter {
   private static float time;
 
   private static Scene scene;
+  private static Scene nextScene;
 
   /** @return the current scene */
   public static Scene getScene() {
@@ -26,11 +28,7 @@ public final class Game extends ApplicationAdapter {
    *     multithreading
    */
   public static void setScene(final Scene scene) throws SceneExit {
-    if (Game.scene != null) {
-      Game.scene.dispose();
-      ResourceLoader.unloadAllResources();
-    }
-    Game.scene = scene;
+    nextScene = scene;
     if (scene == null) Gdx.app.exit();
     throw new SceneExit(); // fast exit whatever
   }
@@ -43,10 +41,8 @@ public final class Game extends ApplicationAdapter {
 
   @Override
   public void dispose() {
-    if (scene != null) {
-      scene.dispose();
-      scene = null;
-    }
+    scene = null;
+    RenderManager.dispose();
     ResourceLoader.dispose();
   }
 
@@ -55,17 +51,20 @@ public final class Game extends ApplicationAdapter {
     final float deltaTime = Gdx.graphics.getDeltaTime();
     time += deltaTime;
 
-    long updateCount = 0;
+    int updateCount = 0;
     if (time >= fixedDeltaTime) {
       updateCount = (int) (time / fixedDeltaTime);
       time -= updateCount * fixedDeltaTime;
     }
 
     try {
-      for (; updateCount > 0; --updateCount) scene.fixedUpdate();
-      scene.update(deltaTime);
+      scene.updateAndFixedUpdate(updateCount);
     } catch (final SceneExit exit) {
-      if (scene != null) scene.start();
+      scene = nextScene;
+      if (scene != null) {
+        ResourceLoader.unloadAllResources();
+        scene.start();
+      }
       return;
     }
 

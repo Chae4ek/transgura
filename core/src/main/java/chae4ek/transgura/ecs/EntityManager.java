@@ -2,14 +2,14 @@ package chae4ek.transgura.ecs;
 
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class EntityManager {
 
   private static final transient GameAlert gameAlert = new GameAlert(EntityManager.class);
 
-  private final Set<Entity> entities = new HashSet<>();
+  private final Set<Entity> entities = ConcurrentHashMap.newKeySet();
 
   /** Add a new entity to the manager's memory */
   void addEntity(final Entity entity) {

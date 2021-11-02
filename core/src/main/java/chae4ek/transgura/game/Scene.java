@@ -15,8 +15,8 @@ public abstract class Scene {
   public final SystemManager systemManager = new SystemManager();
   public final RenderManager renderManager = new RenderManager(viewport);
 
-  /** Start a scene */
-  public abstract void start();
+  /** Create and start this scene */
+  public abstract void create();
 
   /**
    * Update and fixed update this scene

@@ -2,11 +2,13 @@ package chae4ek.transgura.ecs;
 
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
+import chae4ek.transgura.render.ResourceLoader;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -16,19 +18,11 @@ public final class RenderManager {
 
   private static final transient GameAlert gameAlert = new GameAlert(RenderManager.class);
 
-  // TODO: clean up this
-  private static final SpriteBatch defaultSpriteBatch = new SpriteBatch();
-
   private final ExtendViewport viewport;
   private final Map<Entity, Set<RenderComponent>> renderComponents = new ConcurrentHashMap<>();
 
   public RenderManager(final ExtendViewport viewport) {
     this.viewport = viewport;
-  }
-
-  /** Clean all resources */
-  public static void dispose() {
-    defaultSpriteBatch.dispose();
   }
 
   /** Add a render component to this render manager */
@@ -75,15 +69,21 @@ public final class RenderManager {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     final Matrix4 projection = viewport.getCamera().combined;
-    defaultSpriteBatch.setProjectionMatrix(projection);
-    defaultSpriteBatch.begin();
+    final Collection<SpriteBatch> spriteBatches = ResourceLoader.getSpriteBatches();
+
+    for (final SpriteBatch spriteBatch : spriteBatches) {
+      spriteBatch.setProjectionMatrix(projection);
+      spriteBatch.begin();
+    }
 
     for (final Set<RenderComponent> renderComponents : renderComponents.values()) {
       for (final RenderComponent renderComponent : renderComponents) {
-        if (renderComponent.isEnabled()) renderComponent.draw(projection);
+        if (renderComponent.isEnabled()) renderComponent.draw();
       }
     }
 
-    defaultSpriteBatch.end();
+    for (final SpriteBatch spriteBatch : spriteBatches) {
+      spriteBatch.end();
+    }
   }
 }

@@ -2,13 +2,15 @@ package chae4ek.transgura.ecs.component;
 
 import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.RenderComponent;
+import chae4ek.transgura.render.ResourceLoader;
+import chae4ek.transgura.render.resources.SpriteBatchType;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.math.Matrix4;
 
 public class Sprite extends RenderComponent {
 
-  private static final SpriteBatch spriteBatch = new SpriteBatch();
+  private static final SpriteBatch spriteBatch =
+      ResourceLoader.loadSpriteBatch(SpriteBatchType.DEFAULT);
 
   public final AtlasRegion atlasRegion;
 
@@ -18,13 +20,10 @@ public class Sprite extends RenderComponent {
   }
 
   @Override
-  public void draw(final Matrix4 projection) {
-    spriteBatch.setProjectionMatrix(projection);
-    spriteBatch.begin();
+  public void draw() {
     for (final Entity parent : getParentEntities()) {
       draw(parent.getComponent(Position.class), atlasRegion);
     }
-    spriteBatch.end();
   }
 
   /** Draw an atlasRegion at the position */

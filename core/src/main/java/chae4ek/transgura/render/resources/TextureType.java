@@ -1,4 +1,4 @@
-package chae4ek.transgura.render;
+package chae4ek.transgura.render.resources;
 
 public enum TextureType {
   TEST_BLOCK(AtlasType.TEST, "test_block"),

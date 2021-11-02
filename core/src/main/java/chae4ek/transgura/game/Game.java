@@ -1,6 +1,5 @@
 package chae4ek.transgura.game;
 
-import chae4ek.transgura.ecs.RenderManager;
 import chae4ek.transgura.game.scenes.MainMenu;
 import chae4ek.transgura.render.ResourceLoader;
 import com.badlogic.gdx.ApplicationAdapter;
@@ -36,13 +35,12 @@ public final class Game extends ApplicationAdapter {
   @Override
   public void create() {
     scene = new MainMenu();
-    scene.start();
+    scene.create();
   }
 
   @Override
   public void dispose() {
     scene = null;
-    RenderManager.dispose();
     ResourceLoader.dispose();
   }
 
@@ -60,10 +58,9 @@ public final class Game extends ApplicationAdapter {
     try {
       scene.updateAndFixedUpdate(updateCount);
     } catch (final SceneExit exit) {
-      scene = nextScene;
-      if (scene != null) {
-        ResourceLoader.unloadAllResources();
-        scene.start();
+      if ((scene = nextScene) != null) {
+        ResourceLoader.unloadSceneResources();
+        scene.create();
       }
       return;
     }

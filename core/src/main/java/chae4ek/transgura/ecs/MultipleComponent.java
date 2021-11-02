@@ -83,8 +83,8 @@ public abstract class MultipleComponent {
             .append(isEnabled)
             .append("], parentEntity ids: [ ");
     // don't use the entity instead of classes to exclude recursive calls:
-    for (final Entity entity : parentEntitiesOrigin) sb.append(entity.getClass()).append(" ");
-    return sb.append("]").toString();
+    for (final Entity entity : parentEntitiesOrigin) sb.append(entity.getClass()).append(' ');
+    return sb.append(']').toString();
   }
 
   @Override

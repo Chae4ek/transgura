@@ -2,7 +2,6 @@ package chae4ek.transgura.ecs;
 
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
-import com.badlogic.gdx.math.Matrix4;
 
 public abstract class RenderComponent extends MultipleComponent {
 
@@ -13,7 +12,7 @@ public abstract class RenderComponent extends MultipleComponent {
   }
 
   /** Draw this render component */
-  public abstract void draw(final Matrix4 projection);
+  public abstract void draw();
 
   @Override
   void bind(final Entity parentEntity) {

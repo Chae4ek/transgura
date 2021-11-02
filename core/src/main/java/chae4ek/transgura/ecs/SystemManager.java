@@ -106,6 +106,12 @@ public final class SystemManager {
 
   @Override
   public String toString() {
-    return "systems: " + systems;
+    return new StringBuilder(500)
+        .append("systems: [")
+        .append(systems)
+        .append("], deferredEvents: [")
+        .append(deferredEvents)
+        .append(']')
+        .toString();
   }
 }

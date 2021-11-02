@@ -22,8 +22,9 @@ public final class SystemManager {
           null,
           true);
 
-  private final Set<Runnable> deferredEvents = ConcurrentHashMap.newKeySet();
   private final Map<Entity, Set<System>> systems = new HashMap<>();
+  /** Non-final for fast clear only */
+  private Set<Runnable> deferredEvents = ConcurrentHashMap.newKeySet();
 
   /** Add a deferred event that will run after all updates */
   void addDeferredEvent(final Runnable event) {
@@ -52,16 +53,18 @@ public final class SystemManager {
 
   /** Remove the system of this system manager */
   void removeSystem(final Entity parentEntity, final System system) {
-    final Set<System> systems = this.systems.get(parentEntity);
-    if (systems == null) {
+    if (systems.computeIfPresent(
+            parentEntity,
+            (parent, systems) -> {
+              if (!systems.remove(system)) {
+                gameAlert.warn(
+                    GameErrorType.SYSTEM_DOES_NOT_EXIST,
+                    "parentEntity: " + parentEntity + ", systems: " + systems);
+              }
+              return systems;
+            })
+        == null) {
       gameAlert.warn(GameErrorType.ENTITY_HAS_NOT_SYSTEM, "parentEntity: " + parentEntity);
-    } else {
-      // too late, but it's deferred, so it's ok
-      if (!systems.remove(system)) {
-        gameAlert.warn(
-            GameErrorType.SYSTEM_DOES_NOT_EXIST,
-            "parentEntity: " + parentEntity + ", systems: " + systems);
-      }
     }
   }
 
@@ -98,6 +101,7 @@ public final class SystemManager {
 
     // deferred events:
     for (final Runnable event : deferredEvents) event.run();
+    deferredEvents = ConcurrentHashMap.newKeySet(); // fast clear
   }
 
   @Override

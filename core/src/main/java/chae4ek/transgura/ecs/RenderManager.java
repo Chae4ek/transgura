@@ -53,17 +53,19 @@ public final class RenderManager {
 
   /** Remove the render component of this render manager */
   void removeRenderComponent(final Entity parentEntity, final RenderComponent renderComponent) {
-    final Set<RenderComponent> renderComponents = this.renderComponents.get(parentEntity);
-    if (renderComponents == null) {
+    if (renderComponents.computeIfPresent(
+            parentEntity,
+            (parent, components) -> {
+              if (!components.remove(renderComponent)) {
+                gameAlert.warn(
+                    GameErrorType.RENDER_COMPONENT_DOES_NOT_EXIST,
+                    "parentEntity: " + parentEntity + ", renderComponents: " + renderComponents);
+              }
+              return components;
+            })
+        == null) {
       gameAlert.warn(
           GameErrorType.ENTITY_HAS_NOT_RENDER_COMPONENT, "parentEntity: " + parentEntity);
-    } else {
-      // too late, but it's deferred, so it's ok
-      if (!renderComponents.remove(renderComponent)) {
-        gameAlert.warn(
-            GameErrorType.RENDER_COMPONENT_DOES_NOT_EXIST,
-            "parentEntity: " + parentEntity + ", renderComponents: " + renderComponents);
-      }
     }
   }
 

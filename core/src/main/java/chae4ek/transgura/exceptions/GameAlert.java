@@ -33,4 +33,9 @@ public class GameAlert {
   public void warn(final GameErrorType type, final String debugInfo) {
     logger.warn("warn: [{}]; debug info: [{}]", type.toString(), debugInfo);
   }
+
+  /** Log with DEBUG level */
+  public void debug(final String debugInfo) {
+    logger.debug("debug: [{}]", debugInfo);
+  }
 }

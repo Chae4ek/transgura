@@ -21,10 +21,10 @@ public abstract class Scene {
   /**
    * Update and fixed update this scene
    *
-   * @param updateCount the count of fixed updates
+   * @param fixedUpdateCount the count of fixed updates
    */
-  public final void updateAndFixedUpdate(final int updateCount) {
-    systemManager.updateAndFixedUpdate(updateCount);
+  public final void updateAndFixedUpdate(final int fixedUpdateCount) {
+    systemManager.updateAndFixedUpdate(fixedUpdateCount);
   }
 
   /** Render this scene */

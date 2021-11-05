@@ -2,8 +2,8 @@ package chae4ek.transgura.ecs;
 
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
-import java.util.ArrayList;
-import java.util.HashSet;
+import com.badlogic.gdx.utils.Array;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +36,9 @@ public final class SystemManager {
     systems.compute(
         parentEntity,
         (parent, systems) -> {
-          if (systems == null) systems = new HashSet<>(5);
+          if (systems == null) {
+            systems = ConcurrentHashMap.newKeySet(3);
+          }
           if (!systems.add(system)) {
             gameAlert.warn(
                 GameErrorType.SYSTEM_HAS_BEEN_REPLACED,
@@ -77,42 +79,70 @@ public final class SystemManager {
     return pool;
   }
 
-  /** Invoke update() and fixedUpdate() in all enabled systems */
-  public void updateAndFixedUpdate(int updateCount) {
-    final ArrayList<ForkJoinTask<?>> tasks = new ArrayList<>();
+  /**
+   * Invoke update() and fixedUpdate() in all enabled systems.
+   *
+   * <p>This method guarantees that any entity/component/system enabling/disabling/destroying/etc
+   * are parallel and thread-safe, but their updates are unordered.
+   *
+   * <p>Well, you can be sure that any game object will be destroyed after update, but
+   * enable/disable/adding/checks/etc are invoked during the update. Anyway you can call any method
+   * at any time in your system script
+   */
+  public void updateAndFixedUpdate(int fixedUpdateCount) {
+    final Array<ForkJoinTask<?>> tasks = new Array<>(false, 16);
+    final Collection<Set<System>> allSystems = systems.values();
     // simple update:
-    for (final Set<System> systems : systems.values()) {
+    int extraCapacityNeeded = 0;
+    for (final Set<System> systems : allSystems) {
       for (final System system : systems) {
-        tasks.add(pool.submit(system::update));
+        if (system.isEnabled()) {
+          if (system.isUpdateEnabled()) tasks.add(pool.submit(system::update));
+          if (system.isFixedUpdateEnabled()) ++extraCapacityNeeded;
+        }
       }
     }
     // simple update and first fixed update are invoked together to accelerate:
-    if (updateCount > 0) {
-      tasks.ensureCapacity(2 * tasks.size());
-      for (final Set<System> systems : systems.values()) {
+    if (fixedUpdateCount > 0) {
+      --fixedUpdateCount;
+      tasks.ensureCapacity(extraCapacityNeeded);
+      for (final Set<System> systems : allSystems) {
         for (final System system : systems) {
-          tasks.add(pool.submit(system::fixedUpdate));
+          if (system.isEnabled() && system.isFixedUpdateEnabled()) {
+            tasks.add(pool.submit(system::fixedUpdate));
+          }
         }
       }
-      --updateCount;
     }
     for (final ForkJoinTask<?> task : tasks) task.join();
+    runDeferredEvents();
 
     // other fixed updates:
-    for (; updateCount > 0; --updateCount) {
+    for (; fixedUpdateCount > 0; --fixedUpdateCount) {
       int i = 0;
-      for (final Set<System> systems : systems.values()) {
+      for (final Set<System> systems : allSystems) {
         for (final System system : systems) {
-          tasks.set(i++, pool.submit(system::fixedUpdate));
+          if (system.isEnabled() && system.isFixedUpdateEnabled()) {
+            if (i < tasks.size) tasks.set(i, pool.submit(system::fixedUpdate));
+            else tasks.add(pool.submit(system::fixedUpdate));
+            ++i;
+          }
         }
       }
       final Iterator<ForkJoinTask<?>> it = tasks.iterator();
       for (; i > 0; --i) it.next().join();
+      runDeferredEvents();
     }
+  }
 
-    // deferred events:
-    for (final Runnable event : deferredEvents) event.run();
-    deferredEvents = ConcurrentHashMap.newKeySet(); // fast clear
+  /** Run all deferred events: destroying */
+  private void runDeferredEvents() {
+    final Iterator<Runnable> it = deferredEvents.iterator();
+    if (it.hasNext()) {
+      do {
+        it.next().run();
+      } while (it.hasNext());
+    } else deferredEvents = ConcurrentHashMap.newKeySet(); // fast clear
   }
 
   @Override

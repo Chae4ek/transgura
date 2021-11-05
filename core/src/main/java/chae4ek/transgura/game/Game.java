@@ -1,5 +1,6 @@
 package chae4ek.transgura.game;
 
+import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.game.scenes.MainMenu;
 import chae4ek.transgura.render.ResourceLoader;
 import com.badlogic.gdx.ApplicationAdapter;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 public final class Game extends ApplicationAdapter {
 
   public static final float fixedDeltaTime = 1f / 25f;
+  private static final transient GameAlert gameAlert = new GameAlert(Game.class);
   private static float time;
 
   private static Scene scene;
@@ -20,11 +22,11 @@ public final class Game extends ApplicationAdapter {
 
   /**
    * Set a new scene and exit the current scene immediately. If the scene is null the game will
-   * close. Should invoke only in update methods!
+   * close. Should invoke without custom multithreading, only engine!
    *
    * @param scene a new scene
    * @throws SceneExit it is necessary to exit whatever. Don't try to catch it. It doesn't work with
-   *     multithreading
+   *     custom multithreading
    */
   public static void setScene(final Scene scene) throws SceneExit {
     nextScene = scene;
@@ -49,18 +51,19 @@ public final class Game extends ApplicationAdapter {
     final float deltaTime = Gdx.graphics.getDeltaTime();
     time += deltaTime;
 
-    int updateCount = 0;
+    final int fixedUpdateCount;
     if (time >= fixedDeltaTime) {
-      updateCount = (int) (time / fixedDeltaTime);
-      time -= updateCount * fixedDeltaTime;
-    }
+      fixedUpdateCount = (int) (time / fixedDeltaTime);
+      time -= fixedUpdateCount * fixedDeltaTime;
+    } else fixedUpdateCount = 0;
 
     try {
-      scene.updateAndFixedUpdate(updateCount);
+      scene.updateAndFixedUpdate(fixedUpdateCount);
     } catch (final SceneExit exit) {
       if ((scene = nextScene) != null) {
         ResourceLoader.unloadSceneResources();
         scene.create();
+        gameAlert.debug("Scene " + scene.getClass().getName() + " is loaded");
       }
       return;
     }

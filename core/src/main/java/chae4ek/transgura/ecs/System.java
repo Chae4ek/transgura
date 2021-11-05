@@ -38,6 +38,12 @@ public abstract class System extends MultipleComponent {
     return scene;
   }
 
+  /** @return true if the system uses {@link #update} */
+  public abstract boolean isUpdateEnabled();
+
+  /** @return true if the system uses {@link #fixedUpdate} */
+  public abstract boolean isFixedUpdateEnabled();
+
   /** Update the system logic every frame */
   public void update() {}
 

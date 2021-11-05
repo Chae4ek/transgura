@@ -13,6 +13,16 @@ public class Menu extends System {
   }
 
   @Override
+  public boolean isUpdateEnabled() {
+    return true;
+  }
+
+  @Override
+  public boolean isFixedUpdateEnabled() {
+    return true;
+  }
+
+  @Override
   public void update() {
     if (Gdx.input.isKeyPressed(Keys.ESCAPE)) Game.setScene(null);
     if (Gdx.input.isKeyPressed(Keys.SPACE)) Game.setScene(new MainMenu());

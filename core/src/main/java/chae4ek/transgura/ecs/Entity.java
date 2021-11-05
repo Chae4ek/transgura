@@ -56,14 +56,14 @@ public abstract class Entity {
    * @param componentClass the class of the component to get
    * @return the component or null if it doesn't exist
    */
-  @SuppressWarnings("unchecked")
   public final <T extends MultipleComponent> T getComponent(final Class<T> componentClass) {
-    final MultipleComponent component = components.get(componentClass);
+    @SuppressWarnings("unchecked")
+    final T component = (T) components.get(componentClass);
     if (component == null) {
       gameAlert.warn(GameErrorType.COMPONENT_DOES_NOT_EXIST, componentClass.getName());
       return null;
     }
-    return (T) component;
+    return component;
   }
 
   /**

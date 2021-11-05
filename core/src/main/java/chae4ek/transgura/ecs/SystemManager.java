@@ -3,8 +3,8 @@ package chae4ek.transgura.ecs;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +22,7 @@ public final class SystemManager {
           null,
           true);
 
-  private final Map<Entity, Set<System>> systems = new HashMap<>();
+  private final Map<Entity, Set<System>> systems = new ConcurrentHashMap<>();
   /** Non-final for fast clear only */
   private Set<Runnable> deferredEvents = ConcurrentHashMap.newKeySet();
 
@@ -79,16 +79,26 @@ public final class SystemManager {
 
   /** Invoke update() and fixedUpdate() in all enabled systems */
   public void updateAndFixedUpdate(int updateCount) {
-    // simple update:
     final ArrayList<ForkJoinTask<?>> tasks = new ArrayList<>();
+    // simple update:
     for (final Set<System> systems : systems.values()) {
       for (final System system : systems) {
         tasks.add(pool.submit(system::update));
       }
     }
+    // simple update and first fixed update are invoked together to accelerate:
+    if (updateCount > 0) {
+      tasks.ensureCapacity(2 * tasks.size());
+      for (final Set<System> systems : systems.values()) {
+        for (final System system : systems) {
+          tasks.add(pool.submit(system::fixedUpdate));
+        }
+      }
+      --updateCount;
+    }
     for (final ForkJoinTask<?> task : tasks) task.join();
 
-    // fixed update:
+    // other fixed updates:
     for (; updateCount > 0; --updateCount) {
       int i = 0;
       for (final Set<System> systems : systems.values()) {
@@ -96,7 +106,8 @@ public final class SystemManager {
           tasks.set(i++, pool.submit(system::fixedUpdate));
         }
       }
-      for (final ForkJoinTask<?> task : tasks) task.join();
+      final Iterator<ForkJoinTask<?>> it = tasks.iterator();
+      for (; i > 0; --i) it.next().join();
     }
 
     // deferred events:

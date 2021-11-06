@@ -3,7 +3,6 @@ package chae4ek.transgura.ecs.component;
 import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.RenderComponent;
 import chae4ek.transgura.ecs.util.RenderUtils;
-import chae4ek.transgura.game.Game;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -20,10 +19,9 @@ public class AnimatedSprite extends RenderComponent {
 
   @Override
   public void draw() {
-    final float globalTime = Game.getGlobalTimeInSec();
+    final float time = scene.getSceneLifetimeInSec();
     for (final Entity parent : getParentEntities()) {
-      RenderUtils.drawDefault(
-          parent.getComponent(Position.class), animation.getKeyFrame(globalTime));
+      RenderUtils.drawDefault(parent.getComponent(Position.class), animation.getKeyFrame(time));
     }
   }
 }

@@ -15,11 +15,25 @@ public abstract class Scene {
   public final SystemManager systemManager = new SystemManager();
   public final RenderManager renderManager = new RenderManager(viewport);
 
-  /** Don't use constructor cause it makes problems with scene changing, use {@link #create} */
+  float sceneLifetimeInSec;
+
+  /**
+   * Don't override this constructor cause it makes problems with scene changing. Use {@link
+   * #create} instead
+   */
   public Scene() {}
 
   /** Create and start this scene */
   public abstract void create();
+
+  /**
+   * The lifetime of this scene in seconds. When a scene creates and starts this method returns 0
+   *
+   * @return the lifetime of this scene in seconds
+   */
+  public final float getSceneLifetimeInSec() {
+    return sceneLifetimeInSec;
+  }
 
   /**
    * Update and fixed update this scene

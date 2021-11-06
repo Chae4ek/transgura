@@ -11,15 +11,10 @@ public final class Game extends ApplicationAdapter {
   public static final float fixedDeltaTime = 1f / 25f;
   private static final transient GameAlert gameAlert = new GameAlert(Game.class);
   private static float time;
-  private static float globalTimeInSec;
+  private static long sceneStartTime;
 
   private static Scene scene;
   private static Scene nextScene;
-
-  /** @return high-resolution system time in seconds */
-  public static float getGlobalTimeInSec() {
-    return globalTimeInSec;
-  }
 
   /** @return the current scene */
   public static Scene getScene() {
@@ -44,6 +39,7 @@ public final class Game extends ApplicationAdapter {
   public void create() {
     scene = new MainMenu();
     scene.create();
+    sceneStartTime = System.nanoTime();
   }
 
   @Override
@@ -54,8 +50,6 @@ public final class Game extends ApplicationAdapter {
 
   @Override
   public void render() {
-    globalTimeInSec = 1e-9f * System.nanoTime();
-
     final float deltaTime = Gdx.graphics.getDeltaTime();
     time += deltaTime;
 
@@ -65,12 +59,14 @@ public final class Game extends ApplicationAdapter {
       time -= fixedUpdateCount * fixedDeltaTime;
     } else fixedUpdateCount = 0;
 
+    scene.sceneLifetimeInSec = 1e-9f * (System.nanoTime() - sceneStartTime);
     try {
       scene.updateAndFixedUpdate(fixedUpdateCount);
     } catch (final SceneExit exit) {
       if ((scene = nextScene) != null) {
         ResourceLoader.unloadSceneResources();
         scene.create();
+        sceneStartTime = System.nanoTime();
         gameAlert.debug("Scene " + scene.getClass().getName() + " is loaded");
       }
       return;

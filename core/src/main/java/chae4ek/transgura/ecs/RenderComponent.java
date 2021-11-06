@@ -7,11 +7,13 @@ public abstract class RenderComponent extends MultipleComponent {
 
   private static final transient GameAlert gameAlert = new GameAlert(RenderComponent.class);
 
-  protected RenderComponent(final boolean isEnabled) {
+  public RenderComponent(final boolean isEnabled) {
     super(isEnabled);
   }
 
-  /** Draw this render component */
+  /**
+   * Draw this render component. This method should not invoke begin()/end() methods in sprite batch
+   */
   public abstract void draw();
 
   @Override

@@ -2,6 +2,7 @@ package chae4ek.transgura.ecs;
 
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
+import chae4ek.transgura.game.GameSettings;
 import com.badlogic.gdx.utils.Array;
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,7 +25,8 @@ public final class SystemManager {
 
   private final Map<Entity, Set<System>> systems = new ConcurrentHashMap<>();
   /** Non-final for fast clear only */
-  private Set<Runnable> deferredEvents = ConcurrentHashMap.newKeySet();
+  private Set<Runnable> deferredEvents =
+      ConcurrentHashMap.newKeySet(GameSettings.AVG_DEFERRED_EVENTS);
 
   /** Add a deferred event that will run after all updates */
   void addDeferredEvent(final Runnable event) {
@@ -37,7 +39,7 @@ public final class SystemManager {
         parentEntity,
         (parent, systems) -> {
           if (systems == null) {
-            systems = ConcurrentHashMap.newKeySet(3);
+            systems = ConcurrentHashMap.newKeySet(GameSettings.AVG_SYSTEMS_PER_ENTITY);
           }
           if (!systems.add(system)) {
             gameAlert.warn(
@@ -90,7 +92,7 @@ public final class SystemManager {
    * at any time in your system script
    */
   public void updateAndFixedUpdate(int fixedUpdateCount) {
-    final Array<ForkJoinTask<?>> tasks = new Array<>(false, 16);
+    final Array<ForkJoinTask<?>> tasks = new Array<>(false, GameSettings.AVG_UPDATE_TASKS);
     final Collection<Set<System>> allSystems = systems.values();
     // simple update:
     int extraCapacityNeeded = 0;
@@ -142,12 +144,13 @@ public final class SystemManager {
       do {
         it.next().run();
       } while (it.hasNext());
-    } else deferredEvents = ConcurrentHashMap.newKeySet(); // fast clear
+      deferredEvents = ConcurrentHashMap.newKeySet(GameSettings.AVG_DEFERRED_EVENTS);
+    }
   }
 
   @Override
   public String toString() {
-    return new StringBuilder(500)
+    return new StringBuilder()
         .append("systems: [")
         .append(systems)
         .append("], deferredEvents: [")

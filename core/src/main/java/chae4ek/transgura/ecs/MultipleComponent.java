@@ -2,6 +2,7 @@ package chae4ek.transgura.ecs;
 
 import chae4ek.transgura.ecs.util.SetGuard;
 import chae4ek.transgura.game.Game;
+import chae4ek.transgura.game.GameSettings;
 import chae4ek.transgura.game.Scene;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,7 +26,7 @@ public abstract class MultipleComponent {
 
   protected MultipleComponent(final boolean isEnabled) {
     this.isEnabled.set(isEnabled);
-    parentEntitiesOrigin = ConcurrentHashMap.newKeySet(5);
+    parentEntitiesOrigin = ConcurrentHashMap.newKeySet(GameSettings.AVG_PARENTS_PER_COMPONENT);
     scene = Game.getScene(); // probably this will delete
     parentEntities = new SetGuard<>(parentEntitiesOrigin);
   }
@@ -76,12 +77,14 @@ public abstract class MultipleComponent {
   @Override
   public String toString() {
     final StringBuilder sb =
-        new StringBuilder(70)
-            .append("class: [")
+        new StringBuilder()
+            .append("scene: [")
+            .append(scene.getClass().getName())
+            .append("], class: [")
             .append(getClass().getName())
             .append("], isEnabled: [")
             .append(isEnabled)
-            .append("], parentEntity ids: [ ");
+            .append("], parentEntities: [ ");
     // don't use the entity instead of classes to exclude recursive calls:
     for (final Entity entity : parentEntitiesOrigin) sb.append(entity.getClass()).append(' ');
     return sb.append(']').toString();

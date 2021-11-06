@@ -3,6 +3,7 @@ package chae4ek.transgura.ecs;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 import chae4ek.transgura.game.Game;
+import chae4ek.transgura.game.GameSettings;
 import chae4ek.transgura.game.Scene;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,8 +17,8 @@ public abstract class Entity {
 
   private final Map<Class<? extends MultipleComponent>, MultipleComponent> components;
 
-  protected Entity() {
-    components = new ConcurrentHashMap<>(8);
+  public Entity() {
+    components = new ConcurrentHashMap<>(GameSettings.AVG_COMPONENTS_PER_ENTITY);
     scene = Game.getScene(); // probably this will delete
     scene.entityManager.addEntity(this);
   }
@@ -91,7 +92,7 @@ public abstract class Entity {
 
   @Override
   public String toString() {
-    return new StringBuilder(320)
+    return new StringBuilder()
         .append("class: [")
         .append(getClass().getName())
         .append("], scene: [")

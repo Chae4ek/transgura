@@ -2,13 +2,12 @@ package chae4ek.transgura.ecs;
 
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
-import chae4ek.transgura.game.Scene;
 
 public abstract class System extends MultipleComponent {
 
   private static final transient GameAlert gameAlert = new GameAlert(System.class);
 
-  protected System(final boolean isEnabled) {
+  public System(final boolean isEnabled) {
     super(isEnabled);
   }
 
@@ -31,11 +30,6 @@ public abstract class System extends MultipleComponent {
     }
     // It's redundant
     // super.destroyThis();
-  }
-
-  /** @return the scene of this system */
-  public final Scene getScene() {
-    return scene;
   }
 
   /** @return true if the system uses {@link #update} */

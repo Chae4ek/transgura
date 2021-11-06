@@ -7,10 +7,6 @@ public abstract class System extends MultipleComponent {
 
   private static final transient GameAlert gameAlert = new GameAlert(System.class);
 
-  public System(final boolean isEnabled) {
-    super(isEnabled);
-  }
-
   @Override
   void bind(final Entity parentEntity) {
     super.bind(parentEntity);
@@ -26,7 +22,7 @@ public abstract class System extends MultipleComponent {
             "system scene: " + scene + ", parent entity: " + parent);
       }
       scene.systemManager.removeSystem(parent, this);
-      parent.removeComponent(this); // it's here to optimize a cycle
+      parent.removeComponent(this); // it's here to optimize this cycle
     }
     // It's redundant
     // super.destroyThis();

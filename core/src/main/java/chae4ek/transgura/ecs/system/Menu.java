@@ -8,10 +8,6 @@ import com.badlogic.gdx.Input.Keys;
 
 public class Menu extends System {
 
-  public Menu(final boolean isEnabled) {
-    super(isEnabled);
-  }
-
   @Override
   public boolean isUpdateEnabled() {
     return true;

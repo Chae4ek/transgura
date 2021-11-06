@@ -18,8 +18,8 @@ public abstract class Entity {
   private final Map<Class<? extends MultipleComponent>, MultipleComponent> components;
 
   public Entity() {
+    scene = Game.getScene();
     components = new ConcurrentHashMap<>(GameSettings.AVG_COMPONENTS_PER_ENTITY);
-    scene = Game.getScene(); // probably this will delete
     scene.entityManager.addEntity(this);
   }
 

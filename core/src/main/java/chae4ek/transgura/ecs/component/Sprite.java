@@ -9,8 +9,7 @@ public class Sprite extends RenderComponent {
 
   public final AtlasRegion atlasRegion;
 
-  public Sprite(final boolean isEnabled, final AtlasRegion atlasRegion) {
-    super(isEnabled);
+  public Sprite(final AtlasRegion atlasRegion) {
     this.atlasRegion = atlasRegion;
   }
 

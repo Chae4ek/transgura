@@ -8,13 +8,12 @@ public class Position extends MultipleComponent {
   public int y;
 
   public Position(final int x, final int y) {
-    super(true);
     this.x = x;
     this.y = y;
   }
 
   public Position() {
-    this(0, 0);
+    x = y = 0;
   }
 
   @Override

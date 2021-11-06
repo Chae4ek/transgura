@@ -20,13 +20,13 @@ public class MainMenu extends Scene {
     final AtlasRegion testBlock = ResourceLoader.loadAtlasRegion(TextureType.TEST_BLOCK);
     final AtlasRegion wood = ResourceLoader.loadAtlasRegion(TextureType.WOOD);
 
-    new GameObject(new Menu(true));
+    new GameObject(new Menu());
 
-    new GameObject(new Position(), new Sprite(true, testBlock));
-    new GameObject(new Position(100, 100), new Sprite(true, wood));
-    new GameObject(new Position(150, 100), new Sprite(true, wood));
+    new GameObject(new Position(), new Sprite(testBlock));
+    new GameObject(new Position(100, 100), new Sprite(wood));
+    new GameObject(new Position(150, 100), new Sprite(wood));
 
     new GameObject(
-        new Position(200, 200), new AnimatedSprite(true, 0.5f, PlayMode.LOOP, testBlock, wood));
+        new Position(200, 200), new AnimatedSprite(0.5f, PlayMode.LOOP, testBlock, wood));
   }
 }

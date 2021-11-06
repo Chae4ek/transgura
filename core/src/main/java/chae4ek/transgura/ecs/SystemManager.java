@@ -102,7 +102,7 @@ public final class SystemManager {
     int extraCapacityNeeded = 0;
     for (final Set<System> systems : allSystems) {
       for (final System system : systems) {
-        if (system.isEnabled()) {
+        if (system.isEnabled) {
           if (system.isUpdateEnabled()) tasks.add(pool.submit(system::update));
           if (system.isFixedUpdateEnabled()) ++extraCapacityNeeded;
         }
@@ -114,7 +114,7 @@ public final class SystemManager {
       tasks.ensureCapacity(extraCapacityNeeded);
       for (final Set<System> systems : allSystems) {
         for (final System system : systems) {
-          if (system.isEnabled() && system.isFixedUpdateEnabled()) {
+          if (system.isEnabled && system.isFixedUpdateEnabled()) {
             tasks.add(pool.submit(system::fixedUpdate));
           }
         }
@@ -128,7 +128,7 @@ public final class SystemManager {
       int i = 0;
       for (final Set<System> systems : allSystems) {
         for (final System system : systems) {
-          if (system.isEnabled() && system.isFixedUpdateEnabled()) {
+          if (system.isEnabled && system.isFixedUpdateEnabled()) {
             if (i < tasks.size) tasks.set(i, pool.submit(system::fixedUpdate));
             else tasks.add(pool.submit(system::fixedUpdate));
             ++i;

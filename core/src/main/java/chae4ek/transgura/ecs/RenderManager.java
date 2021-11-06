@@ -86,7 +86,7 @@ public final class RenderManager {
 
     for (final Set<RenderComponent> renderComponents : renderComponents.values()) {
       for (final RenderComponent renderComponent : renderComponents) {
-        if (renderComponent.isEnabled()) renderComponent.draw();
+        if (renderComponent.isEnabled) renderComponent.draw();
       }
     }
 

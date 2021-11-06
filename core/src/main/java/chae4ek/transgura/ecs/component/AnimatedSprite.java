@@ -13,11 +13,7 @@ public class AnimatedSprite extends RenderComponent {
   public final Animation<AtlasRegion> animation;
 
   public AnimatedSprite(
-      final boolean isEnabled,
-      final float frameDurationInSec,
-      final PlayMode playMode,
-      final AtlasRegion... textureFrames) {
-    super(isEnabled);
+      final float frameDurationInSec, final PlayMode playMode, final AtlasRegion... textureFrames) {
     animation = new Animation<>(frameDurationInSec, textureFrames);
     animation.setPlayMode(playMode);
   }

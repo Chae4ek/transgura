@@ -1,8 +1,9 @@
 package chae4ek.transgura.ecs;
 
+import chae4ek.transgura.ecs.util.RenderUtils;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
-import chae4ek.transgura.render.ResourceLoader;
+import chae4ek.transgura.game.GameSettings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -30,7 +31,14 @@ public final class RenderManager {
     renderComponents.compute(
         parentEntity,
         (parent, components) -> {
-          if (components == null) components = new HashSet<>(5);
+          if (components == null) {
+            /*
+             it's not a thread-safe set cause the render isn't parallel;
+             the render is invoked after update/fixedUpdate;
+             all operations with the set of render components are in the thread-safe methods like this
+            */
+            components = new HashSet<>(GameSettings.AVG_RENDER_COMPONENTS_PER_ENTITY);
+          }
           if (!components.add(renderComponent)) {
             gameAlert.warn(
                 GameErrorType.RENDER_COMPONENT_HAS_BEEN_REPLACED,
@@ -69,7 +77,7 @@ public final class RenderManager {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     final Matrix4 projection = viewport.getCamera().combined;
-    final Collection<SpriteBatch> spriteBatches = ResourceLoader.getSpriteBatches();
+    final Collection<SpriteBatch> spriteBatches = RenderUtils.getSpriteBatches();
 
     for (final SpriteBatch spriteBatch : spriteBatches) {
       spriteBatch.setProjectionMatrix(projection);

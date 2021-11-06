@@ -1,8 +1,8 @@
 package chae4ek.transgura.game;
 
+import chae4ek.transgura.ecs.util.ResourceLoader;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.game.scenes.MainMenu;
-import chae4ek.transgura.render.ResourceLoader;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 
@@ -11,9 +11,15 @@ public final class Game extends ApplicationAdapter {
   public static final float fixedDeltaTime = 1f / 25f;
   private static final transient GameAlert gameAlert = new GameAlert(Game.class);
   private static float time;
+  private static float globalTimeInSec;
 
   private static Scene scene;
   private static Scene nextScene;
+
+  /** @return high-resolution system time in seconds */
+  public static float getGlobalTimeInSec() {
+    return globalTimeInSec;
+  }
 
   /** @return the current scene */
   public static Scene getScene() {
@@ -21,8 +27,8 @@ public final class Game extends ApplicationAdapter {
   }
 
   /**
-   * Set a new scene and exit the current scene immediately. If the scene is null the game will
-   * close. Should invoke without custom multithreading, only engine!
+   * Schedule to set a new scene and exit the current scene immediately. If the scene is null the
+   * game will close. Should invoke without custom multithreading, only engine!
    *
    * @param scene a new scene
    * @throws SceneExit it is necessary to exit whatever. Don't try to catch it. It doesn't work with
@@ -48,6 +54,8 @@ public final class Game extends ApplicationAdapter {
 
   @Override
   public void render() {
+    globalTimeInSec = 1e-9f * System.nanoTime();
+
     final float deltaTime = Gdx.graphics.getDeltaTime();
     time += deltaTime;
 

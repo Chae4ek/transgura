@@ -1,10 +1,10 @@
-package chae4ek.transgura.render;
+package chae4ek.transgura.ecs.util;
 
+import chae4ek.transgura.ecs.util.resources.SpriteBatchType;
+import chae4ek.transgura.ecs.util.resources.TextureType;
+import chae4ek.transgura.ecs.util.resources.TextureType.AtlasType;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
-import chae4ek.transgura.render.resources.SpriteBatchType;
-import chae4ek.transgura.render.resources.TextureType;
-import chae4ek.transgura.render.resources.TextureType.AtlasType;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
@@ -79,7 +79,7 @@ public class ResourceLoader implements AssetErrorListener {
   }
 
   /** @return the all loaded sprite batches */
-  public static Collection<SpriteBatch> getSpriteBatches() {
+  static Collection<SpriteBatch> getSpriteBatches() {
     return spriteBatches.values();
   }
 

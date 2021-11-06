@@ -39,6 +39,10 @@ public final class SystemManager {
         parentEntity,
         (parent, systems) -> {
           if (systems == null) {
+            /*
+             it's a thread-safe set cause when update/fixedUpdate methods are invoked they can
+             enable/disable other systems and then add the systems in this set
+            */
             systems = ConcurrentHashMap.newKeySet(GameSettings.AVG_SYSTEMS_PER_ENTITY);
           }
           if (!systems.add(system)) {

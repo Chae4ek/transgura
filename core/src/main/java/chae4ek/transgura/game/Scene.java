@@ -15,6 +15,9 @@ public abstract class Scene {
   public final SystemManager systemManager = new SystemManager();
   public final RenderManager renderManager = new RenderManager(viewport);
 
+  /** Don't use constructor cause it makes problems with scene changing, use {@link #create} */
+  public Scene() {}
+
   /** Create and start this scene */
   public abstract void create();
 

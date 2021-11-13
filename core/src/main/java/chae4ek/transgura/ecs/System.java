@@ -24,7 +24,7 @@ public abstract class System extends MultipleComponent {
       scene.systemManager.removeSystem(parent, this);
       parent.removeComponent(this); // it's here to optimize this cycle
     }
-    // It's redundant
+    // it's redundant
     // super.destroyThis();
   }
 

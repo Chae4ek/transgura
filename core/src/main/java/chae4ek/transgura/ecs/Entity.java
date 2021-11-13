@@ -25,7 +25,7 @@ public abstract class Entity {
 
   /** Remove a component */
   final void removeComponent(final MultipleComponent component) {
-    if (components.remove(component.getClass()) != null) {
+    if (components.remove(component.getClass()) == null) {
       gameAlert.warn(GameErrorType.COMPONENT_DOES_NOT_EXIST, "component: " + component);
     }
   }

@@ -43,7 +43,7 @@ public abstract class MultipleComponent {
 
   /** Destroy this component */
   void destroyThis() {
-    // It's implemented in an overriden method to optimize this cycle
+    // it's implemented in an overriden method to optimize this cycle
     // for (final Entity parent : parentEntitiesOrigin) parent.removeComponent(this);
   }
 

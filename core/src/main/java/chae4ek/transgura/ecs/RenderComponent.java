@@ -29,7 +29,7 @@ public abstract class RenderComponent extends MultipleComponent {
       scene.renderManager.removeRenderComponent(parent, this);
       parent.removeComponent(this); // it's here to optimize this cycle
     }
-    // It's redundant
+    // it's redundant
     // super.destroyThis();
   }
 }

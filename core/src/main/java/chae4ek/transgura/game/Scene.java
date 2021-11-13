@@ -18,13 +18,12 @@ public abstract class Scene {
   float sceneLifetimeInSec;
 
   /**
-   * Don't override this constructor cause it makes problems with scene changing. Use {@link
-   * #create} instead
+   * Create and start this scene. Before creating the {@link Game#scene} is set to the previous one
+   * or null if this scene is the first
    */
-  public Scene() {}
-
-  /** Create and start this scene */
-  public abstract void create();
+  public Scene() {
+    Game.scene = this;
+  }
 
   /**
    * The lifetime of this scene in seconds. When a scene creates and starts this method returns 0

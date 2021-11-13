@@ -5,16 +5,16 @@ import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.game.scenes.MainMenu;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import java.util.function.Supplier;
 
 public final class Game extends ApplicationAdapter {
 
   public static final float fixedDeltaTime = 1f / 25f;
   private static final transient GameAlert gameAlert = new GameAlert(Game.class);
-  private static float time;
+  static Scene scene;
+  private static Supplier<Scene> nextSceneCreator;
   private static long sceneStartTime;
-
-  private static Scene scene;
-  private static Scene nextScene;
+  private static float time;
 
   /** @return the current scene */
   public static Scene getScene() {
@@ -22,23 +22,22 @@ public final class Game extends ApplicationAdapter {
   }
 
   /**
-   * Schedule to set a new scene and exit the current scene immediately. If the scene is null the
-   * game will close. Should invoke without custom multithreading, only engine!
+   * Schedule to set a new scene and exit the current scene immediately. If the sceneCreator is null
+   * the game will close. Should invoke without custom multithreading, only engine!
    *
-   * @param scene a new scene
+   * @param sceneCreator a new scene creator
    * @throws SceneExit it is necessary to exit whatever. Don't try to catch it. It doesn't work with
    *     custom multithreading
    */
-  public static void setScene(final Scene scene) throws SceneExit {
-    nextScene = scene;
-    if (scene == null) Gdx.app.exit();
+  public static void setScene(final Supplier<Scene> sceneCreator) throws SceneExit {
+    nextSceneCreator = sceneCreator;
+    if (sceneCreator == null) Gdx.app.exit();
     throw new SceneExit(); // fast exit whatever
   }
 
   @Override
   public void create() {
-    scene = new MainMenu();
-    scene.create();
+    new MainMenu();
     sceneStartTime = System.nanoTime();
   }
 
@@ -63,9 +62,9 @@ public final class Game extends ApplicationAdapter {
     try {
       scene.updateAndFixedUpdate(fixedUpdateCount);
     } catch (final SceneExit exit) {
-      if ((scene = nextScene) != null) {
+      if (nextSceneCreator != null) {
         ResourceLoader.unloadSceneResources();
-        scene.create();
+        nextSceneCreator.get();
         sceneStartTime = System.nanoTime();
         gameAlert.debug("Scene " + scene.getClass().getName() + " is loaded");
       }

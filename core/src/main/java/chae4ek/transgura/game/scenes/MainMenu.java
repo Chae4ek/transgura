@@ -14,8 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 
 public class MainMenu extends Scene {
 
-  @Override
-  public void create() {
+  public MainMenu() {
     ResourceLoader.loadAtlases(AtlasType.TEST);
     final AtlasRegion testBlock = ResourceLoader.loadAtlasRegion(TextureType.TEST_BLOCK);
     final AtlasRegion wood = ResourceLoader.loadAtlasRegion(TextureType.WOOD);

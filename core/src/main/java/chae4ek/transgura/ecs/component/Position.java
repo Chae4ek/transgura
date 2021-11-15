@@ -4,16 +4,16 @@ import chae4ek.transgura.ecs.MultipleComponent;
 
 public class Position extends MultipleComponent {
 
-  public int x;
-  public int y;
+  public float x;
+  public float y;
 
-  public Position(final int x, final int y) {
+  public Position(final float x, final float y) {
     this.x = x;
     this.y = y;
   }
 
   public Position() {
-    x = y = 0;
+    x = y = 0f;
   }
 
   @Override
@@ -26,6 +26,6 @@ public class Position extends MultipleComponent {
 
   @Override
   public int hashCode() {
-    return 961 + 31 * x + y;
+    return (int) (961f + 31f * x + y);
   }
 }

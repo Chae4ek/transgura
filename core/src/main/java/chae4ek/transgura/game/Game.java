@@ -9,12 +9,19 @@ import java.util.function.Supplier;
 
 public final class Game extends ApplicationAdapter {
 
-  public static final float fixedDeltaTime = 1f / 25f;
   private static final transient GameAlert gameAlert = new GameAlert(Game.class);
+
   static Scene scene;
   private static Supplier<Scene> nextSceneCreator;
   private static long sceneStartTime;
+
   private static float time;
+  private static float deltaTime;
+
+  /** @return delta time between the current frame and the previous one */
+  public static float getDeltaTime() {
+    return deltaTime;
+  }
 
   /** @return the current scene */
   public static Scene getScene() {
@@ -49,13 +56,13 @@ public final class Game extends ApplicationAdapter {
 
   @Override
   public void render() {
-    final float deltaTime = Gdx.graphics.getDeltaTime();
+    deltaTime = Gdx.graphics.getDeltaTime();
     time += deltaTime;
 
     final int fixedUpdateCount;
-    if (time >= fixedDeltaTime) {
-      fixedUpdateCount = (int) (time / fixedDeltaTime);
-      time -= fixedUpdateCount * fixedDeltaTime;
+    if (time >= GameSettings.fixedDeltaTime) {
+      fixedUpdateCount = (int) (time / GameSettings.fixedDeltaTime);
+      time -= fixedUpdateCount * GameSettings.fixedDeltaTime;
     } else fixedUpdateCount = 0;
 
     scene.sceneLifetimeInSec = 1e-9f * (System.nanoTime() - sceneStartTime);

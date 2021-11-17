@@ -21,7 +21,7 @@ public class Menu extends System {
   @Override
   public void update() {
     if (Gdx.input.isKeyPressed(Keys.ESCAPE)) Game.setScene(null);
-    if (Gdx.input.isKeyPressed(Keys.SPACE)) Game.setScene(MainMenu::new);
+    if (Gdx.input.isKeyJustPressed(Keys.SPACE)) Game.setScene(MainMenu::new);
   }
 
   /** @deprecated only for testing */

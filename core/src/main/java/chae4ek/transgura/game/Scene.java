@@ -4,6 +4,8 @@ import chae4ek.transgura.ecs.EntityManager;
 import chae4ek.transgura.ecs.RenderManager;
 import chae4ek.transgura.ecs.SystemManager;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 public abstract class Scene {
@@ -14,6 +16,7 @@ public abstract class Scene {
   public final EntityManager entityManager = new EntityManager();
   public final SystemManager systemManager = new SystemManager();
   public final RenderManager renderManager = new RenderManager(viewport);
+  public final World world = new World(new Vector2(0f, -9.81f), true);
 
   float sceneLifetimeInSec;
 

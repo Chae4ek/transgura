@@ -7,6 +7,27 @@ public abstract class RenderComponent extends MultipleComponent {
 
   private static final transient GameAlert gameAlert = new GameAlert(RenderComponent.class);
 
+  /** The priority for rendering */
+  int zOrder;
+
+  public RenderComponent(final int zOrder) {
+    this.zOrder = zOrder;
+  }
+
+  public RenderComponent() {
+    zOrder = 0;
+  }
+
+  /** @return the priority for rendering */
+  public int getZOrder() {
+    return zOrder;
+  }
+
+  /** Set the priority for rendering */
+  public final void setZOrder(final int zOrder) {
+    scene.renderManager.changeZOrder(this, zOrder);
+  }
+
   /**
    * Draw this render component. This method should not invoke begin()/end() methods in sprite batch
    */
@@ -31,5 +52,15 @@ public abstract class RenderComponent extends MultipleComponent {
     }
     // it's redundant
     // super.destroyThis();
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    return this == o;
+  }
+
+  @Override
+  public int hashCode() {
+    return java.lang.System.identityHashCode(this);
   }
 }

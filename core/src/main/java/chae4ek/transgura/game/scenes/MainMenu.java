@@ -24,9 +24,10 @@ public class MainMenu extends Scene {
 
     new GameObject(new Position(), new Sprite(testBlock));
     new GameObject(new Position(100, 100), new Sprite(wood));
-    new GameObject(new Position(150, 100), new Sprite(wood), new PlayerController());
+    new GameObject(new Position(150, 100), new Sprite(1, wood), new PlayerController());
 
     new GameObject(
-        new Position(200, 200), new AnimatedSprite(0.5f, PlayMode.LOOP, testBlock, wood));
+        new Position(200, 200),
+        new AnimatedSprite(0.5f, PlayMode.LOOP, new Sprite(testBlock), new Sprite(wood)));
   }
 }

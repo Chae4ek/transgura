@@ -5,15 +5,14 @@ import chae4ek.transgura.ecs.RenderComponent;
 import chae4ek.transgura.ecs.util.RenderUtils;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 
 public class AnimatedSprite extends RenderComponent {
 
-  public final Animation<AtlasRegion> animation;
+  public final Animation<Sprite> animation;
 
   public AnimatedSprite(
-      final float frameDurationInSec, final PlayMode playMode, final AtlasRegion... textureFrames) {
-    animation = new Animation<>(frameDurationInSec, textureFrames);
+      final float frameDurationInSec, final PlayMode playMode, final Sprite... spriteFrames) {
+    animation = new Animation<>(frameDurationInSec, spriteFrames);
     animation.setPlayMode(playMode);
   }
 

@@ -1,9 +1,9 @@
 package chae4ek.transgura.ecs.util;
 
 import chae4ek.transgura.ecs.component.Position;
+import chae4ek.transgura.ecs.component.Sprite;
 import chae4ek.transgura.ecs.util.resources.SpriteBatchType;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import java.util.Collection;
 
 public class RenderUtils {
@@ -17,14 +17,14 @@ public class RenderUtils {
     return ResourceLoader.getSpriteBatches();
   }
 
-  /** Draw an atlasRegion at the position with {@link #defaultSpriteBatch} */
-  public static void drawDefault(final Position position, final AtlasRegion atlasRegion) {
-    final int width = atlasRegion.getRegionWidth();
-    final int height = atlasRegion.getRegionHeight();
+  /** Draw a sprite at the position with {@link #defaultSpriteBatch} */
+  public static void drawDefault(final Position position, final Sprite sprite) {
+    final int width = sprite.atlasRegion.getRegionWidth();
+    final int height = sprite.atlasRegion.getRegionHeight();
     defaultSpriteBatch.draw(
-        atlasRegion.getTexture(),
-        position.x + atlasRegion.offsetX,
-        position.y + atlasRegion.offsetY,
+        sprite.atlasRegion.getTexture(),
+        position.x + sprite.atlasRegion.offsetX,
+        position.y + sprite.atlasRegion.offsetY,
         0,
         0,
         width,
@@ -32,11 +32,11 @@ public class RenderUtils {
         2,
         2,
         0,
-        atlasRegion.getRegionX(),
-        atlasRegion.getRegionY(),
+        sprite.atlasRegion.getRegionX(),
+        sprite.atlasRegion.getRegionY(),
         width,
         height,
-        false,
-        false);
+        sprite.flipX,
+        sprite.flipY);
   }
 }

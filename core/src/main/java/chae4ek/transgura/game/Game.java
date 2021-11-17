@@ -50,6 +50,7 @@ public final class Game extends ApplicationAdapter {
 
   @Override
   public void dispose() {
+    scene.world.dispose();
     scene = null;
     ResourceLoader.dispose();
   }
@@ -70,6 +71,7 @@ public final class Game extends ApplicationAdapter {
       scene.updateAndFixedUpdate(fixedUpdateCount);
     } catch (final SceneExit exit) {
       if (nextSceneCreator != null) {
+        scene.world.dispose();
         ResourceLoader.unloadSceneResources();
         nextSceneCreator.get();
         sceneStartTime = System.nanoTime();

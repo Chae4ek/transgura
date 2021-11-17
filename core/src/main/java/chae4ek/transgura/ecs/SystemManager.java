@@ -52,19 +52,16 @@ public final class SystemManager {
 
   /** Remove all systems of this system manager if they present */
   void removeAllSystemsIfPresent(final Entity parentEntity) {
-    entitySystems.computeIfPresent(
-        parentEntity,
-        (entity, systems) -> {
-          for (final System system : systems) {
-            this.systems.compute(
-                system,
-                (s, i) -> {
-                  int i0 = i.intValue();
-                  return i0 == 1 ? null : --i0;
-                });
-          }
-          return null;
-        });
+    final Set<System> systems = entitySystems.remove(parentEntity);
+    if (systems != null)
+      for (final System system : systems) {
+        this.systems.compute( // if it isn't present it's a bug
+            system,
+            (s, i) -> {
+              int i0 = i;
+              return i0 == 1 ? null : --i0;
+            });
+      }
   }
 
   /** Remove the system of this system manager */
@@ -73,10 +70,10 @@ public final class SystemManager {
             parentEntity,
             (parent, systems) -> {
               if (systems.remove(system)) {
-                this.systems.compute(
+                this.systems.compute( // if it isn't present it's a bug
                     system,
                     (s, i) -> {
-                      int i0 = i.intValue();
+                      int i0 = i;
                       return i0 == 1 ? null : --i0;
                     });
               } else {
@@ -111,6 +108,7 @@ public final class SystemManager {
    * at any time in your system script
    */
   public void updateAndFixedUpdate(int fixedUpdateCount) {
+    // TODO: make final
     final Array<ForkJoinTask<?>> tasks = new Array<>(false, GameSettings.AVG_UPDATE_TASKS);
     final Set<System> allSystems = systems.keySet();
     // simple update:

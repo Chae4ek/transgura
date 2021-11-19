@@ -1,11 +1,13 @@
 package chae4ek.transgura.ecs;
 
+import chae4ek.transgura.ecs.util.DeferredEvent;
+import chae4ek.transgura.ecs.util.NonConcurrent;
 import chae4ek.transgura.ecs.util.SetGuard;
 import chae4ek.transgura.game.Game;
 import chae4ek.transgura.game.GameSettings;
 import chae4ek.transgura.game.Scene;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Entities can contain only one instance of a component implementation, but at the same time the
@@ -27,21 +29,23 @@ public abstract class MultipleComponent {
 
   public MultipleComponent() {
     scene = Game.getScene();
-    parentEntitiesOrigin = ConcurrentHashMap.newKeySet(GameSettings.AVG_PARENTS_PER_COMPONENT);
+    parentEntitiesOrigin = new HashSet<>(GameSettings.AVG_PARENTS_PER_COMPONENT);
     parentEntities = new SetGuard<>(parentEntitiesOrigin);
   }
 
   /** Bind a component to its parent entity */
+  @NonConcurrent
   void bind(final Entity parentEntity) {
     parentEntitiesOrigin.add(parentEntity);
   }
 
-  /** @return parent entities origin set */
+  /** @return the parent entities origin set of this component */
   final Set<Entity> getParentEntitiesOrigin() {
     return parentEntitiesOrigin;
   }
 
   /** Destroy this component */
+  @NonConcurrent
   void destroyThis() {
     // it's implemented in an overriden method to optimize this cycle
     // for (final Entity parent : parentEntitiesOrigin) parent.removeComponent(this);
@@ -51,10 +55,12 @@ public abstract class MultipleComponent {
    * Destroy this component and all associated with it resources. This method adds deferred event,
    * so this component will destroy after the current loop
    */
+  @DeferredEvent
   public final void destroy() {
     scene.systemManager.addDeferredEvent(this::destroyThis);
   }
 
+  /** @return the parent entities set of this component */
   public final SetGuard<Entity> getParentEntities() {
     return parentEntities;
   }

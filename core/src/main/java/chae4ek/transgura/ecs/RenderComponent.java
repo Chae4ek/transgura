@@ -1,5 +1,6 @@
 package chae4ek.transgura.ecs;
 
+import chae4ek.transgura.ecs.util.DeferredEvent;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 
@@ -24,8 +25,9 @@ public abstract class RenderComponent extends MultipleComponent {
   }
 
   /** Set the priority for rendering */
+  @DeferredEvent
   public final void setZOrder(final int zOrder) {
-    scene.renderManager.changeZOrder(this, zOrder);
+    scene.systemManager.addDeferredEvent(() -> scene.renderManager.changeZOrder(this, zOrder));
   }
 
   /**

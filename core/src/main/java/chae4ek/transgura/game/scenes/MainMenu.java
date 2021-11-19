@@ -22,7 +22,9 @@ public class MainMenu extends Scene {
 
     new GameObject(new Menu());
 
-    new GameObject(new Position(), new Sprite(testBlock));
+    final var s = new Sprite(testBlock);
+    s.destroy(); // TODO: hmm... it's ok
+    new GameObject(new Position(), s);
     new GameObject(new Position(100, 100), new Sprite(wood));
     new GameObject(new Position(150, 100), new Sprite(1, wood), new PlayerController());
 

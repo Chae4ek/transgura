@@ -1,14 +1,17 @@
 package chae4ek.transgura.ecs;
 
+import chae4ek.transgura.ecs.util.NonConcurrent;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 import chae4ek.transgura.game.GameSettings;
 import com.badlogic.gdx.utils.Array;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 
@@ -23,11 +26,10 @@ public final class SystemManager {
           null,
           true);
 
-  private final Map<Entity, Set<System>> entitySystems = new ConcurrentHashMap<>();
-  private final Map<System, Integer> systems = new ConcurrentHashMap<>();
+  private final Map<Entity, Set<System>> entitySystems = new HashMap<>();
+  private final Map<System, Integer> systems = new HashMap<>();
   /** Non-final for fast clear only */
-  private Set<Runnable> deferredEvents =
-      ConcurrentHashMap.newKeySet(GameSettings.AVG_DEFERRED_EVENTS);
+  private Queue<Runnable> deferredEvents = new ConcurrentLinkedQueue<>();
 
   /** Add a deferred event that will run after all updates */
   void addDeferredEvent(final Runnable event) {
@@ -35,6 +37,7 @@ public final class SystemManager {
   }
 
   /** Add a system to this system manager */
+  @NonConcurrent
   void addSystem(final Entity parentEntity, final System system) {
     entitySystems.compute(
         parentEntity,
@@ -51,6 +54,7 @@ public final class SystemManager {
   }
 
   /** Remove all systems of this system manager if they present */
+  @NonConcurrent
   void removeAllSystemsIfPresent(final Entity parentEntity) {
     final Set<System> systems = entitySystems.remove(parentEntity);
     if (systems != null)
@@ -65,6 +69,7 @@ public final class SystemManager {
   }
 
   /** Remove the system of this system manager */
+  @NonConcurrent
   void removeSystem(final Entity parentEntity, final System system) {
     if (entitySystems.computeIfPresent(
             parentEntity,
@@ -108,6 +113,7 @@ public final class SystemManager {
    * at any time in your system script
    */
   public void updateAndFixedUpdate(int fixedUpdateCount) {
+    runDeferredEvents();
     // TODO: make final
     final Array<ForkJoinTask<?>> tasks = new Array<>(false, GameSettings.AVG_UPDATE_TASKS);
     final Set<System> allSystems = systems.keySet();
@@ -148,14 +154,11 @@ public final class SystemManager {
     }
   }
 
-  /** Run all deferred events: destroying */
+  /** Run all deferred events */
   private void runDeferredEvents() {
-    final Iterator<Runnable> it = deferredEvents.iterator();
-    if (it.hasNext()) {
-      do {
-        it.next().run();
-      } while (it.hasNext());
-      deferredEvents = ConcurrentHashMap.newKeySet(GameSettings.AVG_DEFERRED_EVENTS);
+    if (!deferredEvents.isEmpty()) {
+      for (final Runnable event : deferredEvents) event.run();
+      deferredEvents = new ConcurrentLinkedQueue<>();
     }
   }
 

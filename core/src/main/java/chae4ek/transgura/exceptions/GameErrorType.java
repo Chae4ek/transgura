@@ -13,6 +13,8 @@ public enum GameErrorType {
   ENTITY_HAS_NOT_RENDER_COMPONENT("The entity has not a render component"),
   RENDER_COMPONENT_HAS_BEEN_REPLACED(
       "The render component had already existed, so it was replaced"),
+  RENDER_COMPONENT_Z_ORDER_IS_THE_SAME(
+      "The render component's priority for rendering (Z order) has not change"),
 
   // Entity
   COMPONENT_DOES_NOT_EXIST("The component doesn't exist"),

@@ -4,10 +4,8 @@ import chae4ek.transgura.ecs.util.NonConcurrent;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 import chae4ek.transgura.game.GameSettings;
-import com.badlogic.gdx.utils.Array;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -30,6 +28,8 @@ public final class SystemManager {
   private final Map<System, Integer> systems = new HashMap<>();
   /** Non-final for fast clear only */
   private Queue<Runnable> deferredEvents = new ConcurrentLinkedQueue<>();
+
+  private ForkJoinTask<?>[] tasksToUpdate = new ForkJoinTask<?>[12];
 
   /** Add a deferred event that will run after all updates */
   void addDeferredEvent(final Runnable event) {
@@ -114,42 +114,43 @@ public final class SystemManager {
    */
   public void updateAndFixedUpdate(int fixedUpdateCount) {
     runDeferredEvents();
-    // TODO: make final
-    final Array<ForkJoinTask<?>> tasks = new Array<>(false, GameSettings.AVG_UPDATE_TASKS);
     final Set<System> allSystems = systems.keySet();
     // simple update:
-    int extraCapacityNeeded = 0;
+    int taskCount = 0, extraCapacityNeeded = 0;
     for (final System system : allSystems) {
       if (system.isEnabled) {
-        if (system.isUpdateEnabled()) tasks.add(pool.submit(system::update));
+        if (system.isUpdateEnabled()) {
+          if (taskCount == tasksToUpdate.length) setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
+          tasksToUpdate[taskCount++] = pool.submit(system::update);
+        }
         if (system.isFixedUpdateEnabled()) ++extraCapacityNeeded;
       }
     }
     // simple update and first fixed update are invoked together to accelerate:
     if (fixedUpdateCount > 0) {
       --fixedUpdateCount;
-      tasks.ensureCapacity(extraCapacityNeeded);
+      if (taskCount + extraCapacityNeeded > tasksToUpdate.length) {
+        setSizeOfTasksToUpdate(taskCount + extraCapacityNeeded);
+      }
       for (final System system : allSystems) {
         if (system.isEnabled && system.isFixedUpdateEnabled()) {
-          tasks.add(pool.submit(system::fixedUpdate));
+          if (taskCount == tasksToUpdate.length) setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
+          tasksToUpdate[taskCount++] = pool.submit(system::fixedUpdate);
         }
       }
     }
-    for (final ForkJoinTask<?> task : tasks) task.join();
+    while (taskCount > 0) tasksToUpdate[--taskCount].join();
     runDeferredEvents();
 
     // other fixed updates:
     for (; fixedUpdateCount > 0; --fixedUpdateCount) {
-      int i = 0;
       for (final System system : allSystems) {
         if (system.isEnabled && system.isFixedUpdateEnabled()) {
-          if (i < tasks.size) tasks.set(i, pool.submit(system::fixedUpdate));
-          else tasks.add(pool.submit(system::fixedUpdate));
-          ++i;
+          if (taskCount == tasksToUpdate.length) setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
+          tasksToUpdate[taskCount++] = pool.submit(system::fixedUpdate);
         }
       }
-      final Iterator<ForkJoinTask<?>> it = tasks.iterator();
-      for (; i > 0; --i) it.next().join();
+      while (taskCount > 0) tasksToUpdate[--taskCount].join();
       runDeferredEvents();
     }
   }
@@ -160,6 +161,12 @@ public final class SystemManager {
       for (final Runnable event : deferredEvents) event.run();
       deferredEvents = new ConcurrentLinkedQueue<>();
     }
+  }
+
+  private void setSizeOfTasksToUpdate(final int newSize) {
+    final ForkJoinTask<?>[] tasks = tasksToUpdate;
+    tasksToUpdate = new ForkJoinTask<?>[newSize];
+    java.lang.System.arraycopy(tasks, 0, tasksToUpdate, 0, tasks.length);
   }
 
   @Override

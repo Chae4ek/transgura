@@ -1,6 +1,6 @@
 package chae4ek.transgura.ecs;
 
-import chae4ek.transgura.ecs.util.DeferredEvent;
+import chae4ek.transgura.ecs.util.annotations.DeferredEvent;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 

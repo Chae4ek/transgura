@@ -2,13 +2,13 @@ package chae4ek.transgura.ecs.component;
 
 import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.RenderComponent;
-import chae4ek.transgura.ecs.util.RenderUtils;
+import chae4ek.transgura.ecs.util.render.RenderUtils;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 
 public class AnimatedSprite extends RenderComponent {
 
-  public final Animation<Sprite> animation;
+  private final Animation<Sprite> animation;
 
   public AnimatedSprite(
       final float frameDurationInSec, final PlayMode playMode, final Sprite... spriteFrames) {

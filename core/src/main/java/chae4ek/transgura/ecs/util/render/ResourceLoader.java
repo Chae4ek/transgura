@@ -1,4 +1,4 @@
-package chae4ek.transgura.ecs.util;
+package chae4ek.transgura.ecs.util.render;
 
 import chae4ek.transgura.ecs.util.resources.SpriteBatchType;
 import chae4ek.transgura.ecs.util.resources.TextureType;

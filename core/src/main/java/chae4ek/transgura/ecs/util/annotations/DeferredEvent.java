@@ -1,4 +1,4 @@
-package chae4ek.transgura.ecs.util;
+package chae4ek.transgura.ecs.util.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

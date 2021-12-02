@@ -1,6 +1,7 @@
 package chae4ek.transgura.game;
 
-import chae4ek.transgura.ecs.util.ResourceLoader;
+import chae4ek.transgura.ecs.util.input.InputProcessor;
+import chae4ek.transgura.ecs.util.render.ResourceLoader;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.game.scenes.MainMenu;
 import com.badlogic.gdx.ApplicationAdapter;
@@ -44,13 +45,14 @@ public final class Game extends ApplicationAdapter {
 
   @Override
   public void create() {
+    InputProcessor.init();
     new MainMenu();
     sceneStartTime = System.nanoTime();
   }
 
   @Override
   public void dispose() {
-    scene.world.dispose();
+    scene.systemManager.world.dispose();
     scene = null;
     ResourceLoader.dispose();
   }
@@ -68,10 +70,11 @@ public final class Game extends ApplicationAdapter {
 
     scene.sceneLifetimeInSec = 1e-9f * (System.nanoTime() - sceneStartTime);
     try {
-      scene.updateAndFixedUpdate(fixedUpdateCount);
+      scene.systemManager.updateAndFixedUpdate(fixedUpdateCount);
     } catch (final SceneExit exit) {
       if (nextSceneCreator != null) {
-        scene.world.dispose();
+        InputProcessor.postUpdate();
+        scene.systemManager.world.dispose();
         ResourceLoader.unloadSceneResources();
         nextSceneCreator.get();
         sceneStartTime = System.nanoTime();
@@ -79,13 +82,14 @@ public final class Game extends ApplicationAdapter {
       }
       return;
     }
+    InputProcessor.postUpdate();
 
-    scene.render();
+    scene.renderManager.renderAll();
   }
 
   @Override
   public void resize(final int width, final int height) {
-    if (scene != null) scene.resize(width, height);
+    if (scene != null) Scene.viewport.update(width, height, true);
   }
 
   /** Using to exit a scene */

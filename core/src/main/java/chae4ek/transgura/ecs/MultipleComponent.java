@@ -1,8 +1,8 @@
 package chae4ek.transgura.ecs;
 
-import chae4ek.transgura.ecs.util.DeferredEvent;
-import chae4ek.transgura.ecs.util.NonConcurrent;
-import chae4ek.transgura.ecs.util.SetGuard;
+import chae4ek.transgura.ecs.util.annotations.DeferredEvent;
+import chae4ek.transgura.ecs.util.annotations.NonConcurrent;
+import chae4ek.transgura.ecs.util.structures.SetGuard;
 import chae4ek.transgura.game.Game;
 import chae4ek.transgura.game.GameSettings;
 import chae4ek.transgura.game.Scene;

@@ -1,7 +1,7 @@
 package chae4ek.transgura.ecs;
 
-import chae4ek.transgura.ecs.util.NonConcurrent;
-import chae4ek.transgura.ecs.util.RenderUtils;
+import chae4ek.transgura.ecs.util.annotations.NonConcurrent;
+import chae4ek.transgura.ecs.util.render.RenderUtils;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 import chae4ek.transgura.game.GameSettings;
@@ -95,9 +95,11 @@ public final class RenderManager {
     final Set<RenderComponent> renderComponents = entityComponents.remove(parentEntity);
     if (renderComponents != null)
       for (final RenderComponent renderComponent : renderComponents) {
-        this.renderComponents.compute( // if it isn't present it's a bug
+        this.renderComponents.compute(
             renderComponent.zOrder,
             (z, rcomps) -> {
+              // if it isn't present it's a bug:
+              assert rcomps != null;
               rcomps.remove(renderComponent);
               return rcomps.isEmpty() ? null : rcomps;
             });
@@ -111,9 +113,11 @@ public final class RenderManager {
             parentEntity,
             (parent, components) -> {
               if (components.remove(renderComponent)) {
-                renderComponents.compute( // if it isn't present it's a bug
+                renderComponents.compute(
                     renderComponent.zOrder,
                     (z, rcomps) -> {
+                      // if it isn't present it's a bug:
+                      assert rcomps != null;
                       rcomps.remove(renderComponent);
                       return rcomps.isEmpty() ? null : rcomps;
                     });

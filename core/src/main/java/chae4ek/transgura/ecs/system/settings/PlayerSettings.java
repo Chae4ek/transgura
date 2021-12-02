@@ -1,12 +1,12 @@
 package chae4ek.transgura.ecs.system.settings;
 
-import com.badlogic.gdx.Input.Keys;
+import chae4ek.transgura.ecs.util.input.Key;
 
 public class PlayerSettings {
-  public static int PLAYER_LEFT = Keys.A;
-  public static int PLAYER_RIGHT = Keys.D;
-  public static int PLAYER_UP = Keys.W;
-  public static int PLAYER_DOWN = Keys.S;
+  public static Key PLAYER_LEFT = Key.A;
+  public static Key PLAYER_RIGHT = Key.D;
+  public static Key PLAYER_UP = Key.W;
+  public static Key PLAYER_DOWN = Key.S;
 
-  public static float SPEED = 200f;
+  public static float SPEED = 200000f;
 }

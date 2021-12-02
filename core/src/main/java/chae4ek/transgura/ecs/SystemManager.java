@@ -1,9 +1,11 @@
 package chae4ek.transgura.ecs;
 
-import chae4ek.transgura.ecs.util.NonConcurrent;
+import chae4ek.transgura.ecs.util.annotations.NonConcurrent;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 import chae4ek.transgura.game.GameSettings;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,6 +26,8 @@ public final class SystemManager {
           null,
           true);
 
+  public final World world = new World(new Vector2(0f, -9.81f), true);
+
   private final Map<Entity, Set<System>> entitySystems = new HashMap<>();
   private final Map<System, Integer> systems = new HashMap<>();
   /** Non-final for fast clear only */
@@ -31,8 +35,8 @@ public final class SystemManager {
 
   private ForkJoinTask<?>[] tasksToUpdate = new ForkJoinTask<?>[12];
 
-  /** Add a deferred event that will run after all updates */
-  void addDeferredEvent(final Runnable event) {
+  /** Add a deferred event that will run after all updates in a non-parallel context */
+  public void addDeferredEvent(final Runnable event) {
     deferredEvents.add(event);
   }
 
@@ -59,9 +63,11 @@ public final class SystemManager {
     final Set<System> systems = entitySystems.remove(parentEntity);
     if (systems != null)
       for (final System system : systems) {
-        this.systems.compute( // if it isn't present it's a bug
+        this.systems.compute(
             system,
             (s, i) -> {
+              // if it isn't present it's a bug:
+              @SuppressWarnings("ConstantConditions")
               int i0 = i;
               return i0 == 1 ? null : --i0;
             });
@@ -75,9 +81,11 @@ public final class SystemManager {
             parentEntity,
             (parent, systems) -> {
               if (systems.remove(system)) {
-                this.systems.compute( // if it isn't present it's a bug
+                this.systems.compute(
                     system,
                     (s, i) -> {
+                      // if it isn't present it's a bug:
+                      @SuppressWarnings("ConstantConditions")
                       int i0 = i;
                       return i0 == 1 ? null : --i0;
                     });
@@ -97,7 +105,7 @@ public final class SystemManager {
    * @return the pool to fork/join custom tasks
    * @deprecated it is not safe
    */
-  @Deprecated
+  @Deprecated(forRemoval = true)
   public ForkJoinPool getPool() {
     return pool;
   }
@@ -105,15 +113,17 @@ public final class SystemManager {
   /**
    * Invoke update() and fixedUpdate() in all enabled systems.
    *
-   * <p>This method guarantees that any entity/component/system enabling/disabling/destroying/etc
-   * are parallel and thread-safe, but their updates are unordered.
+   * <p>This method guarantees that any entity/component/system enabling/disabling/etc are parallel
+   * and thread-safe, but their updates are unordered.
    *
-   * <p>Well, you can be sure that any game object will be destroyed after update, but
-   * enable/disable/adding/checks/etc are invoked during the update. Anyway you can call any method
-   * at any time in your system script
+   * <p>Well, you can be sure that any game object will be created/destroyed after update, but
+   * enable/disable/checks/etc are invoked during the update. Anyway you can call any method at any
+   * time in your system script or defer it using {@link #addDeferredEvent}
    */
   public void updateAndFixedUpdate(int fixedUpdateCount) {
     runDeferredEvents();
+    world.step(GameSettings.timeStepForPhysics, 6, 2);
+
     final Set<System> allSystems = systems.keySet();
     // simple update:
     int taskCount = 0, extraCapacityNeeded = 0;

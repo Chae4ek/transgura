@@ -1,10 +1,10 @@
 package chae4ek.transgura.ecs.system;
 
 import chae4ek.transgura.ecs.System;
+import chae4ek.transgura.ecs.util.input.InputProcessor;
+import chae4ek.transgura.ecs.util.input.Key;
 import chae4ek.transgura.game.Game;
 import chae4ek.transgura.game.scenes.MainMenu;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 
 public class Menu extends System {
 
@@ -20,14 +20,14 @@ public class Menu extends System {
 
   @Override
   public void update() {
-    if (Gdx.input.isKeyPressed(Keys.ESCAPE)) Game.setScene(null);
-    if (Gdx.input.isKeyJustPressed(Keys.SPACE)) Game.setScene(MainMenu::new);
+    if (InputProcessor.isKeyDown(Key.ESCAPE)) Game.setScene(null);
+    if (InputProcessor.isKeyJustDownNow(Key.SPACE)) Game.setScene(MainMenu::new);
   }
 
   /** @deprecated only for testing */
   @Deprecated(forRemoval = true)
   @Override
   public void fixedUpdate() {
-    if (Gdx.input.isKeyPressed(Keys.ENTER)) Game.setScene(null);
+    if (InputProcessor.isKeyDown(Key.ENTER)) Game.setScene(null);
   }
 }

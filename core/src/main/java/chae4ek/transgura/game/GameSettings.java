@@ -3,6 +3,7 @@ package chae4ek.transgura.game;
 /** You can change these values at runtime if you know something more */
 public class GameSettings {
   public static final float fixedDeltaTime = 1f / 25f;
+  public static final float timeStepForPhysics = 1f / 60f;
 
   public static int AVG_SYSTEMS_PER_ENTITY = 3;
 

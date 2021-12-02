@@ -1,4 +1,4 @@
-package chae4ek.transgura.ecs.util;
+package chae4ek.transgura.ecs.util.structures;
 
 import java.util.Collection;
 import java.util.Iterator;

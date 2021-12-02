@@ -2,12 +2,12 @@ package chae4ek.transgura.ecs.component;
 
 import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.RenderComponent;
-import chae4ek.transgura.ecs.util.RenderUtils;
+import chae4ek.transgura.ecs.util.render.RenderUtils;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 
 public class Sprite extends RenderComponent {
 
-  public final AtlasRegion atlasRegion;
+  private final AtlasRegion atlasRegion;
   public boolean flipX;
   public boolean flipY;
 
@@ -24,6 +24,10 @@ public class Sprite extends RenderComponent {
     this.atlasRegion = atlasRegion;
     this.flipX = flipX;
     this.flipY = flipY;
+  }
+
+  public AtlasRegion getAtlasRegion() {
+    return atlasRegion;
   }
 
   @Override

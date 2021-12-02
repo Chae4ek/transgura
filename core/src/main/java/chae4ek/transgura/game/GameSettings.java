@@ -4,6 +4,8 @@ package chae4ek.transgura.game;
 public class GameSettings {
   /** Pixels Per Meter */
   public static final float PPM = 32f;
+  /** Pixels Per Meter for colliders */
+  public static final float PPM_2 = PPM + 1f;
 
   public static final float fixedDeltaTime = 1f / 25f;
   public static final float timeStepForPhysics = 1f / 60f;

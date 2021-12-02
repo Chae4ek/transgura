@@ -83,6 +83,7 @@ public class ResourceLoader implements AssetErrorListener {
     return spriteBatches.values();
   }
 
+  // TODO: make package-private for Game only
   /** Unload some scene's textures if they are loaded */
   public static void unloadSceneResources() {
     for (final TextureAtlas textureAtlas : textureAtlases.values()) textureAtlas.dispose();
@@ -91,6 +92,7 @@ public class ResourceLoader implements AssetErrorListener {
     assetManager.clear();
   }
 
+  // TODO: make package-private for Game only
   /** Unload and dispose all textures and other component */
   public static void dispose() {
     for (final SpriteBatch spriteBatch : spriteBatches.values()) spriteBatch.dispose();

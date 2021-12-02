@@ -2,6 +2,7 @@ package chae4ek.transgura.ecs.util.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Target;
 
 /**
@@ -9,4 +10,5 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+@Inherited
 public @interface DeferredEvent {}

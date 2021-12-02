@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 /** This method is not thread-safe */
 @Documented
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @Inherited
 public @interface NonConcurrent {}

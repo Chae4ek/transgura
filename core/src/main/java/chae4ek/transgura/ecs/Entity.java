@@ -10,7 +10,7 @@ import chae4ek.transgura.game.Scene;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Entity {
+public class Entity {
 
   private static final transient GameAlert gameAlert = new GameAlert(Entity.class);
 
@@ -24,6 +24,17 @@ public abstract class Entity {
     scene = Game.getScene();
     components = new HashMap<>(GameSettings.AVG_COMPONENTS_PER_ENTITY);
     scene.systemManager.addDeferredEvent(() -> scene.entityManager.addEntity(this));
+  }
+
+  @DeferredEvent
+  public Entity(final MultipleComponent... components) {
+    scene = Game.getScene();
+    this.components = new HashMap<>(GameSettings.AVG_COMPONENTS_PER_ENTITY);
+    scene.systemManager.addDeferredEvent(
+        () -> {
+          scene.entityManager.addEntity(this);
+          for (final MultipleComponent comp : components) addComponentUnsafe(comp);
+        });
   }
 
   /** Remove a component */
@@ -41,20 +52,36 @@ public abstract class Entity {
    */
   @DeferredEvent
   public final void addComponent(final MultipleComponent component) {
+    scene.systemManager.addDeferredEvent(() -> addComponentUnsafe(component));
+  }
+
+  /**
+   * Add components (at least 2)
+   *
+   * @param components the unique components
+   */
+  @DeferredEvent
+  public final void addComponent(
+      final MultipleComponent component, final MultipleComponent... components) {
     scene.systemManager.addDeferredEvent(
         () -> {
-          component.bind(this);
-          final MultipleComponent old = components.put(component.getClass(), component);
-          if (old != null) {
-            gameAlert.warn(
-                GameErrorType.COMPONENT_ALREADY_EXISTS, "old: " + old + ", new: " + component);
-            if (!old.getParentEntitiesOrigin().remove(this)) {
-              gameAlert.warn(
-                  GameErrorType.COMPONENT_HAS_NOT_PARENT_ENTITY,
-                  "entity: " + this + ", component: " + old);
-            }
-          }
+          addComponentUnsafe(component);
+          for (final MultipleComponent comp : components) addComponentUnsafe(comp);
         });
+  }
+
+  @NonConcurrent
+  private void addComponentUnsafe(final MultipleComponent component) {
+    component.bind(this);
+    final MultipleComponent old = components.put(component.getClass(), component);
+    if (old != null) {
+      gameAlert.warn(GameErrorType.COMPONENT_ALREADY_EXISTS, "old: " + old + ", new: " + component);
+      if (!old.getParentEntitiesOrigin().remove(this)) {
+        gameAlert.warn(
+            GameErrorType.COMPONENT_HAS_NOT_PARENT_ENTITY,
+            "entity: " + this + ", component: " + old);
+      }
+    }
   }
 
   /**
@@ -110,7 +137,7 @@ public abstract class Entity {
         .toString();
   }
 
-  /** Each instance of an entity is unique */
+  /** Each instance of an entity is unique. This is necessary to avoid thread-safe indexes */
   @Override
   public final boolean equals(final Object o) {
     return this == o;

@@ -3,6 +3,7 @@ package chae4ek.transgura.game;
 import chae4ek.transgura.ecs.EntityManager;
 import chae4ek.transgura.ecs.RenderManager;
 import chae4ek.transgura.ecs.SystemManager;
+import chae4ek.transgura.ecs.util.annotations.NonConcurrent;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
@@ -21,6 +22,7 @@ public abstract class Scene {
    * Create and start this scene. Before creating the {@link Game#scene} is set to the previous one
    * or null if this scene is the first
    */
+  @NonConcurrent
   public Scene() {
     Game.scene = this;
   }

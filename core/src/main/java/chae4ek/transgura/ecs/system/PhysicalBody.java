@@ -1,5 +1,7 @@
 package chae4ek.transgura.ecs.system;
 
+import static chae4ek.transgura.game.GameSettings.PPM;
+
 import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.System;
 import chae4ek.transgura.ecs.component.Position;
@@ -7,6 +9,7 @@ import chae4ek.transgura.ecs.util.annotations.DeferredEvent;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Null;
 
@@ -23,6 +26,17 @@ public class PhysicalBody extends System {
           body = scene.systemManager.world.createBody(bodyDef);
           body.createFixture(shape, density);
         });
+  }
+
+  /** @return a new BodyDef with specified parameters */
+  public static BodyDef createBodyDef(final BodyType bodyType, final float x, final float y) {
+    final BodyDef bodyDef = new BodyDef();
+    bodyDef.type = bodyType;
+    bodyDef.gravityScale = 0f;
+    bodyDef.fixedRotation = true;
+    bodyDef.linearDamping = 1f;
+    bodyDef.position.set(x / PPM, y / PPM);
+    return bodyDef;
   }
 
   /** @return null until the next update frame */

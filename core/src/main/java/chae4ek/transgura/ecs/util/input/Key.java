@@ -21,6 +21,7 @@ public enum Key {
 
   final int keycode;
   boolean isDown;
+  boolean isJustDown;
   boolean isReleased = true;
   boolean isJustReleased;
 

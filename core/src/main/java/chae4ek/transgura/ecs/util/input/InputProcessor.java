@@ -8,7 +8,7 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
 
   private static final InputProcessor instance = new InputProcessor();
 
-  private static final Set<Key> keysToJustRelease = EnumSet.noneOf(Key.class);
+  private static final Set<Key> keysThatJustChanged = EnumSet.noneOf(Key.class);
 
   private InputProcessor() {}
 
@@ -19,10 +19,10 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
 
   /** Update keys that "just" changed */
   public static void postUpdate() {
-    for (final Key key : keysToJustRelease) {
-      key.isJustReleased = false;
+    for (final Key key : keysThatJustChanged) {
+      key.isJustDown = key.isJustReleased = false;
     }
-    keysToJustRelease.clear();
+    keysThatJustChanged.clear();
   }
 
   /** @return true if a key is down */
@@ -34,11 +34,9 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
    * It will return true once, in the next update frames it will return false
    *
    * @return true if a key is just down right now
-   * @deprecated it's not recommended to use cause it doesn't work sometimes. TODO: fix
    */
-  @Deprecated
   public static boolean isKeyJustDownNow(final Key key) {
-    return Gdx.input.isKeyJustPressed(key.keycode);
+    return key.isJustDown;
   }
 
   /** @return true if a key is released */
@@ -59,9 +57,9 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
   public boolean keyDown(final int keycode) {
     final Key key = Key.getKey(keycode);
     if (key != null) {
-      key.isDown = true;
-      key.isReleased = false;
-      if (keysToJustRelease.remove(key)) key.isJustReleased = false;
+      key.isDown = key.isJustDown = true;
+      key.isReleased = key.isJustReleased = false;
+      keysThatJustChanged.add(key);
       return true;
     }
     return false;
@@ -71,9 +69,9 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
   public boolean keyUp(final int keycode) {
     final Key key = Key.getKey(keycode);
     if (key != null) {
-      key.isDown = false;
+      key.isDown = key.isJustDown = false;
       key.isReleased = key.isJustReleased = true;
-      keysToJustRelease.add(key);
+      keysThatJustChanged.add(key);
       return true;
     }
     return false;

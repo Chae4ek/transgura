@@ -1,5 +1,7 @@
 package chae4ek.transgura.ecs.entity;
 
+import static chae4ek.transgura.game.GameSettings.PPM;
+
 import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.component.Sprite;
@@ -16,19 +18,17 @@ public class Player extends Entity {
   public Player() {
     addComponent(new Sprite(1, ResourceLoader.loadAtlasRegion(TextureType.WOOD)));
     addComponent(new PlayerController());
+    addComponent(new Position());
 
     final BodyDef bodyDef = new BodyDef();
     bodyDef.type = BodyType.DynamicBody;
     bodyDef.gravityScale = 0f;
     bodyDef.fixedRotation = true;
     bodyDef.linearDamping = 1f;
-    bodyDef.position.set(150f, 100f);
-
-    addComponent(new Position(bodyDef.position));
+    bodyDef.position.set(150f / PPM, 100f / PPM);
 
     final PolygonShape shape = new PolygonShape();
-    // TODO: render scaling by PPM =32
-    shape.setAsBox(16f, 16f);
+    shape.setAsBox(32f / 2f / PPM, 32f / 2f / PPM);
 
     addComponent(new PhysicalBody(bodyDef, shape, 1f));
 

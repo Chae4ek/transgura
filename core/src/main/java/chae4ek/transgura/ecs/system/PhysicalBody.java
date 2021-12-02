@@ -4,6 +4,7 @@ import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.System;
 import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.util.annotations.DeferredEvent;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -13,8 +14,6 @@ public class PhysicalBody extends System {
 
   /** This is null until the next update frame */
   @Null private Body body;
-
-  private boolean isSet;
 
   /** @param shape you should dispose this yourself as a deferred event */
   @DeferredEvent
@@ -44,13 +43,9 @@ public class PhysicalBody extends System {
 
   @Override
   public void update() {
-    if (isSet) body.getPosition();
-    else {
-      // for some reason the position cannot update until the world is updated for the first time
-      isSet = true;
-      for (final Entity parent : getParentEntities()) {
-        parent.getComponent(Position.class).setVecRef(body.getPosition());
-      }
+    final Vector2 pos = body.getPosition();
+    for (final Entity parent : getParentEntities()) {
+      parent.getComponent(Position.class).setVecRef(pos, true);
     }
   }
 }

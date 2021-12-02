@@ -8,5 +8,5 @@ public class PlayerSettings {
   public static Key PLAYER_UP = Key.W;
   public static Key PLAYER_DOWN = Key.S;
 
-  public static float SPEED = 200000f;
+  public static float SPEED = 10f;
 }

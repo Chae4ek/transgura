@@ -25,7 +25,6 @@ public class MainMenu extends Scene {
     final AtlasRegion wood = ResourceLoader.loadAtlasRegion(TextureType.WOOD);
 
     new Entity(new Menu());
-    new Player(150f, 100f); // TODO: don't work if move it to the bottom (broken Set probably)
 
     final var s = new Sprite(testBlock);
     s.destroy(); // TODO: hmm... it's ok
@@ -34,12 +33,16 @@ public class MainMenu extends Scene {
     final PolygonShape shape = new PolygonShape();
     shape.setAsBox(wood.getRegionWidth() / PPM_2, wood.getRegionHeight() / PPM_2);
 
-    new SolidBlock(100f, 100f, wood, shape);
-    new SolidBlock(200f, 100f, wood, shape);
-    new Entity(
-        new Position(200, 200),
+    new SolidBlock(100f, 100f, shape, wood);
+    new SolidBlock(200f, 100f, shape, wood);
+    new SolidBlock(
+        200f,
+        200f,
+        shape,
         new AnimatedSprite(0.5f, PlayMode.LOOP, new Sprite(testBlock), new Sprite(wood)));
 
     systemManager.addDeferredEvent(shape::dispose);
+
+    new Player(150f, 100f);
   }
 }

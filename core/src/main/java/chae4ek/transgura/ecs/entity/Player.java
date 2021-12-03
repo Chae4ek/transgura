@@ -20,6 +20,7 @@ public class Player extends Entity {
     final AtlasRegion texture = ResourceLoader.loadAtlasRegion(TextureType.WOOD);
 
     final BodyDef bodyDef = PhysicalBody.createBodyDef(BodyType.DynamicBody, x, y);
+    bodyDef.linearDamping = 1.5f;
     final PolygonShape shape = new PolygonShape();
     shape.setAsBox(texture.getRegionWidth() / PPM_2, texture.getRegionHeight() / PPM_2);
 

@@ -34,7 +34,6 @@ public class PhysicalBody extends System {
     bodyDef.type = bodyType;
     bodyDef.gravityScale = 0f;
     bodyDef.fixedRotation = true;
-    bodyDef.linearDamping = 1f;
     bodyDef.position.set(x / PPM, y / PPM);
     return bodyDef;
   }

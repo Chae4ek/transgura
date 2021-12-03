@@ -39,4 +39,14 @@ public abstract class System extends MultipleComponent {
 
   /** Update the system logic fixed frame number */
   public void fixedUpdate() {}
+
+  @Override
+  public boolean equals(final Object o) {
+    return this == o;
+  }
+
+  @Override
+  public int hashCode() {
+    return java.lang.System.identityHashCode(this);
+  }
 }

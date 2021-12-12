@@ -9,7 +9,7 @@ import chae4ek.transgura.ecs.component.Sprite;
 import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.ecs.entity.SolidBlock;
 import chae4ek.transgura.ecs.system.Menu;
-import chae4ek.transgura.ecs.util.render.ResourceLoader;
+import chae4ek.transgura.ecs.util.resources.ResourceLoader;
 import chae4ek.transgura.ecs.util.resources.TextureType;
 import chae4ek.transgura.ecs.util.resources.TextureType.AtlasType;
 import chae4ek.transgura.game.Scene;

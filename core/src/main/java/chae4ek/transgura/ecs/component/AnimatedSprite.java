@@ -20,7 +20,7 @@ public class AnimatedSprite extends RenderComponent {
   public void draw() {
     final float time = scene.getSceneLifetimeInSec();
     for (final Entity parent : getParentEntities()) {
-      RenderUtils.drawDefault(parent.getComponent(Position.class), animation.getKeyFrame(time));
+      RenderUtils.draw(parent.getComponent(Position.class), animation.getKeyFrame(time));
     }
   }
 }

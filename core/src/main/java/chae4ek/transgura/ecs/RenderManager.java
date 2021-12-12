@@ -1,16 +1,17 @@
 package chae4ek.transgura.ecs;
 
 import chae4ek.transgura.ecs.util.annotations.NonConcurrent;
-import chae4ek.transgura.ecs.util.render.RenderUtils;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 import chae4ek.transgura.game.GameSettings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,14 +21,29 @@ import java.util.TreeMap;
 
 public final class RenderManager {
 
+  /** Sprite batch for drawing */
+  public static final SpriteBatch spriteBatch =
+      new SpriteBatch(
+          GameSettings.defaultSpriteBatchSize,
+          new ShaderProgram(GameSettings.defaultVertexShader, GameSettings.defaultFragmentShader));
+
   private static final transient GameAlert gameAlert = new GameAlert(RenderManager.class);
+
+  private static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
 
   private final ExtendViewport viewport;
   private final Map<Entity, Set<RenderComponent>> entityComponents = new HashMap<>();
   private final NavigableMap<Integer, Set<RenderComponent>> renderComponents = new TreeMap<>();
 
+  private FrameBuffer frameBuffer;
+
   public RenderManager(final ExtendViewport viewport) {
     this.viewport = viewport;
+    setNewFrameBuffer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+  }
+
+  public void setNewFrameBuffer(final int width, final int height) {
+    frameBuffer = new FrameBuffer(Format.RGBA8888, width, height, false, false);
   }
 
   /** Change the priority for rendering */
@@ -99,7 +115,6 @@ public final class RenderManager {
             renderComponent.zOrder,
             (z, rcomps) -> {
               // if it isn't present it's a bug:
-              assert rcomps != null;
               rcomps.remove(renderComponent);
               return rcomps.isEmpty() ? null : rcomps;
             });
@@ -117,7 +132,6 @@ public final class RenderManager {
                     renderComponent.zOrder,
                     (z, rcomps) -> {
                       // if it isn't present it's a bug:
-                      assert rcomps != null;
                       rcomps.remove(renderComponent);
                       return rcomps.isEmpty() ? null : rcomps;
                     });
@@ -136,25 +150,33 @@ public final class RenderManager {
 
   /** Render all render components */
   public void renderAll() {
-    Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1f);
+    Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     final Matrix4 projection = viewport.getCamera().combined;
-    final Collection<SpriteBatch> spriteBatches = RenderUtils.getSpriteBatches();
 
-    for (final SpriteBatch spriteBatch : spriteBatches) {
-      spriteBatch.setProjectionMatrix(projection);
-      spriteBatch.begin();
-    }
+    spriteBatch.setProjectionMatrix(projection);
+    spriteBatch.begin();
 
+    frameBuffer.begin();
+    Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1f);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     for (final Set<RenderComponent> renderComponents : renderComponents.values()) {
       for (final RenderComponent renderComponent : renderComponents) {
         if (renderComponent.isEnabled) renderComponent.draw();
       }
     }
+    spriteBatch.flush();
+    frameBuffer.end();
 
-    for (final SpriteBatch spriteBatch : spriteBatches) {
-      spriteBatch.end();
-    }
+    // post-processing
+    spriteBatch.setShader(GameSettings.postProcessingShader);
+    GameSettings.postProcessingSetup.run();
+
+    spriteBatch.setProjectionMatrix(SHADER_MATRIX_IDENTITY);
+    spriteBatch.draw(frameBuffer.getColorBufferTexture(), -1f, 1f, 2f, -2f);
+
+    spriteBatch.end();
+    spriteBatch.setShader(null);
   }
 }

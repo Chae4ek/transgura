@@ -1,7 +1,8 @@
 package chae4ek.transgura.game;
 
+import chae4ek.transgura.ecs.RenderManager;
 import chae4ek.transgura.ecs.util.input.InputProcessor;
-import chae4ek.transgura.ecs.util.render.ResourceLoader;
+import chae4ek.transgura.ecs.util.resources.ResourceLoader;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.game.scenes.MainMenu;
 import com.badlogic.gdx.ApplicationAdapter;
@@ -52,6 +53,7 @@ public final class Game extends ApplicationAdapter {
 
   @Override
   public void dispose() {
+    RenderManager.spriteBatch.dispose();
     scene.systemManager.world.dispose();
     scene = null;
     ResourceLoader.dispose();
@@ -89,7 +91,10 @@ public final class Game extends ApplicationAdapter {
 
   @Override
   public void resize(final int width, final int height) {
-    if (scene != null) Scene.viewport.update(width, height, true);
+    if (scene != null) {
+      Scene.viewport.update(width, height, true);
+      scene.renderManager.setNewFrameBuffer(width, height);
+    }
   }
 
   /** Using to exit a scene */

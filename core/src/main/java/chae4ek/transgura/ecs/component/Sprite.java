@@ -33,7 +33,7 @@ public class Sprite extends RenderComponent {
   @Override
   public void draw() {
     for (final Entity parent : getParentEntities()) {
-      RenderUtils.drawDefault(parent.getComponent(Position.class), this);
+      RenderUtils.draw(parent.getComponent(Position.class), this);
     }
   }
 }

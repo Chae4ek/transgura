@@ -7,7 +7,7 @@ import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.component.Sprite;
 import chae4ek.transgura.ecs.system.PhysicalBody;
 import chae4ek.transgura.ecs.system.PlayerController;
-import chae4ek.transgura.ecs.util.render.ResourceLoader;
+import chae4ek.transgura.ecs.util.resources.ResourceLoader;
 import chae4ek.transgura.ecs.util.resources.TextureType;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;

@@ -18,6 +18,10 @@ public class Position extends MultipleComponent {
     vec = new Vector2();
   }
 
+  public Position(Position position) {
+    vec = new Vector2(position.getVec());
+  }
+
   public Vector2 getVec() {
     return scaledVec == null ? vec : scaledVec;
   }

@@ -1,5 +1,6 @@
 package chae4ek.transgura.ecs;
 
+import chae4ek.transgura.ecs.system.collision.CollisionListener;
 import chae4ek.transgura.ecs.util.annotations.NonConcurrent;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
@@ -26,7 +27,8 @@ public final class SystemManager {
           null,
           true);
 
-  public final World world = new World(new Vector2(0f, -9.81f), true);
+  public final World world = new World(Vector2.Zero, true);
+  public final CollisionListener collisionListener = new CollisionListener();
 
   private final Map<Entity, Set<System>> entitySystems = new HashMap<>();
   private final Map<System, Integer> systems = new HashMap<>();
@@ -35,8 +37,12 @@ public final class SystemManager {
 
   private ForkJoinTask<?>[] tasksToUpdate = new ForkJoinTask<?>[12];
 
+  public SystemManager() {
+    world.setContactListener(collisionListener);
+  }
+
   /** Add a deferred event that will run after all updates in a non-parallel context */
-  public void addDeferredEvent(final Runnable event) {
+  void addDeferredEvent(final Runnable event) {
     deferredEvents.add(event);
   }
 
@@ -71,6 +77,9 @@ public final class SystemManager {
               int i0 = i;
               return i0 == 1 ? null : --i0;
             });
+        system.toDestroy = true;
+        system.onDestroy();
+        system.hasDestroyed = true;
       }
   }
 

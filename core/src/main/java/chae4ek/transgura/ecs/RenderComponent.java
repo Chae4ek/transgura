@@ -15,12 +15,10 @@ public abstract class RenderComponent extends MultipleComponent {
     this.zOrder = zOrder;
   }
 
-  public RenderComponent() {
-    zOrder = 0;
-  }
+  public RenderComponent() {}
 
   /** @return the priority for rendering */
-  public int getZOrder() {
+  public final int getZOrder() {
     return zOrder;
   }
 

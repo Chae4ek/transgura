@@ -16,8 +16,8 @@ public class RenderUtils {
         atlasRegion.getTexture(),
         position.getVec().x + atlasRegion.offsetX,
         position.getVec().y + atlasRegion.offsetY,
-        0,
-        0,
+        width,
+        height,
         width,
         height,
         2,
@@ -29,5 +29,32 @@ public class RenderUtils {
         height,
         sprite.flipX,
         sprite.flipY);
+  }
+
+  /** Draw an atlas region at the position */
+  public static void draw(
+      final Position position,
+      final AtlasRegion atlasRegion,
+      final boolean flipX,
+      final boolean flipY) {
+    final int width = atlasRegion.getRegionWidth();
+    final int height = atlasRegion.getRegionHeight();
+    RenderManager.spriteBatch.draw(
+        atlasRegion.getTexture(),
+        position.getVec().x + atlasRegion.offsetX,
+        position.getVec().y + atlasRegion.offsetY,
+        width,
+        height,
+        width,
+        height,
+        2,
+        2,
+        0,
+        atlasRegion.getRegionX(),
+        atlasRegion.getRegionY(),
+        width,
+        height,
+        flipX,
+        flipY);
   }
 }

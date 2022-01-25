@@ -1,35 +1,64 @@
 package chae4ek.transgura.ecs.entity;
 
-import static chae4ek.transgura.game.GameSettings.PPM_2;
+import static chae4ek.transgura.game.GameSettings.PPM;
 
 import chae4ek.transgura.ecs.Entity;
+import chae4ek.transgura.ecs.component.AnimatedSprite;
 import chae4ek.transgura.ecs.component.Position;
-import chae4ek.transgura.ecs.component.Sprite;
 import chae4ek.transgura.ecs.system.PhysicalBody;
 import chae4ek.transgura.ecs.system.PlayerController;
-import chae4ek.transgura.ecs.util.resources.ResourceLoader;
-import chae4ek.transgura.ecs.util.resources.TextureType;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import chae4ek.transgura.ecs.system.settings.PlayerSettings;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Player extends Entity {
 
   public Player(final float x, final float y) {
-    final AtlasRegion texture = ResourceLoader.loadAtlasRegion(TextureType.WOOD);
+    PlayerSettings.initResources();
 
     final BodyDef bodyDef = PhysicalBody.createBodyDef(BodyType.DynamicBody, x, y);
-    bodyDef.linearDamping = 1.5f;
+    bodyDef.linearDamping = 2.2f;
     final PolygonShape shape = new PolygonShape();
-    shape.setAsBox(texture.getRegionWidth() / PPM_2, texture.getRegionHeight() / PPM_2);
+    final float size = PlayerSettings.idle.getKeyFrames()[0].getRegionWidth() / PPM;
+    final float size2 = size - 0.2f;
+    final float corner = 0.02f;
+    final float offsetY = 0.05f;
+    // shape.setAsBox(size - 0.2f, size);
+    shape.set(
+        new float[] {
+          -size2,
+          size,
+          size2,
+          size,
+          size2,
+          corner - size2 + offsetY,
+          size2 - corner,
+          -size + offsetY,
+          corner - size2,
+          -size + offsetY,
+          -size2,
+          corner - size + offsetY
+        });
+    final PhysicalBody physicalBody = new PhysicalBody(bodyDef);
+    final Body body = physicalBody.getBody();
+    final Fixture fixture = body.createFixture(shape, 1f);
+    fixture.setFriction(0);
+    fixture.setUserData("PLAYER");
+
+    final MassData massData = body.getMassData();
+    massData.mass = 0.73851955f;
+    body.setMassData(massData);
+
+    shape.dispose();
 
     addComponent(
-        new Sprite(1, texture),
+        new AnimatedSprite(1, PlayerSettings.idle),
         new PlayerController(),
         new Position(x, y),
-        new PhysicalBody(bodyDef, shape, 1f));
-
-    scene.systemManager.addDeferredEvent(shape::dispose);
+        physicalBody);
   }
 }

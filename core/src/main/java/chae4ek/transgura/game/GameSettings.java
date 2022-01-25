@@ -4,12 +4,13 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 /** You can change these values at runtime if you know something more */
 public class GameSettings {
+
+  public static final boolean isDebugOn = true;
+
   /** Pixels Per Meter */
   public static final float PPM = 32f;
-  /** Pixels Per Meter for colliders */
-  public static final float PPM_2 = PPM + 1f;
 
-  public static final float fixedDeltaTime = 1f / 25f;
+  public static final float fixedDeltaTime = 1f / 60f;
   public static final float timeStepForPhysics = 1f / 60f;
 
   public static final int defaultSpriteBatchSize = 1000;
@@ -53,11 +54,12 @@ public class GameSettings {
               + "uniform float u_time;\n"
               + "void main() {\n"
               + "  vec2 st = v_texCoords;\n"
-              + "  st.x += sin(u_time + st.y * 30.0) * 0.01;\n"
+              // + "  st.x += sin(u_time + st.y * 30.0) * 0.01;\n"
               + "  gl_FragColor = texture2D(u_texture, st);\n"
               + "}\n");
-  public static Runnable postProcessingSetup =
-      () -> postProcessingShader.setUniformf("u_time", Game.getScene().getSceneLifetimeInSec());
+  // TODO: move this out
+  // postProcessingShader.setUniformf("u_time", Game.getScene().getSceneLifetimeInSec());
+  public static Runnable postProcessingSetup = () -> {};
 
   public static int AVG_SYSTEMS_PER_ENTITY = 3;
 

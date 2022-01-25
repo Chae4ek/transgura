@@ -5,22 +5,51 @@ import chae4ek.transgura.ecs.RenderComponent;
 import chae4ek.transgura.ecs.util.render.RenderUtils;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class AnimatedSprite extends RenderComponent {
 
-  private final Animation<Sprite> animation;
+  public boolean flipX;
+  public boolean flipY;
+  private Animation<AtlasRegion> animation;
+
+  @Deprecated
+  public AnimatedSprite(
+      final float frameDurationInSec, final PlayMode playMode, final AtlasRegion... frames) {
+    animation = new Animation<>(frameDurationInSec, frames);
+    animation.setPlayMode(playMode);
+  }
+
+  public AnimatedSprite(final int zOrder, final Animation<AtlasRegion> animation) {
+    super(zOrder);
+    this.animation = animation;
+  }
 
   public AnimatedSprite(
-      final float frameDurationInSec, final PlayMode playMode, final Sprite... spriteFrames) {
-    animation = new Animation<>(frameDurationInSec, spriteFrames);
+      final int zOrder,
+      final float frameDurationInSec,
+      final PlayMode playMode,
+      final Array<AtlasRegion> frames) {
+    super(zOrder);
+    animation = new Animation<>(frameDurationInSec, frames);
     animation.setPlayMode(playMode);
+  }
+
+  public Animation<AtlasRegion> getAnimation() {
+    return animation;
+  }
+
+  public void setAnimation(final Animation<AtlasRegion> animation) {
+    this.animation = animation;
   }
 
   @Override
   public void draw() {
     final float time = scene.getSceneLifetimeInSec();
     for (final Entity parent : getParentEntities()) {
-      RenderUtils.draw(parent.getComponent(Position.class), animation.getKeyFrame(time));
+      RenderUtils.draw(
+          parent.getComponent(Position.class), animation.getKeyFrame(time), flipX, flipY);
     }
   }
 }

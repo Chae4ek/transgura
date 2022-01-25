@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.utils.Array;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -19,7 +20,8 @@ public class ResourceLoader implements AssetErrorListener {
   private static final AssetManager assetManager;
 
   private static Map<AtlasType, TextureAtlas> textureAtlases = new EnumMap<>(AtlasType.class);
-  private static Map<TextureType, AtlasRegion> atlasRegions = new EnumMap<>(TextureType.class);
+  private static Map<TextureType, Array<AtlasRegion>> atlasRegions =
+      new EnumMap<>(TextureType.class);
 
   static {
     resourceLoader = new ResourceLoader();
@@ -42,7 +44,7 @@ public class ResourceLoader implements AssetErrorListener {
   }
 
   /**
-   * Load an atlas region if it hasn't already loaded
+   * Load the first atlas region if it hasn't already loaded
    *
    * @return the loaded atlas region
    */
@@ -51,7 +53,23 @@ public class ResourceLoader implements AssetErrorListener {
     if (atlas == null) {
       gameAlert.error(GameErrorType.ATLAS_IS_NOT_LOADED, "TextureType: " + textureType);
     }
-    return atlasRegions.computeIfAbsent(textureType, type -> atlas.findRegion(type.regionName));
+    return atlasRegions
+        .computeIfAbsent(
+            textureType, type -> new Array<>(new AtlasRegion[] {atlas.findRegion(type.regionName)}))
+        .first();
+  }
+
+  /**
+   * Load atlas regions if its haven't already loaded
+   *
+   * @return the loaded atlas region
+   */
+  public static Array<AtlasRegion> loadAtlasRegions(final TextureType textureType) {
+    final TextureAtlas atlas = textureAtlases.get(textureType.atlas);
+    if (atlas == null) {
+      gameAlert.error(GameErrorType.ATLAS_IS_NOT_LOADED, "TextureType: " + textureType);
+    }
+    return atlasRegions.computeIfAbsent(textureType, type -> atlas.findRegions(type.regionName));
   }
 
   /** Unload some scene's textures if they are loaded */

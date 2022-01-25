@@ -3,6 +3,7 @@ package chae4ek.transgura.ecs;
 import chae4ek.transgura.ecs.util.annotations.NonConcurrent;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
+import chae4ek.transgura.game.Game;
 import chae4ek.transgura.game.GameSettings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +29,8 @@ public final class RenderManager {
           GameSettings.defaultSpriteBatchSize,
           new ShaderProgram(GameSettings.defaultVertexShader, GameSettings.defaultFragmentShader));
 
+  private static final Box2DDebugRenderer debugRenderer =
+      GameSettings.isDebugOn ? new Box2DDebugRenderer() : null;
   private static final transient GameAlert gameAlert = new GameAlert(RenderManager.class);
 
   private static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
@@ -118,6 +122,9 @@ public final class RenderManager {
               rcomps.remove(renderComponent);
               return rcomps.isEmpty() ? null : rcomps;
             });
+        renderComponent.toDestroy = true;
+        renderComponent.onDestroy();
+        renderComponent.hasDestroyed = true;
       }
   }
 
@@ -167,6 +174,12 @@ public final class RenderManager {
       }
     }
     spriteBatch.flush();
+
+    if (GameSettings.isDebugOn) {
+      debugRenderer.render(
+          Game.getScene().systemManager.world, new Matrix4(projection).scl(GameSettings.PPM));
+    }
+
     frameBuffer.end();
 
     // post-processing

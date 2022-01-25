@@ -3,6 +3,8 @@ package chae4ek.transgura.ecs;
 import chae4ek.transgura.ecs.util.annotations.DeferredEvent;
 import chae4ek.transgura.ecs.util.annotations.NonConcurrent;
 import chae4ek.transgura.ecs.util.structures.SetGuard;
+import chae4ek.transgura.exceptions.GameAlert;
+import chae4ek.transgura.exceptions.GameErrorType;
 import chae4ek.transgura.game.Game;
 import chae4ek.transgura.game.GameSettings;
 import chae4ek.transgura.game.Scene;
@@ -18,6 +20,8 @@ import java.util.Set;
  */
 public abstract class MultipleComponent {
 
+  private static final transient GameAlert gameAlert = new GameAlert(MultipleComponent.class);
+
   /** The scene where this component was created */
   public final Scene scene;
   /** The entities which contain this component */
@@ -26,6 +30,9 @@ public abstract class MultipleComponent {
   private final Set<Entity> parentEntitiesOrigin;
 
   public volatile boolean isEnabled = true;
+
+  volatile boolean toDestroy;
+  boolean hasDestroyed;
 
   public MultipleComponent() {
     scene = Game.getScene();
@@ -51,13 +58,32 @@ public abstract class MultipleComponent {
     // for (final Entity parent : parentEntitiesOrigin) parent.removeComponent(this);
   }
 
+  /** Invoke before actually destroying */
+  @NonConcurrent
+  public void onDestroy() {}
+
+  /** @return true if this component will be destroyed */
+  public final boolean willDestroy() {
+    return toDestroy;
+  }
+
   /**
    * Destroy this component and all associated with it resources. This method adds deferred event,
    * so this component will destroy after the current loop
    */
   @DeferredEvent
   public final void destroy() {
-    scene.systemManager.addDeferredEvent(this::destroyThis);
+    toDestroy = true;
+    scene.systemManager.addDeferredEvent(
+        () -> {
+          if (hasDestroyed) {
+            gameAlert.warn(GameErrorType.COMPONENT_HAS_ALREADY_DESTROYED, "component: " + this);
+            return;
+          }
+          onDestroy();
+          destroyThis();
+          hasDestroyed = true;
+        });
   }
 
   /** @return the parent entities set of this component */

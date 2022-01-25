@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 
 public class Sprite extends RenderComponent {
 
-  private final AtlasRegion atlasRegion;
+  protected final AtlasRegion atlasRegion;
   public boolean flipX;
   public boolean flipY;
 

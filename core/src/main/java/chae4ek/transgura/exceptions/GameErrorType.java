@@ -20,6 +20,10 @@ public enum GameErrorType {
   COMPONENT_DOES_NOT_EXIST("The component doesn't exist"),
   COMPONENT_ALREADY_EXISTS("The component already exists, so it was replaced"),
   COMPONENT_HAS_NOT_PARENT_ENTITY("The component has not parent entity, but the entity has"),
+  COMPONENT_WILL_BE_DESTROYED("You add a component that will be destroyed"),
+  ENTITY_WILL_BE_DESTROYED("You add an entity that will be destroyed"),
+  ENTITY_HAS_ALREADY_DESTROYED("You destroy a destroyed entity"),
+  COMPONENT_HAS_ALREADY_DESTROYED("You destroy a destroyed component"),
 
   // System
   SYSTEM_SCENE_IS_NOT_EQUAL_TO_ENTITY_SCENE(
@@ -30,7 +34,11 @@ public enum GameErrorType {
 
   // ResourceLoader
   RESOURCE_LOADER_ERROR("Resource loader error occurs"),
-  ATLAS_IS_NOT_LOADED("The atlas is not loaded");
+  ATLAS_IS_NOT_LOADED("The atlas is not loaded"),
+
+  // CollisionListener
+  COLLISION_SUBSCRIBER_HAS_ALREADY_EXIST("The collision subscriber has already subscribed"),
+  COLLISION_SUBSCRIBER_DOES_NOT_EXIST("The collision subscriber is not subscribed");
 
   private final String message;
 

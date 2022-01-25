@@ -1,13 +1,12 @@
 package chae4ek.transgura.game.scenes;
 
-import static chae4ek.transgura.game.GameSettings.PPM_2;
-
 import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.component.AnimatedSprite;
 import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.component.Sprite;
 import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.ecs.entity.SolidBlock;
+import chae4ek.transgura.ecs.entity.TestRock;
 import chae4ek.transgura.ecs.system.Menu;
 import chae4ek.transgura.ecs.util.resources.ResourceLoader;
 import chae4ek.transgura.ecs.util.resources.TextureType;
@@ -15,7 +14,6 @@ import chae4ek.transgura.ecs.util.resources.TextureType.AtlasType;
 import chae4ek.transgura.game.Scene;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class MainMenu extends Scene {
 
@@ -26,23 +24,18 @@ public class MainMenu extends Scene {
 
     new Entity(new Menu());
 
-    final var s = new Sprite(testBlock);
-    s.destroy(); // TODO: hmm... it's ok
-    new Entity(new Position(), s);
+    new Entity(new Position(), new Sprite(testBlock));
 
-    final PolygonShape shape = new PolygonShape();
-    shape.setAsBox(wood.getRegionWidth() / PPM_2, wood.getRegionHeight() / PPM_2);
+    new SolidBlock(100f, 100f, wood);
+    new SolidBlock(200f, 100f, wood);
+    new SolidBlock(200f, 200f, new AnimatedSprite(0.5f, PlayMode.LOOP, testBlock, wood));
 
-    new SolidBlock(100f, 100f, shape, wood);
-    new SolidBlock(200f, 100f, shape, wood);
-    new SolidBlock(
-        200f,
-        200f,
-        shape,
-        new AnimatedSprite(0.5f, PlayMode.LOOP, new Sprite(testBlock), new Sprite(wood)));
-
-    systemManager.addDeferredEvent(shape::dispose);
+    new SolidBlock(16f, 16f, 27, 1, wood);
+    new SolidBlock(16f, 48f, 1, 4, wood);
 
     new Player(150f, 100f);
+
+    // debug test
+    new TestRock(400f, 300f);
   }
 }

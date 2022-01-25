@@ -19,12 +19,8 @@ public class Entity {
 
   private final Map<Class<? extends MultipleComponent>, MultipleComponent> components;
 
-  @DeferredEvent
-  public Entity() {
-    scene = Game.getScene();
-    components = new HashMap<>(GameSettings.AVG_COMPONENTS_PER_ENTITY);
-    scene.systemManager.addDeferredEvent(() -> scene.entityManager.addEntity(this));
-  }
+  private volatile boolean toDestroy;
+  private boolean hasDestroyed;
 
   @DeferredEvent
   public Entity(final MultipleComponent... components) {
@@ -32,6 +28,9 @@ public class Entity {
     this.components = new HashMap<>(GameSettings.AVG_COMPONENTS_PER_ENTITY);
     scene.systemManager.addDeferredEvent(
         () -> {
+          if (toDestroy) {
+            gameAlert.warn(GameErrorType.ENTITY_WILL_BE_DESTROYED, "entity: " + this);
+          }
           scene.entityManager.addEntity(this);
           for (final MultipleComponent comp : components) addComponentUnsafe(comp);
         });
@@ -72,6 +71,9 @@ public class Entity {
 
   @NonConcurrent
   private void addComponentUnsafe(final MultipleComponent component) {
+    if (component.toDestroy) {
+      gameAlert.warn(GameErrorType.COMPONENT_WILL_BE_DESTROYED, "component: " + component);
+    }
     component.bind(this);
     final MultipleComponent old = components.put(component.getClass(), component);
     if (old != null) {
@@ -108,13 +110,27 @@ public class Entity {
     return components.containsKey(componentClass);
   }
 
+  /** @return true if this component will be destroyed */
+  public final boolean willDestroy() {
+    return toDestroy;
+  }
+
   /**
    * Destroy this entity and all associated with it components on its scene. This method adds
    * deferred event, so this entity will destroy after the current loop
    */
   @DeferredEvent
   public final void destroy() {
-    scene.systemManager.addDeferredEvent(this::destroyThis);
+    toDestroy = true;
+    scene.systemManager.addDeferredEvent(
+        () -> {
+          if (hasDestroyed) {
+            gameAlert.warn(GameErrorType.ENTITY_HAS_ALREADY_DESTROYED, "entity: " + this);
+            return;
+          }
+          destroyThis();
+          hasDestroyed = true;
+        });
   }
 
   /** Destroy this entity */

@@ -2,7 +2,9 @@ package chae4ek.transgura.ecs.util.resources;
 
 public enum TextureType {
   TEST_BLOCK(AtlasType.TEST, "test_block"),
-  WOOD(AtlasType.TEST, "wood");
+  WOOD(AtlasType.TEST, "wood"),
+  OLD_MAN_IDLE(AtlasType.OLD_MAN, "idle"),
+  OLD_MAN_RUN(AtlasType.OLD_MAN, "run");
 
   public final AtlasType atlas;
   public final String regionName;
@@ -18,7 +20,8 @@ public enum TextureType {
   }
 
   public enum AtlasType {
-    TEST("atlas/all_textures.atlas");
+    TEST("atlas/test_textures.atlas"),
+    OLD_MAN("atlas/old_man.atlas");
 
     public final String atlasPath;
 

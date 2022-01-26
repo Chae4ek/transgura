@@ -16,7 +16,8 @@ public class PlayerController extends System implements CollisionSubscriber {
 
   private static final float jumpStep = 0.06f;
   private float jumpForce;
-  private boolean onGround;
+  private boolean allowJump;
+  private int touchedGrounds;
   private boolean dash;
 
   public PlayerController() {
@@ -75,9 +76,9 @@ public class PlayerController extends System implements CollisionSubscriber {
       body.applyLinearImpulse(-playerSpeed, 0f, 0f, 0f, true);
     }
 
-    if (onGround && up && !down) {
+    if (allowJump && up && !down) {
       isRunning = true;
-      onGround = false;
+      allowJump = false;
       jumpForce = PlayerSettings.JUMP_FORCE;
       body.applyLinearImpulse(0f, jumpForce, 0f, 0f, true);
     } else {
@@ -100,9 +101,23 @@ public class PlayerController extends System implements CollisionSubscriber {
   }
 
   @Override
+  public void onDestroy() {
+    scene.systemManager.collisionListener.removeCollisionSubscriber(this);
+  }
+
+  @Override
   public void beginContact(final Contact contact) {
-    if (CollisionProcessor.isFixturesCollision(contact, "PLAYER", "GROUND")) {
-      onGround = true;
+    if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_BOTTOM", "GROUND")) {
+      ++touchedGrounds;
+      allowJump = touchedGrounds > 0;
+    }
+  }
+
+  @Override
+  public void endContact(final Contact contact) {
+    if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_BOTTOM", "GROUND")) {
+      --touchedGrounds;
+      allowJump = touchedGrounds > 0;
     }
   }
 }

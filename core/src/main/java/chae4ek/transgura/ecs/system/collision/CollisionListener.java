@@ -33,7 +33,9 @@ public class CollisionListener implements ContactListener {
   }
 
   @Override
-  public void endContact(final Contact contact) {}
+  public void endContact(final Contact contact) {
+    for (final CollisionSubscriber subscriber : subscribers) subscriber.endContact(contact);
+  }
 
   @Override
   public void preSolve(final Contact contact, final Manifold oldManifold) {}

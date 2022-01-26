@@ -8,6 +8,7 @@ import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.system.PhysicalBody;
 import chae4ek.transgura.ecs.system.PlayerController;
 import chae4ek.transgura.ecs.system.settings.PlayerSettings;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -48,6 +49,12 @@ public class Player extends Entity {
     final Fixture fixture = body.createFixture(shape, 1f);
     fixture.setFriction(0);
     fixture.setUserData("PLAYER");
+
+    final PolygonShape shapeLegs = new PolygonShape();
+    shapeLegs.setAsBox(size2 - corner - 0.01f, 0.01f, new Vector2(0f, -size2 - 0.15f), 0f);
+    final Fixture fixtureLegs = body.createFixture(shapeLegs, 1f);
+    fixtureLegs.setSensor(true);
+    fixtureLegs.setUserData("PLAYER_BOTTOM");
 
     final MassData massData = body.getMassData();
     massData.mass = 0.73851955f;

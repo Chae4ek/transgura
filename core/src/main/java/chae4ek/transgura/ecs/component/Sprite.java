@@ -1,6 +1,5 @@
 package chae4ek.transgura.ecs.component;
 
-import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.RenderComponent;
 import chae4ek.transgura.ecs.util.render.RenderUtils;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -32,8 +31,6 @@ public class Sprite extends RenderComponent {
 
   @Override
   public void draw() {
-    for (final Entity parent : getParentEntities()) {
-      RenderUtils.draw(parent.getComponent(Position.class), this);
-    }
+    RenderUtils.draw(getParent().getComponent(Position.class), this);
   }
 }

@@ -7,6 +7,7 @@ import chae4ek.transgura.exceptions.GameErrorType;
 import chae4ek.transgura.game.GameSettings;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,7 +32,6 @@ public final class SystemManager {
   public final CollisionListener collisionListener = new CollisionListener();
 
   private final Map<Entity, Set<System>> entitySystems = new HashMap<>();
-  private final Map<System, Integer> systems = new HashMap<>();
   /** Non-final for fast clear only */
   private Queue<Runnable> deferredEvents = new ConcurrentLinkedQueue<>();
 
@@ -53,8 +53,7 @@ public final class SystemManager {
         parentEntity,
         (parent, systems) -> {
           if (systems == null) systems = new HashSet<>(GameSettings.AVG_SYSTEMS_PER_ENTITY);
-          if (systems.add(system)) this.systems.compute(system, (s, i) -> i == null ? 1 : ++i);
-          else {
+          if (!systems.add(system)) {
             gameAlert.warn(
                 GameErrorType.SYSTEM_HAS_BEEN_REPLACED,
                 "parentEntity: " + parentEntity + ", system: " + system);
@@ -69,14 +68,6 @@ public final class SystemManager {
     final Set<System> systems = entitySystems.remove(parentEntity);
     if (systems != null)
       for (final System system : systems) {
-        this.systems.compute(
-            system,
-            (s, i) -> {
-              // if it isn't present it's a bug:
-              @SuppressWarnings("ConstantConditions")
-              int i0 = i;
-              return i0 == 1 ? null : --i0;
-            });
         system.toDestroy = true;
         system.onDestroy();
         system.hasDestroyed = true;
@@ -89,16 +80,7 @@ public final class SystemManager {
     if (entitySystems.computeIfPresent(
             parentEntity,
             (parent, systems) -> {
-              if (systems.remove(system)) {
-                this.systems.compute(
-                    system,
-                    (s, i) -> {
-                      // if it isn't present it's a bug:
-                      @SuppressWarnings("ConstantConditions")
-                      int i0 = i;
-                      return i0 == 1 ? null : --i0;
-                    });
-              } else {
+              if (!systems.remove(system)) {
                 gameAlert.warn(
                     GameErrorType.SYSTEM_DOES_NOT_EXIST,
                     "parentEntity: " + parentEntity + ", systems: " + systems);
@@ -133,42 +115,48 @@ public final class SystemManager {
     runDeferredEvents();
     world.step(GameSettings.timeStepForPhysics, 6, 2);
 
-    final Set<System> allSystems = systems.keySet();
+    final Collection<Set<System>> allEntitySystems = entitySystems.values();
     // simple update:
     int taskCount = 0, extraCapacityNeeded = 0;
-    for (final System system : allSystems) {
-      if (system.isEnabled()) {
-        if (system.isUpdateEnabled()) {
-          if (taskCount == tasksToUpdate.length) setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
-          tasksToUpdate[taskCount++] = pool.submit(system::update);
+    for (final Set<System> allSystems : allEntitySystems)
+      for (final System system : allSystems) {
+        if (system.isEnabled()) {
+          if (system.isUpdateEnabled()) {
+            if (taskCount == tasksToUpdate.length)
+              setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
+            tasksToUpdate[taskCount++] = pool.submit(system::update);
+          }
+          if (system.isFixedUpdateEnabled()) ++extraCapacityNeeded;
         }
-        if (system.isFixedUpdateEnabled()) ++extraCapacityNeeded;
       }
-    }
     // simple update and first fixed update are invoked together to accelerate:
     if (fixedUpdateCount > 0) {
       --fixedUpdateCount;
       if (taskCount + extraCapacityNeeded > tasksToUpdate.length) {
         setSizeOfTasksToUpdate(taskCount + extraCapacityNeeded);
       }
-      for (final System system : allSystems) {
-        if (system.isEnabled() && system.isFixedUpdateEnabled()) {
-          if (taskCount == tasksToUpdate.length) setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
-          tasksToUpdate[taskCount++] = pool.submit(system::fixedUpdate);
+      for (final Set<System> allSystems : allEntitySystems)
+        for (final System system : allSystems) {
+          if (system.isEnabled() && system.isFixedUpdateEnabled()) {
+            if (taskCount == tasksToUpdate.length)
+              setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
+            tasksToUpdate[taskCount++] = pool.submit(system::fixedUpdate);
+          }
         }
-      }
     }
     while (taskCount > 0) tasksToUpdate[--taskCount].join();
     runDeferredEvents();
 
     // other fixed updates:
     for (; fixedUpdateCount > 0; --fixedUpdateCount) {
-      for (final System system : allSystems) {
-        if (system.isEnabled() && system.isFixedUpdateEnabled()) {
-          if (taskCount == tasksToUpdate.length) setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
-          tasksToUpdate[taskCount++] = pool.submit(system::fixedUpdate);
+      for (final Set<System> allSystems : allEntitySystems)
+        for (final System system : allSystems) {
+          if (system.isEnabled() && system.isFixedUpdateEnabled()) {
+            if (taskCount == tasksToUpdate.length)
+              setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
+            tasksToUpdate[taskCount++] = pool.submit(system::fixedUpdate);
+          }
         }
-      }
       while (taskCount > 0) tasksToUpdate[--taskCount].join();
       runDeferredEvents();
     }
@@ -191,8 +179,8 @@ public final class SystemManager {
   @Override
   public String toString() {
     return new StringBuilder()
-        .append("systems: [")
-        .append(systems)
+        .append("entitySystems: [")
+        .append(entitySystems)
         .append("], deferredEvents: [")
         .append(deferredEvents)
         .append(']')

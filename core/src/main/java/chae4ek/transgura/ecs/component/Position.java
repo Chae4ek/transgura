@@ -2,10 +2,10 @@ package chae4ek.transgura.ecs.component;
 
 import static chae4ek.transgura.game.GameSettings.PPM;
 
-import chae4ek.transgura.ecs.MultipleComponent;
+import chae4ek.transgura.ecs.Component;
 import com.badlogic.gdx.math.Vector2;
 
-public class Position extends MultipleComponent {
+public class Position extends Component {
 
   private Vector2 scaledVec;
   private Vector2 vec;
@@ -18,7 +18,7 @@ public class Position extends MultipleComponent {
     vec = new Vector2();
   }
 
-  public Position(Position position) {
+  public Position(final Position position) {
     vec = new Vector2(position.getVec());
   }
 

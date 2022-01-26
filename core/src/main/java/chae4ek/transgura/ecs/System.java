@@ -1,9 +1,8 @@
 package chae4ek.transgura.ecs;
 
 import chae4ek.transgura.exceptions.GameAlert;
-import chae4ek.transgura.exceptions.GameErrorType;
 
-public abstract class System extends MultipleComponent {
+public abstract class System extends Component {
 
   private static final transient GameAlert gameAlert = new GameAlert(System.class);
 
@@ -21,17 +20,8 @@ public abstract class System extends MultipleComponent {
 
   @Override
   void destroyThis() {
-    for (final Entity parent : getParentEntitiesOrigin()) {
-      if (scene != parent.scene) {
-        gameAlert.warn(
-            GameErrorType.SYSTEM_SCENE_IS_NOT_EQUAL_TO_ENTITY_SCENE,
-            "system scene: " + scene + ", parent entity: " + parent);
-      }
-      scene.systemManager.removeSystem(parent, this);
-      parent.removeComponent(this); // it's here to optimize this cycle
-    }
-    // it's redundant
-    // super.destroyThis();
+    super.destroyThis();
+    scene.systemManager.removeSystem(getParent(), this);
   }
 
   /** @return true if the system uses {@link #update} */
@@ -47,12 +37,12 @@ public abstract class System extends MultipleComponent {
   public void fixedUpdate() {}
 
   @Override
-  public boolean equals(final Object o) {
+  public final boolean equals(final Object o) {
     return this == o;
   }
 
   @Override
-  public int hashCode() {
+  public final int hashCode() {
     return java.lang.System.identityHashCode(this);
   }
 }

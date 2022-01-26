@@ -1,6 +1,5 @@
 package chae4ek.transgura.ecs.component;
 
-import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.util.render.RenderUtils;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -22,17 +21,15 @@ public class TiledSprite extends Sprite {
 
   @Override
   public void draw() {
-    for (final Entity parent : getParentEntities()) {
-      final Position parentPos = parent.getComponent(Position.class);
-      final Vector2 parentVec = parentPos.getVec();
-      final Position pos = new Position(parentPos);
-      final Vector2 vec = pos.getVec();
-      for (int x = 0; x < countX; ++x) {
-        vec.x = parentVec.x + x * scaledWidth;
-        for (int y = 0; y < countY; ++y) {
-          vec.y = parentVec.y + y * scaledHeight;
-          RenderUtils.draw(pos, atlasRegion, flipX, flipY);
-        }
+    final Position parentPos = getParent().getComponent(Position.class);
+    final Vector2 parentVec = parentPos.getVec();
+    final Position pos = new Position(parentPos);
+    final Vector2 vec = pos.getVec();
+    for (int x = 0; x < countX; ++x) {
+      vec.x = parentVec.x + x * scaledWidth;
+      for (int y = 0; y < countY; ++y) {
+        vec.y = parentVec.y + y * scaledHeight;
+        RenderUtils.draw(pos, atlasRegion, flipX, flipY);
       }
     }
   }

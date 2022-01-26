@@ -118,7 +118,7 @@ public final class RenderManager {
         this.renderComponents.compute(
             renderComponent.zOrder,
             (z, rcomps) -> {
-              // if it isn't present it's a bug:
+              assert rcomps != null; // if it isn't present it's a bug
               rcomps.remove(renderComponent);
               return rcomps.isEmpty() ? null : rcomps;
             });
@@ -138,7 +138,7 @@ public final class RenderManager {
                 renderComponents.compute(
                     renderComponent.zOrder,
                     (z, rcomps) -> {
-                      // if it isn't present it's a bug:
+                      assert rcomps != null; // if it isn't present it's a bug
                       rcomps.remove(renderComponent);
                       return rcomps.isEmpty() ? null : rcomps;
                     });

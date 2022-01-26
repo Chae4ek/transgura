@@ -17,13 +17,13 @@ public class Entity {
   /** The scene where this entity was created */
   public final Scene scene;
 
-  private final Map<Class<? extends MultipleComponent>, MultipleComponent> components;
+  private final Map<Class<? extends Component>, Component> components;
 
   private volatile boolean toDestroy;
   private boolean hasDestroyed;
 
   @DeferredEvent
-  public Entity(final MultipleComponent... components) {
+  public Entity(final Component... components) {
     scene = Game.getScene();
     this.components = new HashMap<>(GameSettings.AVG_COMPONENTS_PER_ENTITY);
     scene.systemManager.addDeferredEvent(
@@ -32,13 +32,13 @@ public class Entity {
             gameAlert.warn(GameErrorType.ENTITY_WILL_BE_DESTROYED, "entity: " + this);
           }
           scene.entityManager.addEntity(this);
-          for (final MultipleComponent comp : components) addComponentUnsafe(comp);
+          for (final Component comp : components) addComponentUnsafe(comp);
         });
   }
 
   /** Remove a component */
   @NonConcurrent
-  final void removeComponent(final MultipleComponent component) {
+  final void removeComponent(final Component component) {
     if (components.remove(component.getClass()) == null) {
       gameAlert.warn(GameErrorType.COMPONENT_DOES_NOT_EXIST, "component: " + component);
     }
@@ -50,7 +50,7 @@ public class Entity {
    * @param component the unique component
    */
   @DeferredEvent
-  public final void addComponent(final MultipleComponent component) {
+  public final void addComponent(final Component component) {
     scene.systemManager.addDeferredEvent(() -> addComponentUnsafe(component));
   }
 
@@ -60,25 +60,24 @@ public class Entity {
    * @param components the unique components
    */
   @DeferredEvent
-  public final void addComponent(
-      final MultipleComponent component, final MultipleComponent... components) {
+  public final void addComponent(final Component component, final Component... components) {
     scene.systemManager.addDeferredEvent(
         () -> {
           addComponentUnsafe(component);
-          for (final MultipleComponent comp : components) addComponentUnsafe(comp);
+          for (final Component comp : components) addComponentUnsafe(comp);
         });
   }
 
   @NonConcurrent
-  private void addComponentUnsafe(final MultipleComponent component) {
+  private void addComponentUnsafe(final Component component) {
     if (component.toDestroy) {
       gameAlert.warn(GameErrorType.COMPONENT_WILL_BE_DESTROYED, "component: " + component);
     }
     component.bind(this);
-    final MultipleComponent old = components.put(component.getClass(), component);
+    final Component old = components.put(component.getClass(), component);
     if (old != null) {
       gameAlert.warn(GameErrorType.COMPONENT_ALREADY_EXISTS, "old: " + old + ", new: " + component);
-      if (!old.getParentEntitiesOrigin().remove(this)) {
+      if (old.getParent() == null) {
         gameAlert.warn(
             GameErrorType.COMPONENT_HAS_NOT_PARENT_ENTITY,
             "entity: " + this + ", component: " + old);
@@ -92,7 +91,7 @@ public class Entity {
    * @param componentClass the class of the component to get
    * @return the component or null if it doesn't exist
    */
-  public final <T extends MultipleComponent> T getComponent(final Class<T> componentClass) {
+  public final <T extends Component> T getComponent(final Class<T> componentClass) {
     @SuppressWarnings("unchecked")
     final T component = (T) components.get(componentClass);
     if (component == null) {
@@ -106,7 +105,7 @@ public class Entity {
    * @param componentClass the class of the component to check
    * @return true if the component exists, else false
    */
-  public final boolean contains(final Class<? extends MultipleComponent> componentClass) {
+  public final boolean contains(final Class<? extends Component> componentClass) {
     return components.containsKey(componentClass);
   }
 
@@ -148,6 +147,10 @@ public class Entity {
         .append(getClass().getName())
         .append("], scene: [")
         .append(scene.getClass().getName())
+        .append("], toDestroy: [")
+        .append(toDestroy)
+        .append("], hasDestroyed: [")
+        .append(hasDestroyed)
         .append("], components: ")
         .append(components)
         .toString();

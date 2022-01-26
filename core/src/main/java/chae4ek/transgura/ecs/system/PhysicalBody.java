@@ -2,10 +2,8 @@ package chae4ek.transgura.ecs.system;
 
 import static chae4ek.transgura.game.GameSettings.PPM;
 
-import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.System;
 import chae4ek.transgura.ecs.component.Position;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -48,9 +46,6 @@ public class PhysicalBody extends System {
 
   @Override
   public void update() {
-    final Vector2 pos = body.getPosition();
-    for (final Entity parent : getParentEntities()) {
-      parent.getComponent(Position.class).setVecRef(pos, true);
-    }
+    getParent().getComponent(Position.class).setVecRef(body.getPosition(), true);
   }
 }

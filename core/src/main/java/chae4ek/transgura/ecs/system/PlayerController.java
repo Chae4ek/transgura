@@ -44,15 +44,14 @@ public class PlayerController extends System implements CollisionSubscriber {
     final boolean godMod = InputProcessor.isKeyJustDownNow(PlayerSettings.GOD_MOD);
     if (godMod) {
       setEnabled(false);
-      for (final Entity parent : getParentEntities()) {
-        parent.getComponent(PlayerGodModController.class).setEnabled(true);
-        final Array<Fixture> array =
-            parent.getComponent(PhysicalBody.class).getBody().getFixtureList();
-        for (final Fixture fixture : array) {
-          if (fixture.getUserData() == "PLAYER") {
-            fixture.setSensor(true);
-            break;
-          }
+      final Entity parent = getParent();
+      parent.getComponent(PlayerGodModController.class).setEnabled(true);
+      final Array<Fixture> array =
+          parent.getComponent(PhysicalBody.class).getBody().getFixtureList();
+      for (final Fixture fixture : array) {
+        if (fixture.getUserData() == "PLAYER") {
+          fixture.setSensor(true);
+          break;
         }
       }
     }
@@ -60,10 +59,7 @@ public class PlayerController extends System implements CollisionSubscriber {
 
   @Override
   public void fixedUpdate() {
-    for (final Entity parent : getParentEntities()) fixedUpdate(parent);
-  }
-
-  private void fixedUpdate(final Entity player) {
+    final Entity player = getParent();
     final AnimatedSprite animation = player.getComponent(AnimatedSprite.class);
     final Body body = player.getComponent(PhysicalBody.class).getBody();
 

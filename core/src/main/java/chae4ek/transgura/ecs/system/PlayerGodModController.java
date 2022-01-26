@@ -30,15 +30,14 @@ public class PlayerGodModController extends System {
     final boolean godMod = InputProcessor.isKeyJustDownNow(PlayerSettings.GOD_MOD);
     if (godMod) {
       setEnabled(false);
-      for (final Entity parent : getParentEntities()) {
-        parent.getComponent(PlayerController.class).setEnabled(true);
-        final Array<Fixture> array =
-            parent.getComponent(PhysicalBody.class).getBody().getFixtureList();
-        for (final Fixture fixture : array) {
-          if (fixture.getUserData() == "PLAYER") {
-            fixture.setSensor(false);
-            break;
-          }
+      final Entity parent = getParent();
+      parent.getComponent(PlayerController.class).setEnabled(true);
+      final Array<Fixture> array =
+          parent.getComponent(PhysicalBody.class).getBody().getFixtureList();
+      for (final Fixture fixture : array) {
+        if (fixture.getUserData() == "PLAYER") {
+          fixture.setSensor(false);
+          break;
         }
       }
     }
@@ -46,10 +45,7 @@ public class PlayerGodModController extends System {
 
   @Override
   public void fixedUpdate() {
-    for (final Entity parent : getParentEntities()) fixedUpdate(parent);
-  }
-
-  private void fixedUpdate(final Entity player) {
+    final Entity player = getParent();
     final AnimatedSprite animation = player.getComponent(AnimatedSprite.class);
     final Body body = player.getComponent(PhysicalBody.class).getBody();
 

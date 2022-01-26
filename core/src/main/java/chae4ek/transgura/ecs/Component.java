@@ -2,65 +2,66 @@ package chae4ek.transgura.ecs;
 
 import chae4ek.transgura.ecs.util.annotations.DeferredEvent;
 import chae4ek.transgura.ecs.util.annotations.NonConcurrent;
-import chae4ek.transgura.ecs.util.structures.SetGuard;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
 import chae4ek.transgura.game.Game;
-import chae4ek.transgura.game.GameSettings;
 import chae4ek.transgura.game.Scene;
-import java.util.HashSet;
-import java.util.Set;
 
-/**
- * Entities can contain only one instance of a component implementation, but at the same time the
- * component can be contained into several entities.
- *
- * <p>That means you can add a component to several entities, but you cannot add one instance of a
- * component implementation to one entity multiple times
- */
-public abstract class MultipleComponent {
+public abstract class Component {
 
-  private static final transient GameAlert gameAlert = new GameAlert(MultipleComponent.class);
+  private static final transient GameAlert gameAlert = new GameAlert(Component.class);
 
   /** The scene where this component was created */
   public final Scene scene;
-  /** The entities which contain this component */
-  private final SetGuard<Entity> parentEntities;
-
-  private final Set<Entity> parentEntitiesOrigin;
 
   volatile boolean toDestroy;
   boolean hasDestroyed;
 
+  private Entity parent;
+
   private volatile boolean isEnabled;
 
-  public MultipleComponent() {
+  public Component() {
     this(true);
   }
 
-  public MultipleComponent(final boolean isEnabled) {
+  public Component(final boolean isEnabled) {
     scene = Game.getScene();
-    parentEntitiesOrigin = new HashSet<>(GameSettings.AVG_PARENTS_PER_COMPONENT);
-    parentEntities = new SetGuard<>(parentEntitiesOrigin);
     this.isEnabled = isEnabled;
   }
 
   /** Bind a component to its parent entity */
   @NonConcurrent
   void bind(final Entity parentEntity) {
-    parentEntitiesOrigin.add(parentEntity);
+    if (parent != null) {
+      gameAlert.error(
+          GameErrorType.COMPONENT_BELONGS_TO_ENTITY,
+          "component: " + this + ", new parent entity: " + parentEntity);
+    }
+    parent = parentEntity;
   }
 
-  /** @return the parent entities origin set of this component */
-  final Set<Entity> getParentEntitiesOrigin() {
-    return parentEntitiesOrigin;
+  /** @return the parent entity of this component */
+  public final Entity getParent() {
+    if (parent == null) {
+      gameAlert.warn(GameErrorType.COMPONENT_DOES_NOT_BELONG_TO_ENTITY, "component: " + this);
+    }
+    return parent;
   }
 
   /** Destroy this component */
   @NonConcurrent
   void destroyThis() {
-    // it's implemented in an overriden method to optimize this cycle
-    // for (final Entity parent : parentEntitiesOrigin) parent.removeComponent(this);
+    if (parent == null) {
+      gameAlert.warn(GameErrorType.COMPONENT_IS_DESTROYED_WITHOUT_PARENT, "component: " + this);
+      return;
+    }
+    if (scene != parent.scene) {
+      gameAlert.warn(
+          GameErrorType.COMPONENT_SCENE_IS_NOT_EQUAL_TO_ENTITY_SCENE,
+          "component scene: " + scene + ", parent entity: " + parent);
+    }
+    parent.removeComponent(this);
   }
 
   /** Invoke before actually destroying */
@@ -91,11 +92,6 @@ public abstract class MultipleComponent {
         });
   }
 
-  /** @return the parent entities set of this component */
-  public final SetGuard<Entity> getParentEntities() {
-    return parentEntities;
-  }
-
   /** @return true if this component is enabled */
   public final boolean isEnabled() {
     return isEnabled;
@@ -115,18 +111,22 @@ public abstract class MultipleComponent {
 
   @Override
   public String toString() {
-    final StringBuilder sb =
-        new StringBuilder()
-            .append("scene: [")
-            .append(scene.getClass().getName())
-            .append("], class: [")
-            .append(getClass().getName())
-            .append("], isEnabled: [")
-            .append(isEnabled)
-            .append("], parentEntities: [ ");
-    // no entity is used instead of classes to exclude recursive calls:
-    for (final Entity entity : parentEntitiesOrigin) sb.append(entity.getClass()).append(' ');
-    return sb.append(']').toString();
+    return new StringBuilder()
+        .append("scene: [")
+        .append(scene.getClass().getName())
+        .append("], class: [")
+        .append(getClass().getName())
+        .append("], isEnabled: [")
+        .append(isEnabled)
+        .append("], toDestroy: [")
+        .append(toDestroy)
+        .append("], hasDestroyed: [")
+        .append(hasDestroyed)
+        .append("], parentEntity: [")
+        // no entity is used instead of class to exclude recursive calls:
+        .append(parent == null ? "null" : parent.getClass())
+        .append(']')
+        .toString();
   }
 
   @Override

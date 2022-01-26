@@ -26,13 +26,11 @@ public enum GameErrorType {
   COMPONENT_HAS_ALREADY_DESTROYED("You destroy a destroyed component"),
   COMPONENT_IS_ALREADY_ENABLED("The component is already enabled"),
   COMPONENT_IS_ALREADY_DISABLED("The component is already disabled"),
-
-  // System
-  SYSTEM_SCENE_IS_NOT_EQUAL_TO_ENTITY_SCENE(
-      "The system's scene is not equal to the entity's scene"),
-  // RenderComponent
-  RENDER_COMPONENT_SCENE_IS_NOT_EQUAL_TO_ENTITY_SCENE(
-      "The render component's scene is not equal to the entity's scene"),
+  COMPONENT_BELONGS_TO_ENTITY("The component already belongs to another entity"),
+  COMPONENT_DOES_NOT_BELONG_TO_ENTITY("The component does not belong to an entity yet"),
+  COMPONENT_SCENE_IS_NOT_EQUAL_TO_ENTITY_SCENE(
+      "The component's scene is not equal to the entity's scene"),
+  COMPONENT_IS_DESTROYED_WITHOUT_PARENT("You destroy a component without its parent"),
 
   // ResourceLoader
   RESOURCE_LOADER_ERROR("Resource loader error occurs"),

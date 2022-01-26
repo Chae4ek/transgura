@@ -6,15 +6,17 @@ import chae4ek.transgura.ecs.component.AnimatedSprite;
 import chae4ek.transgura.ecs.system.collision.CollisionProcessor;
 import chae4ek.transgura.ecs.system.collision.CollisionSubscriber;
 import chae4ek.transgura.ecs.system.settings.PlayerSettings;
-import chae4ek.transgura.ecs.util.input.Button;
 import chae4ek.transgura.ecs.util.input.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.utils.Array;
 
 public class PlayerController extends System implements CollisionSubscriber {
 
   private static final float jumpStep = 0.06f;
+  private static final float jumpInertia = 0.24f;
   private float jumpForce;
   private boolean allowJump;
   private int touchedGrounds;
@@ -36,8 +38,24 @@ public class PlayerController extends System implements CollisionSubscriber {
 
   @Override
   public void update() {
-    final boolean rightMouse = InputProcessor.isButtonJustDownNow(Button.RIGHT);
-    if (rightMouse) dash = true;
+    final boolean dashButton = InputProcessor.isButtonJustDownNow(PlayerSettings.PLAYER_DASH);
+    if (dashButton) dash = true;
+
+    final boolean godMod = InputProcessor.isKeyJustDownNow(PlayerSettings.GOD_MOD);
+    if (godMod) {
+      setEnabled(false);
+      for (final Entity parent : getParentEntities()) {
+        parent.getComponent(PlayerGodModController.class).setEnabled(true);
+        final Array<Fixture> array =
+            parent.getComponent(PhysicalBody.class).getBody().getFixtureList();
+        for (final Fixture fixture : array) {
+          if (fixture.getUserData() == "PLAYER") {
+            fixture.setSensor(true);
+            break;
+          }
+        }
+      }
+    }
   }
 
   @Override
@@ -82,8 +100,8 @@ public class PlayerController extends System implements CollisionSubscriber {
       jumpForce = PlayerSettings.JUMP_FORCE;
       body.applyLinearImpulse(0f, jumpForce, 0f, 0f, true);
     } else {
-      if (!up && jumpForce > jumpStep * 5f && body.getLinearVelocity().y > 0f) {
-        jumpForce = jumpStep * 5f;
+      if (!up && jumpForce > jumpInertia && body.getLinearVelocity().y > 0f) {
+        jumpForce = jumpInertia;
       }
     }
 

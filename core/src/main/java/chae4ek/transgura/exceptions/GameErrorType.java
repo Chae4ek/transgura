@@ -24,6 +24,8 @@ public enum GameErrorType {
   ENTITY_WILL_BE_DESTROYED("You add an entity that will be destroyed"),
   ENTITY_HAS_ALREADY_DESTROYED("You destroy a destroyed entity"),
   COMPONENT_HAS_ALREADY_DESTROYED("You destroy a destroyed component"),
+  COMPONENT_IS_ALREADY_ENABLED("The component is already enabled"),
+  COMPONENT_IS_ALREADY_DISABLED("The component is already disabled"),
 
   // System
   SYSTEM_SCENE_IS_NOT_EQUAL_TO_ENTITY_SCENE(

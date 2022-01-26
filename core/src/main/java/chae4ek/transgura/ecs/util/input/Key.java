@@ -11,7 +11,8 @@ public enum Key {
   W(Keys.W),
   A(Keys.A),
   S(Keys.S),
-  D(Keys.D);
+  D(Keys.D),
+  G(Keys.G);
 
   private static final Map<Integer, Key> keys = new HashMap<>(Key.values().length);
 

@@ -137,7 +137,7 @@ public final class SystemManager {
     // simple update:
     int taskCount = 0, extraCapacityNeeded = 0;
     for (final System system : allSystems) {
-      if (system.isEnabled) {
+      if (system.isEnabled()) {
         if (system.isUpdateEnabled()) {
           if (taskCount == tasksToUpdate.length) setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
           tasksToUpdate[taskCount++] = pool.submit(system::update);
@@ -152,7 +152,7 @@ public final class SystemManager {
         setSizeOfTasksToUpdate(taskCount + extraCapacityNeeded);
       }
       for (final System system : allSystems) {
-        if (system.isEnabled && system.isFixedUpdateEnabled()) {
+        if (system.isEnabled() && system.isFixedUpdateEnabled()) {
           if (taskCount == tasksToUpdate.length) setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
           tasksToUpdate[taskCount++] = pool.submit(system::fixedUpdate);
         }
@@ -164,7 +164,7 @@ public final class SystemManager {
     // other fixed updates:
     for (; fixedUpdateCount > 0; --fixedUpdateCount) {
       for (final System system : allSystems) {
-        if (system.isEnabled && system.isFixedUpdateEnabled()) {
+        if (system.isEnabled() && system.isFixedUpdateEnabled()) {
           if (taskCount == tasksToUpdate.length) setSizeOfTasksToUpdate((int) (taskCount * 1.75f));
           tasksToUpdate[taskCount++] = pool.submit(system::fixedUpdate);
         }

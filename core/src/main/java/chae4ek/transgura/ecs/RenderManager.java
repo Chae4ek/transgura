@@ -170,7 +170,7 @@ public final class RenderManager {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     for (final Set<RenderComponent> renderComponents : renderComponents.values()) {
       for (final RenderComponent renderComponent : renderComponents) {
-        if (renderComponent.isEnabled) renderComponent.draw();
+        if (renderComponent.isEnabled()) renderComponent.draw();
       }
     }
     spriteBatch.flush();

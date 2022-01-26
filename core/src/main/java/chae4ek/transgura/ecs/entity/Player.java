@@ -7,6 +7,7 @@ import chae4ek.transgura.ecs.component.AnimatedSprite;
 import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.system.PhysicalBody;
 import chae4ek.transgura.ecs.system.PlayerController;
+import chae4ek.transgura.ecs.system.PlayerGodModController;
 import chae4ek.transgura.ecs.system.settings.PlayerSettings;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -51,7 +52,7 @@ public class Player extends Entity {
     fixture.setUserData("PLAYER");
 
     final PolygonShape shapeLegs = new PolygonShape();
-    shapeLegs.setAsBox(size2 - corner - 0.01f, 0.01f, new Vector2(0f, -size2 - 0.15f), 0f);
+    shapeLegs.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, -size2 - 0.15f), 0f);
     final Fixture fixtureLegs = body.createFixture(shapeLegs, 1f);
     fixtureLegs.setSensor(true);
     fixtureLegs.setUserData("PLAYER_BOTTOM");
@@ -65,6 +66,7 @@ public class Player extends Entity {
     addComponent(
         new AnimatedSprite(1, PlayerSettings.idle),
         new PlayerController(),
+        new PlayerGodModController(),
         new Position(x, y),
         physicalBody);
   }

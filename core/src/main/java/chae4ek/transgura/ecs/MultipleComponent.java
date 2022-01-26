@@ -29,15 +29,20 @@ public abstract class MultipleComponent {
 
   private final Set<Entity> parentEntitiesOrigin;
 
-  public volatile boolean isEnabled = true;
-
   volatile boolean toDestroy;
   boolean hasDestroyed;
 
+  private volatile boolean isEnabled;
+
   public MultipleComponent() {
+    this(true);
+  }
+
+  public MultipleComponent(final boolean isEnabled) {
     scene = Game.getScene();
     parentEntitiesOrigin = new HashSet<>(GameSettings.AVG_PARENTS_PER_COMPONENT);
     parentEntities = new SetGuard<>(parentEntitiesOrigin);
+    this.isEnabled = isEnabled;
   }
 
   /** Bind a component to its parent entity */
@@ -89,6 +94,23 @@ public abstract class MultipleComponent {
   /** @return the parent entities set of this component */
   public final SetGuard<Entity> getParentEntities() {
     return parentEntities;
+  }
+
+  /** @return true if this component is enabled */
+  public final boolean isEnabled() {
+    return isEnabled;
+  }
+
+  /** Whether to enable this component */
+  @DeferredEvent
+  public final void setEnabled(final boolean isEnabled) {
+    if (this.isEnabled == isEnabled) {
+      if (isEnabled)
+        gameAlert.warn(GameErrorType.COMPONENT_IS_ALREADY_ENABLED, "component: " + this);
+      else gameAlert.warn(GameErrorType.COMPONENT_IS_ALREADY_DISABLED, "component: " + this);
+      return;
+    }
+    scene.systemManager.addDeferredEvent(() -> this.isEnabled = isEnabled);
   }
 
   @Override

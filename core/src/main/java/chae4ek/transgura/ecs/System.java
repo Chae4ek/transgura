@@ -7,6 +7,12 @@ public abstract class System extends MultipleComponent {
 
   private static final transient GameAlert gameAlert = new GameAlert(System.class);
 
+  public System() {}
+
+  public System(final boolean isEnabled) {
+    super(isEnabled);
+  }
+
   @Override
   void bind(final Entity parentEntity) {
     super.bind(parentEntity);

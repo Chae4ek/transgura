@@ -30,8 +30,8 @@ public class MainMenu extends Scene {
     new SolidBlock(200f, 100f, wood);
     new SolidBlock(200f, 200f, new AnimatedSprite(0.5f, PlayMode.LOOP, testBlock, wood));
 
-    new SolidBlock(16f, 16f, 27, 1, wood);
-    new SolidBlock(16f, 48f, 1, 4, wood);
+    new SolidBlock(0f, 0f, 27, 1, wood);
+    new SolidBlock(0f, 32f, 1, 4, wood);
 
     new Player(150f, 100f);
 

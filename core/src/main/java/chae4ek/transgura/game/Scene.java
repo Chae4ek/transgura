@@ -4,17 +4,15 @@ import chae4ek.transgura.ecs.EntityManager;
 import chae4ek.transgura.ecs.RenderManager;
 import chae4ek.transgura.ecs.SystemManager;
 import chae4ek.transgura.ecs.util.annotations.NonConcurrent;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public abstract class Scene {
 
-  public static final ExtendViewport viewport =
-      new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+  public static final OrthographicCamera camera = new OrthographicCamera();
 
   public final EntityManager entityManager = new EntityManager();
   public final SystemManager systemManager = new SystemManager();
-  public final RenderManager renderManager = new RenderManager(viewport);
+  public final RenderManager renderManager = new RenderManager();
 
   float sceneLifetimeInSec;
 

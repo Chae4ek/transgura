@@ -4,11 +4,15 @@ import static chae4ek.transgura.game.GameSettings.PPM;
 
 import chae4ek.transgura.ecs.Entity;
 import chae4ek.transgura.ecs.component.AnimatedSprite;
+import chae4ek.transgura.ecs.component.Particles;
 import chae4ek.transgura.ecs.component.Position;
+import chae4ek.transgura.ecs.system.Camera;
 import chae4ek.transgura.ecs.system.PhysicalBody;
 import chae4ek.transgura.ecs.system.PlayerController;
 import chae4ek.transgura.ecs.system.PlayerGodModController;
 import chae4ek.transgura.ecs.system.settings.PlayerSettings;
+import chae4ek.transgura.ecs.util.resources.ParticlesType;
+import chae4ek.transgura.ecs.util.resources.ResourceLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -25,7 +29,7 @@ public class Player extends Entity {
     final BodyDef bodyDef = PhysicalBody.createBodyDef(BodyType.DynamicBody, x, y);
     bodyDef.linearDamping = 2.2f;
     final PolygonShape shape = new PolygonShape();
-    final float size = PlayerSettings.idle.getKeyFrames()[0].getRegionWidth() / PPM;
+    final float size = 16f / PPM;
     final float size2 = size - 0.2f;
     final float corner = 0.02f;
     final float offsetY = 0.05f;
@@ -68,6 +72,8 @@ public class Player extends Entity {
         new PlayerController(),
         new PlayerGodModController(),
         new Position(x, y),
+        new Camera(),
+        new Particles(true, ResourceLoader.loadParticleEffect(ParticlesType.BLUE)),
         physicalBody);
   }
 }

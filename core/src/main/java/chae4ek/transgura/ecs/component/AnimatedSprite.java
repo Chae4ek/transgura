@@ -47,6 +47,9 @@ public class AnimatedSprite extends RenderComponent {
   public void draw() {
     final float time = scene.getSceneLifetimeInSec();
     RenderUtils.draw(
-        getParent().getComponent(Position.class), animation.getKeyFrame(time), flipX, flipY);
+        getParent().getComponent(Position.class).getVec(),
+        animation.getKeyFrame(time),
+        flipX,
+        flipY);
   }
 }

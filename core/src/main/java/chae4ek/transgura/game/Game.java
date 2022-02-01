@@ -92,7 +92,8 @@ public final class Game extends ApplicationAdapter {
   @Override
   public void resize(final int width, final int height) {
     if (scene != null) {
-      Scene.viewport.update(width, height, true);
+      Scene.camera.viewportWidth = width;
+      Scene.camera.viewportHeight = height;
       scene.renderManager.setNewFrameBuffer(width, height);
     }
   }

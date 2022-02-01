@@ -17,8 +17,10 @@ public class PlayerController extends System implements CollisionSubscriber {
 
   private static final float jumpStep = 0.06f;
   private static final float jumpInertia = 0.24f;
+  private static final int jumpDelayOffset = 5;
   private float jumpForce;
-  private boolean allowJump;
+  private int allowJumpDelay;
+  private boolean onGround;
   private int touchedGrounds;
   private boolean dash;
 
@@ -90,9 +92,11 @@ public class PlayerController extends System implements CollisionSubscriber {
       body.applyLinearImpulse(-playerSpeed, 0f, 0f, 0f, true);
     }
 
-    if (allowJump && up && !down) {
+    if (!onGround && allowJumpDelay > 0) --allowJumpDelay;
+    if (allowJumpDelay > 0 && up && !down) {
       isRunning = true;
-      allowJump = false;
+      onGround = false;
+      allowJumpDelay = 0;
       jumpForce = PlayerSettings.JUMP_FORCE;
       body.applyLinearImpulse(0f, jumpForce, 0f, 0f, true);
     } else {
@@ -123,7 +127,8 @@ public class PlayerController extends System implements CollisionSubscriber {
   public void beginContact(final Contact contact) {
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_BOTTOM", "GROUND")) {
       ++touchedGrounds;
-      allowJump = touchedGrounds > 0;
+      onGround = touchedGrounds > 0;
+      if (onGround) allowJumpDelay = jumpDelayOffset;
     }
   }
 
@@ -131,7 +136,8 @@ public class PlayerController extends System implements CollisionSubscriber {
   public void endContact(final Contact contact) {
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_BOTTOM", "GROUND")) {
       --touchedGrounds;
-      allowJump = touchedGrounds > 0;
+      onGround = touchedGrounds > 0;
+      if (onGround) allowJumpDelay = jumpDelayOffset;
     }
   }
 }

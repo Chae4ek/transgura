@@ -18,10 +18,6 @@ public class Position extends Component {
     vec = new Vector2();
   }
 
-  public Position(final Position position) {
-    vec = new Vector2(position.getVec());
-  }
-
   public Vector2 getVec() {
     return scaledVec == null ? vec : scaledVec;
   }

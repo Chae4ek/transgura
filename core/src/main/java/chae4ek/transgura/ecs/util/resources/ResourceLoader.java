@@ -3,9 +3,11 @@ package chae4ek.transgura.ecs.util.resources;
 import chae4ek.transgura.ecs.util.resources.TextureType.AtlasType;
 import chae4ek.transgura.exceptions.GameAlert;
 import chae4ek.transgura.exceptions.GameErrorType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
@@ -19,6 +21,8 @@ public class ResourceLoader implements AssetErrorListener {
   private static final ResourceLoader resourceLoader;
   private static final AssetManager assetManager;
 
+  private static Map<ParticlesType, ParticleEffect> particleEffects =
+      new EnumMap<>(ParticlesType.class);
   private static Map<AtlasType, TextureAtlas> textureAtlases = new EnumMap<>(AtlasType.class);
   private static Map<TextureType, Array<AtlasRegion>> atlasRegions =
       new EnumMap<>(TextureType.class);
@@ -27,6 +31,18 @@ public class ResourceLoader implements AssetErrorListener {
     resourceLoader = new ResourceLoader();
     assetManager = new AssetManager();
     assetManager.setErrorListener(resourceLoader);
+  }
+
+  /** Load a particle effect if it hasn't already loaded */
+  public static ParticleEffect loadParticleEffect(final ParticlesType particlesType) {
+    return particleEffects.computeIfAbsent(
+        particlesType,
+        type -> {
+          final ParticleEffect particleEffect = new ParticleEffect();
+          particleEffect.load(
+              Gdx.files.internal("particles/" + type.particleName), Gdx.files.internal(""));
+          return particleEffect;
+        });
   }
 
   /** Load atlases if they haven't already loaded */
@@ -75,6 +91,8 @@ public class ResourceLoader implements AssetErrorListener {
   /** Unload some scene's textures if they are loaded */
   public static void unloadSceneResources() {
     for (final TextureAtlas textureAtlas : textureAtlases.values()) textureAtlas.dispose();
+    for (final ParticleEffect particleEffect : particleEffects.values()) particleEffect.dispose();
+    particleEffects = new EnumMap<>(ParticlesType.class);
     textureAtlases = new EnumMap<>(AtlasType.class);
     atlasRegions = new EnumMap<>(TextureType.class);
     assetManager.clear();
@@ -83,6 +101,8 @@ public class ResourceLoader implements AssetErrorListener {
   /** Unload and dispose all textures and other component */
   public static void dispose() {
     for (final TextureAtlas textureAtlas : textureAtlases.values()) textureAtlas.dispose();
+    for (final ParticleEffect particleEffect : particleEffects.values()) particleEffect.dispose();
+    particleEffects = new EnumMap<>(ParticlesType.class);
     textureAtlases = new EnumMap<>(AtlasType.class);
     atlasRegions = new EnumMap<>(TextureType.class);
     assetManager.dispose();

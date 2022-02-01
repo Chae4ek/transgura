@@ -5,11 +5,11 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
 public final class Main {
-  public static void main(final String[] arg) {
+  public static void main(final String[] args) {
     final Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
     config.setTitle("Transgura");
-    config.setWindowedMode(848, 480);
+    config.setWindowedMode(848, 477);
     config.useVsync(false);
     config.setForegroundFPS(500);
 

@@ -11,6 +11,9 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
   private static final Set<Key> keysThatJustChanged = EnumSet.noneOf(Key.class);
   private static final Set<Button> buttonsThatJustChanged = EnumSet.noneOf(Button.class);
 
+  private static float justScrolledX;
+  private static float justScrolledY;
+
   private InputProcessor() {}
 
   /** Initialize the input processor for {@link Gdx#input} */
@@ -28,6 +31,25 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
     }
     keysThatJustChanged.clear();
     buttonsThatJustChanged.clear();
+    justScrolledX = justScrolledY = 0f;
+  }
+
+  /**
+   * It will return scrolled value once, in the next update frames it will return 0
+   *
+   * @return scrolled value if the mouse wheel is just scrolling horizontally right now
+   */
+  public static float getJustScrolledX() {
+    return justScrolledX;
+  }
+
+  /**
+   * It will return scrolled value once, in the next update frames it will return 0
+   *
+   * @return scrolled value if the mouse wheel is just scrolling vertically right now
+   */
+  public static float getJustScrolledY() {
+    return justScrolledY;
   }
 
   /** @return true if a key is down */
@@ -119,32 +141,26 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
   public boolean touchDown(
       final int screenX, final int screenY, final int pointer, final int buttonCode) {
     final Button button = Button.getButton(buttonCode);
-    if (button != null) {
-      button.isDown = button.isJustDown = true;
-      button.isReleased = button.isJustReleased = false;
-      buttonsThatJustChanged.add(button);
-      button.screenX = screenX;
-      button.screenY = screenY;
-      button.pointer = pointer;
-      return true;
-    }
-    return false;
+    button.isDown = button.isJustDown = true;
+    button.isReleased = button.isJustReleased = false;
+    buttonsThatJustChanged.add(button);
+    button.screenX = screenX;
+    button.screenY = screenY;
+    button.pointer = pointer;
+    return true;
   }
 
   @Override
   public boolean touchUp(
       final int screenX, final int screenY, final int pointer, final int buttonCode) {
     final Button button = Button.getButton(buttonCode);
-    if (button != null) {
-      button.isDown = button.isJustDown = false;
-      button.isReleased = button.isJustReleased = true;
-      buttonsThatJustChanged.add(button);
-      button.screenX = screenX;
-      button.screenY = screenY;
-      button.pointer = pointer;
-      return true;
-    }
-    return false;
+    button.isDown = button.isJustDown = false;
+    button.isReleased = button.isJustReleased = true;
+    buttonsThatJustChanged.add(button);
+    button.screenX = screenX;
+    button.screenY = screenY;
+    button.pointer = pointer;
+    return true;
   }
 
   @Override
@@ -159,6 +175,8 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
 
   @Override
   public boolean scrolled(final float amountX, final float amountY) {
-    return false;
+    justScrolledX = amountX;
+    justScrolledY = amountY;
+    return true;
   }
 }

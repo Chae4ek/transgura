@@ -4,18 +4,26 @@ import chae4ek.transgura.ecs.System;
 import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.util.input.InputProcessor;
 import chae4ek.transgura.game.Game;
-import chae4ek.transgura.game.GameSettings;
 import chae4ek.transgura.game.Scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Camera extends System {
 
+  private static final float[] pixelPerfectZoom = new float[10];
+
+  static {
+    pixelPerfectZoom[0] = 2;
+    for (int i = 1; i < pixelPerfectZoom.length; ) {
+      pixelPerfectZoom[i] = pixelPerfectZoom[i - 1] * i / ++i;
+    }
+  }
+
   private final Vector2 lerpPosition = new Vector2();
   private int zoomIndex = 2;
 
   public Camera() {
-    Scene.camera.zoom = GameSettings.normalZoom[zoomIndex];
+    Scene.camera.zoom = pixelPerfectZoom[zoomIndex];
   }
 
   @Override
@@ -32,14 +40,14 @@ public class Camera extends System {
   public void update() {
     if (InputProcessor.getJustScrolledY() < 0) {
       ++zoomIndex;
-      if (zoomIndex >= GameSettings.normalZoom.length) zoomIndex = 0;
-      Scene.camera.zoom = GameSettings.normalZoom[zoomIndex];
+      if (zoomIndex >= pixelPerfectZoom.length) zoomIndex = pixelPerfectZoom.length - 1;
     }
     if (InputProcessor.getJustScrolledY() > 0) {
       --zoomIndex;
-      if (zoomIndex < 0) zoomIndex = GameSettings.normalZoom.length - 1;
-      Scene.camera.zoom = GameSettings.normalZoom[zoomIndex];
+      if (zoomIndex < 0) zoomIndex = 0;
     }
+    final float lerpZoom = 5f * Game.getDeltaTime();
+    Scene.camera.zoom += (pixelPerfectZoom[zoomIndex] - Scene.camera.zoom) * lerpZoom;
 
     final Vector2 pos = getParent().getComponent(Position.class).getVec();
     final float lerpX = 5f * Game.getDeltaTime();

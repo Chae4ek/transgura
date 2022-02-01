@@ -115,6 +115,12 @@ public class PlayerController extends System implements CollisionSubscriber {
 
     body.applyLinearImpulse(0f, jumpForce, 0f, 0f, true);
 
+    final Vector2 vel = body.getLinearVelocity();
+    if (onGround && vel.y < 0f) {
+      vel.y = 0f;
+      body.setLinearVelocity(vel);
+    }
+
     animation.setAnimation(isRunning ? PlayerSettings.run : PlayerSettings.idle);
   }
 

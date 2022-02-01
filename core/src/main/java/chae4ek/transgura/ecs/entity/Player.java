@@ -33,7 +33,6 @@ public class Player extends Entity {
     final float size2 = size - 0.2f;
     final float corner = 0.02f;
     final float offsetY = 0.05f;
-    // shape.setAsBox(size - 0.2f, size);
     shape.set(
         new float[] {
           -size2,
@@ -41,7 +40,7 @@ public class Player extends Entity {
           size2,
           size,
           size2,
-          corner - size2 + offsetY,
+          corner - size + offsetY,
           size2 - corner,
           -size + offsetY,
           corner - size2,

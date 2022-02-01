@@ -10,9 +10,6 @@ public class GameSettings {
   /** Pixels Per Meter */
   public static final float PPM = 32f;
 
-  public static final float[] normalZoom =
-      new float[] {2f, 1f, 2f / 3f, 1f / 2f, 2f / 5f, 1f / 3f, 2f / 7f, 1f / 4f};
-
   public static final float fixedDeltaTime = 1f / 60f;
   public static final float timeStepForPhysics = 1f / 60f;
 

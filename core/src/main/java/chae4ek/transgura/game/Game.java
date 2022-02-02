@@ -53,7 +53,7 @@ public final class Game extends ApplicationAdapter {
 
   @Override
   public void dispose() {
-    RenderManager.spriteBatch.dispose();
+    RenderManager.dispose();
     scene.systemManager.world.dispose();
     scene = null;
     ResourceLoader.dispose();

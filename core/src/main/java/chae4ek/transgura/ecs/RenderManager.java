@@ -36,16 +36,24 @@ public final class RenderManager {
 
   private static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
 
+  private static FrameBuffer frameBuffer;
+
   private final Map<Entity, Set<RenderComponent>> entityComponents = new HashMap<>();
   private final NavigableMap<Integer, Set<RenderComponent>> renderComponents = new TreeMap<>();
-
-  private FrameBuffer frameBuffer;
 
   public RenderManager() {
     setNewFrameBuffer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
   }
 
+  public static void dispose() {
+    if (frameBuffer != null) frameBuffer.dispose();
+    if (debugRenderer != null) debugRenderer.dispose();
+    spriteBatch.dispose();
+  }
+
+  @NonConcurrent
   public void setNewFrameBuffer(final int width, final int height) {
+    if (frameBuffer != null) frameBuffer.dispose();
     frameBuffer = new FrameBuffer(Format.RGBA8888, width, height, false, false);
   }
 

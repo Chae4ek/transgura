@@ -1,18 +1,16 @@
 package chae4ek.transgura.game.scenes;
 
-import chae4ek.transgura.ecs.Entity;
-import chae4ek.transgura.ecs.component.AnimatedSprite;
-import chae4ek.transgura.ecs.component.Position;
-import chae4ek.transgura.ecs.component.Sprite;
-import chae4ek.transgura.ecs.entity.Player;
-import chae4ek.transgura.ecs.entity.SolidBlock;
-import chae4ek.transgura.ecs.entity.TestRock;
-import chae4ek.transgura.ecs.system.Menu;
-import chae4ek.transgura.ecs.util.resources.ResourceLoader;
-import chae4ek.transgura.ecs.util.resources.TextureType;
-import chae4ek.transgura.ecs.util.resources.TextureType.AtlasType;
-import chae4ek.transgura.game.Scene;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import chae4ek.transgura.engine.ecs.Entity;
+import chae4ek.transgura.engine.ecs.ResourceLoader;
+import chae4ek.transgura.engine.ecs.Scene;
+import chae4ek.transgura.engine.util.resources.TextureType;
+import chae4ek.transgura.engine.util.resources.TextureType.AtlasType;
+import chae4ek.transgura.game.ecs.component.Position;
+import chae4ek.transgura.game.ecs.component.Sprite;
+import chae4ek.transgura.game.ecs.entity.Player;
+import chae4ek.transgura.game.ecs.entity.SolidBlock;
+import chae4ek.transgura.game.ecs.entity.TestRock;
+import chae4ek.transgura.game.ecs.system.Menu;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 
 public class MainMenu extends Scene {
@@ -28,7 +26,7 @@ public class MainMenu extends Scene {
 
     new SolidBlock(100f, 100f, wood);
     new SolidBlock(200f, 100f, wood);
-    new SolidBlock(200f, 200f, new AnimatedSprite(0.5f, PlayMode.LOOP, testBlock, wood));
+    new SolidBlock(200f, 110f, wood);
 
     new SolidBlock(0f, 0f, 27, 1, wood);
     new SolidBlock(0f, 32f, 1, 4, wood);

@@ -44,6 +44,7 @@ public final class Game implements ApplicationListener {
     InputProcessor.init();
     sceneChanging = true;
     nextScene.run();
+    if (sceneChanging) gameAlert.error("Scene should create inside Game.setScene() method");
   }
 
   @Override
@@ -75,6 +76,7 @@ public final class Game implements ApplicationListener {
         scene.dispose();
         sceneChanging = true;
         nextScene.run();
+        if (sceneChanging) gameAlert.error("Scene should create inside Game.setScene() method");
 
         gameAlert.debug("Scene {} is loaded", scene.getClass().getName());
       }

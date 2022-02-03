@@ -15,16 +15,14 @@ public abstract class Scene {
 
   private static final GameAlert gameAlert = new GameAlert(Scene.class);
 
-  public final OrthographicCamera camera =
-      new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+  public final OrthographicCamera camera;
 
-  public final World world = new World(Vector2.Zero, true);
-  public final CollisionListener collisionListener = new CollisionListener();
+  public final World world;
+  public final CollisionListener collisionListener;
 
-  final EntityManager entityManager = new EntityManager();
-  final SystemManager systemManager = new SystemManager();
-  final RenderManager renderManager =
-      GameSettings.isDebugBox2DRendererOn ? new DebugRenderManager(this) : new RenderManager(this);
+  final EntityManager entityManager;
+  final SystemManager systemManager;
+  final RenderManager renderManager;
 
   private final long sceneStartTime;
   private float sceneLifetimeInSec;
@@ -36,7 +34,18 @@ public abstract class Scene {
     }
     Game.sceneChanging = false;
     Game.scene = this;
+
+    camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    world = new World(Vector2.Zero, true);
+    collisionListener = new CollisionListener();
     world.setContactListener(collisionListener);
+    entityManager = new EntityManager();
+    systemManager = new SystemManager();
+    renderManager =
+        GameSettings.isDebugBox2DRendererOn
+            ? new DebugRenderManager(this)
+            : new RenderManager(this);
+
     sceneStartTime = java.lang.System.nanoTime();
   }
 

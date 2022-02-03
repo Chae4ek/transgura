@@ -53,7 +53,7 @@ public class Entity {
   }
 
   /**
-   * Add components (at least 2)
+   * Add components
    *
    * @param components the unique components
    */

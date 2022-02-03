@@ -26,7 +26,8 @@ public abstract class Component {
   }
 
   /**
-   * Bind this component to its parent entity
+   * Bind this component to its parent entity. Checks that the scene of this component is equal to
+   * the parent's one
    *
    * <p>Note: the parentEntity SHOULD exist
    *

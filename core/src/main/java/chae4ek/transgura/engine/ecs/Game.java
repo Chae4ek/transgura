@@ -2,6 +2,7 @@ package chae4ek.transgura.engine.ecs;
 
 import static chae4ek.transgura.engine.util.debug.GameSettings.fixedDeltaTime;
 
+import chae4ek.transgura.engine.util.debug.GameSettings;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -17,8 +18,8 @@ public final class Game implements ApplicationListener {
   private static float time;
   private static float deltaTime;
 
-  public Game(final Runnable mainScene) {
-    nextScene = mainScene;
+  public Game() {
+    nextScene = GameSettings.mainScene;
   }
 
   /** @return the time between the current frame and the previous one */

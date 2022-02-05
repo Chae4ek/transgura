@@ -1,7 +1,7 @@
 package chae4ek.transgura.engine.util.exceptions;
 
-import static chae4ek.transgura.engine.util.debug.GameSettings.isWARNStackTrace;
-import static chae4ek.transgura.engine.util.debug.GameSettings.isWARNThrow;
+import static chae4ek.transgura.engine.util.debug.GameSettings.isWARNStackTraceOn;
+import static chae4ek.transgura.engine.util.debug.GameSettings.isWARNThrowOn;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,12 +70,12 @@ public class GameAlert {
   }
 
   private void logWarnThrow(final String message) throws GameException {
-    if (isWARNThrow) {
+    if (isWARNThrowOn) {
       final GameException e = new GameException(message);
-      if (isWARNStackTrace) logger.warn(getStackTraceToString(e.getStackTrace()));
+      if (isWARNStackTraceOn) logger.warn(getStackTraceToString(e.getStackTrace()));
       throw e;
     }
-    if (isWARNStackTrace) {
+    if (isWARNStackTraceOn) {
       logger.warn(getStackTraceToString(Thread.currentThread().getStackTrace()));
     }
   }

@@ -42,7 +42,7 @@ public abstract class Scene {
     entityManager = new EntityManager();
     systemManager = new SystemManager();
     renderManager =
-        GameSettings.isDebugBox2DRendererOn
+        GameSettings.isBox2DDebugRendererOn
             ? new DebugRenderManager(this)
             : new RenderManager(this);
 

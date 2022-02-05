@@ -22,12 +22,23 @@ public class RenderManager {
           new ShaderProgram(GameSettings.defaultVertexShader, GameSettings.defaultFragmentShader));
 
   protected static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
+
+  /** Shader that will be applied after rendering */
+  public static ShaderProgram postProcessingShader;
+  /**
+   * Calls after setting the {@link #postProcessingShader}
+   *
+   * <pre>Example:{@code
+   * postProcessingSetUp = () ->
+   *   postProcessingShader.setUniformf("u_time", Game.getScene().getSceneLifetimeInSec());
+   * }</pre>
+   */
+  public static Runnable postProcessingSetUp;
+
   protected static FrameBuffer frameBuffer =
       new FrameBuffer(
           Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, false);
-
   protected final NavigableMap<Integer, Set<RenderComponent>> renderComponents = new TreeMap<>();
-
   protected final Scene scene;
 
   public RenderManager(final Scene scene) {
@@ -70,7 +81,7 @@ public class RenderManager {
   /**
    * Add a render component to this render manager
    *
-   * <p>Note: the parentEntity should NOT have the renderComponent. The parentEntity may not exist
+   * <p>Note: the renderComponent should NOT exist in the {@link #renderComponents}
    */
   protected void addRenderComponent(final RenderComponent renderComponent) {
     renderComponents.compute(
@@ -85,7 +96,7 @@ public class RenderManager {
   /**
    * Remove the render component of this render manager
    *
-   * <p>Note: the parentEntity SHOULD exist and SHOULD have the renderComponent
+   * <p>Note: the renderComponent SHOULD exist in the {@link #renderComponents}
    */
   protected void removeRenderComponent(final RenderComponent renderComponent) {
     renderComponents.computeIfPresent(
@@ -97,7 +108,7 @@ public class RenderManager {
   }
 
   /** Render all render components */
-  public void renderAll() {
+  protected void renderAll() {
     scene.camera.update();
     spriteBatch.setProjectionMatrix(scene.camera.combined);
 
@@ -116,14 +127,16 @@ public class RenderManager {
     frameBuffer.end();
 
     // post-processing
-    spriteBatch.setShader(GameSettings.postProcessingShader);
-    GameSettings.postProcessingSetup.run();
+    if (postProcessingShader != null) {
+      spriteBatch.setShader(postProcessingShader);
+      postProcessingSetUp.run();
+    }
 
     spriteBatch.setProjectionMatrix(SHADER_MATRIX_IDENTITY);
     spriteBatch.begin();
     spriteBatch.draw(frameBuffer.getColorBufferTexture(), -1f, 1f, 2f, -2f);
     spriteBatch.end();
 
-    spriteBatch.setShader(null);
+    if (postProcessingShader != null) spriteBatch.setShader(null);
   }
 }

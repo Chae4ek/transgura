@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class SystemManager {
 
-  // using to change the systems when iterating
+  // using to change the systems while iterating
   private static Runnable[] deferredEvents = new Runnable[12];
   protected final Set<System> systems = new HashSet<>();
   private int eventCount;
@@ -13,7 +13,7 @@ public class SystemManager {
   /**
    * Add a system to this system manager
    *
-   * <p>Note: the parentEntity should NOT have the system. The parentEntity may not exist
+   * <p>Note: the system should NOT exist in the {@link #systems}
    */
   protected void addSystem(final System system) {
     addDeferredEvent(() -> systems.add(system));
@@ -22,7 +22,7 @@ public class SystemManager {
   /**
    * Remove the system of this system manager
    *
-   * <p>Note: the parentEntity SHOULD exist and SHOULD have the system
+   * <p>Note: the system SHOULD exist in the {@link #systems}
    */
   protected void removeSystem(final System system) {
     addDeferredEvent(() -> systems.remove(system));

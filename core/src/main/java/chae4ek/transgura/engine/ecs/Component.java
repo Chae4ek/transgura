@@ -20,7 +20,7 @@ public abstract class Component {
     this.isEnabled = isEnabled;
   }
 
-  /** @return true if this component is destroyed (invalid) */
+  /** @return true if this component is destroyed or destroying */
   public final boolean isDestroyed() {
     return isDestroyed;
   }
@@ -29,25 +29,25 @@ public abstract class Component {
    * Bind this component to its parent entity. Checks that the scene of this component is equal to
    * the parent's one
    *
-   * <p>Note: the parentEntity SHOULD exist
+   * <p>Note: the parentEntity should NOT destroyed
    *
    * @return true if the component was successfully bound
    */
   @CallOnce
   boolean bind(final Entity parentEntity) {
+    if (scene != parentEntity.scene) {
+      gameAlert.warn(
+          "The component's scene {} is not equal to the entity's scene {}",
+          scene,
+          parentEntity.scene);
+      return false;
+    }
     if (parent != null) {
       gameAlert.warn(
           "The component {} wasn't bound cause it already has a parent entity {}. The new parent is {}",
           this,
           parent,
           parentEntity);
-      return false;
-    }
-    if (scene != parentEntity.scene) {
-      gameAlert.warn(
-          "The component's scene {} is not equal to the entity's scene {}",
-          scene,
-          parentEntity.scene);
       return false;
     }
     parent = parentEntity;
@@ -72,7 +72,7 @@ public abstract class Component {
     destroyThis();
   }
 
-  /** Invoke before actually destroying */
+  /** Invoke before actually destroying, but {@link #isDestroyed()} returns true now */
   @CallOnce
   protected void onDestroy() {}
 

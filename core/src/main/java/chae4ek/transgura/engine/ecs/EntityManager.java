@@ -10,7 +10,7 @@ public class EntityManager {
   /**
    * Add an entity to this enitity manager
    *
-   * <p>Note: the entity should NOT exist
+   * <p>Note: the entity should NOT exist in the {@link #entities}
    */
   protected void addEntity(final Entity entity) {
     entities.add(entity);
@@ -19,7 +19,7 @@ public class EntityManager {
   /**
    * Remove the entity of this entity manager
    *
-   * <p>Note: the entity SHOULD exist
+   * <p>Note: the entity SHOULD exist in the {@link #entities}
    */
   protected void removeEntity(final Entity entity) {
     entities.remove(entity);

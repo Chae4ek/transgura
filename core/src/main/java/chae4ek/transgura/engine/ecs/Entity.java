@@ -20,7 +20,7 @@ public class Entity {
     for (final Component component : components) addComponent(component);
   }
 
-  /** @return true if this entity is destroyed (invalid) */
+  /** @return true if this entity is destroyed or destroying */
   public final boolean isDestroyed() {
     return isDestroyed;
   }
@@ -28,9 +28,10 @@ public class Entity {
   /**
    * Remove a component
    *
-   * <p>Note: the component SHOULD exist
+   * <p>Note: the component SHOULD exist in the {@link #components}
    */
   final void removeComponent(final Component component) {
+    // if this entity is destroying the components is null. See the destroy() method
     if (components != null) components.remove(component.getClass());
   }
 
@@ -86,18 +87,6 @@ public class Entity {
     return component;
   }
 
-  /**
-   * @param componentClass the class of the component to check
-   * @return true if the component exists, else false
-   */
-  public final boolean contains(final Class<? extends Component> componentClass) {
-    if (isDestroyed) {
-      gameAlert.warn("The entity {} is already destroyed. You cannot check a component", this);
-      return false;
-    }
-    return components.containsKey(componentClass);
-  }
-
   /** Destroy this entity and all associated with it components on its scene */
   @CallOnce
   public final void destroy() {
@@ -116,7 +105,7 @@ public class Entity {
     components.clear();
   }
 
-  /** Invoke before actually destroying */
+  /** Invoke before actually destroying, but {@link #isDestroyed()} returns true now */
   @CallOnce
   protected void onDestroy() {}
 

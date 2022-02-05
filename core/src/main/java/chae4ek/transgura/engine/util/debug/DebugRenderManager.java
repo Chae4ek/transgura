@@ -21,7 +21,7 @@ public class DebugRenderManager extends RenderManager {
   }
 
   @Override
-  public void renderAll() {
+  protected void renderAll() {
     super.renderAll();
     debugRenderer.render(scene.world, debugMatrix.set(scene.camera.combined).scl(GameSettings.PPM));
   }

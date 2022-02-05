@@ -14,15 +14,22 @@
   </appender>
 
   <!-- File appender -->
-  <appender class="ch.qos.logback.core.FileAppender" name="FILE-LAST-SESSION">
-    <append>false</append>
+  <appender class="ch.qos.logback.classic.sift.SiftingAppender" name="FILE">
+    <discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator">
+      <key>time</key>
+      <defaultValue>UNKNOWN_TIME</defaultValue>
+    </discriminator>
+    <sift>
+      <appender class="ch.qos.logback.core.FileAppender">
+        <append>false</append>
 
-    <encoder>
-      <pattern>[%d{dd.MM.yyyy - HH:mm:ss.SSS}] %level [%thread] %logger: "%msg"%n</pattern>
-    </encoder>
+        <encoder>
+          <pattern>[%d{dd.MM.yyyy - HH:mm:ss.SSS}] %level [%thread] %logger: "%msg"%n</pattern>
+        </encoder>
 
-    <file>logs/last-session-debug.log</file>
-
+        <file>logs/debug-${time}.log</file>
+      </appender>
+    </sift>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>DEBUG</level>
     </filter>
@@ -31,7 +38,7 @@
   <!-- Root -->
   <root level="debug">
     <appender-ref ref="STDOUT"/>
-    <appender-ref ref="FILE-LAST-SESSION"/>
+    <appender-ref ref="FILE"/>
   </root>
 
 </configuration>

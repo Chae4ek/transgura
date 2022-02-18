@@ -28,6 +28,7 @@ public class EntityTest {
 
   @BeforeEach
   void setUpEach() {
+    GameSettings.isWARNThrowOn = true;
     entityManager = Mockito.mock(EntityManager.class);
     ReflectUtils.setFieldValue(Game.scene, entityManagerField, entityManager);
   }
@@ -86,17 +87,35 @@ public class EntityTest {
     }
 
     @Test
-    void destroyedComponent__WARN_componentDestroyed() {
-      GameSettings.isWARNThrowOn = true;
+    void twoSameComponentClasses__WARN_componentReplaced() {
       Assertions.assertThrows(
           GameException.class,
-          this::destroyedComponent__nothing,
+          () -> {
+            final Component comp1 = Mockito.mock(Component.class);
+            final Component comp2 = Mockito.mock(Component.class);
+            Mockito.when(comp1.bind(any())).thenReturn(true);
+            Mockito.when(comp2.bind(any())).thenReturn(true);
+
+            new Entity(comp1, comp2);
+          },
+          "Component {} replaced {}. The latter is still attached to this entity {}, but the entity doesn't have it");
+    }
+
+    @Test
+    void destroyedComponent__WARN_componentDestroyed() {
+      Assertions.assertThrows(
+          GameException.class,
+          this::destroyedComponent,
           "The component {} is already destroyed. It wasn't added");
-      GameSettings.isWARNThrowOn = false;
     }
 
     @Test
     void destroyedComponent__nothing() {
+      GameSettings.isWARNThrowOn = false;
+      destroyedComponent();
+    }
+
+    private void destroyedComponent() {
       final Component comp = Mockito.mock(Component.class);
       Mockito.when(comp.isDestroyed()).thenReturn(true);
 
@@ -108,16 +127,19 @@ public class EntityTest {
 
     @Test
     void getNonExistComponent__WARN_componentDoesNotExist() {
-      GameSettings.isWARNThrowOn = true;
       Assertions.assertThrows(
           GameException.class,
-          this::getNonExistComponent__null,
+          this::getNonExistComponent,
           "The component {} doesn't belong to this entity {}");
-      GameSettings.isWARNThrowOn = false;
     }
 
     @Test
     void getNonExistComponent__null() {
+      GameSettings.isWARNThrowOn = false;
+      getNonExistComponent();
+    }
+
+    private void getNonExistComponent() {
       final Entity entity = new Entity();
       Assertions.assertNull(entity.getComponent(Component.class));
     }
@@ -149,22 +171,25 @@ public class EntityTest {
 
     @Test
     void afterDestroy__WARN_alreadyDestroyed() {
-      GameSettings.isWARNThrowOn = true;
       Assertions.assertThrows(
-          GameException.class, this::destroyAgain__nothing, "The entity {} is already destroyed");
+          GameException.class, this::destroyAgain, "The entity {} is already destroyed");
       Assertions.assertThrows(
           GameException.class,
-          this::addComponentsAfterDestroy__nothing,
+          this::addComponentsAfterDestroy,
           "The entity {} is already destroyed. Components weren't added");
       Assertions.assertThrows(
           GameException.class,
-          this::getComponentAfterDestroy__null,
+          this::getComponentAfterDestroy,
           "The entity {} is already destroyed. You cannot get a component");
-      GameSettings.isWARNThrowOn = false;
     }
 
     @Test
     void destroyAgain__nothing() {
+      GameSettings.isWARNThrowOn = false;
+      destroyAgain();
+    }
+
+    private void destroyAgain() {
       Entity entity = new Entity();
       entity.destroy();
 
@@ -177,6 +202,11 @@ public class EntityTest {
 
     @Test
     void addComponentsAfterDestroy__nothing() {
+      GameSettings.isWARNThrowOn = false;
+      addComponentsAfterDestroy();
+    }
+
+    private void addComponentsAfterDestroy() {
       final Entity entity = new Entity();
       entity.destroy();
       final Component1 comp1 = Mockito.mock(Component1.class);
@@ -190,6 +220,11 @@ public class EntityTest {
 
     @Test
     void getComponentAfterDestroy__null() {
+      GameSettings.isWARNThrowOn = false;
+      getComponentAfterDestroy();
+    }
+
+    private void getComponentAfterDestroy() {
       final Entity entity = new Entity();
       entity.destroy();
 

@@ -50,7 +50,16 @@ public class Entity {
       gameAlert.warn("The component {} is already destroyed. It wasn't added", component);
       return;
     }
-    if (component.bind(this)) components.put(component.getClass(), component);
+    if (component.bind(this)) {
+      final Component prev = components.put(component.getClass(), component);
+      if (prev != null) {
+        gameAlert.warn(
+            "Component {} replaced {}. The latter is still attached to this entity {}, but the entity doesn't have it",
+            component,
+            prev,
+            this);
+      }
+    }
   }
 
   /**

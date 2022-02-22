@@ -14,7 +14,9 @@ public class Menu extends System {
     if (InputProcessor.isKeyJustDownNow(Keys.SPACE)) Game.setScene(MainMenu::new);
   }
 
-  /** @deprecated only for testing */
+  /**
+   * @deprecated only for testing
+   */
   @Deprecated(forRemoval = true)
   @Override
   public void fixedUpdate() {

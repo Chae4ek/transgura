@@ -15,26 +15,34 @@ public class GameAlert {
     logger = LoggerFactory.getLogger(classForLog);
   }
 
-  /** @throws GameException always, but after log at the ERROR level */
+  /**
+   * @throws GameException always, but after log at the ERROR level
+   */
   public void error(final String message) throws GameException {
     logger.error(message);
     logErrorThrow(new GameException(message));
   }
 
-  /** @throws GameException always, but after log with ERROR level */
+  /**
+   * @throws GameException always, but after log with ERROR level
+   */
   public void error(final String format, final Object arg) throws GameException {
     logger.error(format, arg);
     logErrorThrow(new GameException(format));
   }
 
-  /** @throws GameException always, but after log with ERROR level */
+  /**
+   * @throws GameException always, but after log with ERROR level
+   */
   public void error(final String format, final Object arg1, final Object arg2)
       throws GameException {
     logger.error(format, arg1, arg2);
     logErrorThrow(new GameException(format));
   }
 
-  /** @throws GameException always, but after log with ERROR level */
+  /**
+   * @throws GameException always, but after log with ERROR level
+   */
   public void error(final String format, final Object... args) throws GameException {
     logger.error(format, args);
     logErrorThrow(new GameException(format));

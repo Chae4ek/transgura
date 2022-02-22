@@ -20,7 +20,9 @@ public abstract class Component {
     this.isEnabled = isEnabled;
   }
 
-  /** @return true if this component is destroyed or destroying */
+  /**
+   * @return true if this component is destroyed or destroying
+   */
   public final boolean isDestroyed() {
     return isDestroyed;
   }
@@ -54,7 +56,9 @@ public abstract class Component {
     return true;
   }
 
-  /** @return the parent entity of this component */
+  /**
+   * @return the parent entity of this component
+   */
   public final Entity getParent() {
     if (parent == null) gameAlert.warn("The component {} does not belong to an entity yet", this);
     return parent;
@@ -86,7 +90,9 @@ public abstract class Component {
     parent.removeComponent(this);
   }
 
-  /** @return true if this component is enabled */
+  /**
+   * @return true if this component is enabled
+   */
   public final boolean isEnabled() {
     if (isDestroyed) {
       gameAlert.warn(

@@ -62,12 +62,16 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
     return justScrolledY;
   }
 
-  /** @return true if a key is down */
+  /**
+   * @return true if a key is down
+   */
   public static boolean isKeyDown(final int key) {
     return key == -1 ? anyKey.isDown : keys[key].isDown;
   }
 
-  /** @return true if a button is down */
+  /**
+   * @return true if a button is down
+   */
   public static boolean isButtonDown(final int button) {
     return buttons[button].isDown;
   }
@@ -90,12 +94,16 @@ public class InputProcessor implements com.badlogic.gdx.InputProcessor {
     return buttons[button].isJustDown;
   }
 
-  /** @return true if a key is released */
+  /**
+   * @return true if a key is released
+   */
   public static boolean isKeyReleased(final int key) {
     return key == -1 ? anyKey.isReleased : keys[key].isReleased;
   }
 
-  /** @return true if a button is released */
+  /**
+   * @return true if a button is released
+   */
   public static boolean isButtonReleased(final int button) {
     return buttons[button].isReleased;
   }

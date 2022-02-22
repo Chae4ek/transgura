@@ -11,7 +11,9 @@ public abstract class RenderComponent extends Component {
 
   public RenderComponent() {}
 
-  /** @return the priority for rendering */
+  /**
+   * @return the priority for rendering
+   */
   public final int getZOrder() {
     return zOrder;
   }

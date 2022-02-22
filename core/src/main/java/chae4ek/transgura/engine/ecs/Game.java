@@ -22,7 +22,9 @@ public final class Game implements ApplicationListener {
     nextScene = GameSettings.mainScene;
   }
 
-  /** @return the time between the current frame and the previous one */
+  /**
+   * @return the time between the current frame and the previous one
+   */
   public static float getDeltaTime() {
     return deltaTime;
   }

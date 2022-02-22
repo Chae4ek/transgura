@@ -20,7 +20,9 @@ public class Entity {
     for (final Component component : components) addComponent(component);
   }
 
-  /** @return true if this entity is destroyed or destroying */
+  /**
+   * @return true if this entity is destroyed or destroying
+   */
   public final boolean isDestroyed() {
     return isDestroyed;
   }

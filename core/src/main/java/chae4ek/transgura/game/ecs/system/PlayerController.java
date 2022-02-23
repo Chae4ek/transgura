@@ -20,7 +20,6 @@ public class PlayerController extends System implements CollisionSubscriber {
   private static final int jumpDelayOffset = 5;
   private float jumpForce;
   private int allowJumpDelay;
-  private boolean onGround;
   private int touchedGrounds;
   private boolean dash;
 
@@ -63,10 +62,6 @@ public class PlayerController extends System implements CollisionSubscriber {
     final float playerSpeed;
     if (dash) {
       dash = false;
-      final Vector2 vel = body.getLinearVelocity();
-      vel.y = jumpForce = 0f;
-      body.setLinearVelocity(vel);
-
       playerSpeed = (Player.DASH_FORCE + Player.SPEED);
     } else playerSpeed = Player.SPEED;
 
@@ -80,6 +75,12 @@ public class PlayerController extends System implements CollisionSubscriber {
       isRunning = true;
       animation.flipX = true;
       body.applyLinearImpulse(-playerSpeed, 0f, 0f, 0f, true);
+    }
+
+    boolean onGround = touchedGrounds > 0;
+    if (onGround) {
+      allowJumpDelay = jumpDelayOffset;
+      jumpForce = 0f;
     }
 
     if (!onGround && allowJumpDelay > 0) --allowJumpDelay;
@@ -100,10 +101,10 @@ public class PlayerController extends System implements CollisionSubscriber {
       body.applyLinearImpulse(0f, -playerSpeed, 0f, 0f, true);
     }
 
-    if (body.getLinearVelocity().y == 0f) jumpForce = -jumpStep;
-    else jumpForce -= jumpStep;
+    if (jumpForce > 0f && body.getLinearVelocity().y <= 0f) jumpForce = 0f;
+    else if (!onGround) jumpForce -= jumpStep;
 
-    body.applyLinearImpulse(0f, jumpForce, 0f, 0f, true);
+    if (jumpForce != 0f) body.applyLinearImpulse(0f, jumpForce, 0f, 0f, true);
 
     final Vector2 vel = body.getLinearVelocity();
     if (onGround && vel.y < 0f) {
@@ -123,8 +124,6 @@ public class PlayerController extends System implements CollisionSubscriber {
   public void beginContact(final Contact contact) {
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_BOTTOM", "GROUND")) {
       ++touchedGrounds;
-      onGround = touchedGrounds > 0;
-      if (onGround) allowJumpDelay = jumpDelayOffset;
     }
   }
 
@@ -132,8 +131,6 @@ public class PlayerController extends System implements CollisionSubscriber {
   public void endContact(final Contact contact) {
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_BOTTOM", "GROUND")) {
       --touchedGrounds;
-      onGround = touchedGrounds > 0;
-      if (onGround) allowJumpDelay = jumpDelayOffset;
     }
   }
 }

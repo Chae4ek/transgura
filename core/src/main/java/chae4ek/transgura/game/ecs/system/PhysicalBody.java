@@ -12,12 +12,15 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 public class PhysicalBody extends System {
 
   private final Body body;
+  private boolean isAwake = true;
 
   public PhysicalBody(final BodyDef bodyDef) {
     body = scene.world.createBody(bodyDef);
   }
 
-  /** @return a new BodyDef with specified parameters */
+  /**
+   * @return a new BodyDef with specified parameters
+   */
   public static BodyDef createBodyDef(final BodyType bodyType, final float x, final float y) {
     final BodyDef bodyDef = new BodyDef();
     bodyDef.type = bodyType;
@@ -37,7 +40,11 @@ public class PhysicalBody extends System {
 
   @Override
   public void update() {
-    final Vector2 pos = body.getPosition();
-    getParent().getComponent(Position.class).getVec().set(pos.x * PPM, pos.y * PPM);
+    final boolean isAwakeNow = body.isAwake();
+    if (isAwakeNow || isAwake) {
+      isAwake = isAwakeNow;
+      final Vector2 pos = body.getPosition();
+      getParent().getComponent(Position.class).getVec().set(pos.x * PPM, pos.y * PPM);
+    }
   }
 }

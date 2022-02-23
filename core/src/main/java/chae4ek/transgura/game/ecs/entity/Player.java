@@ -50,6 +50,7 @@ public class Player extends Entity {
 
     final BodyDef bodyDef = PhysicalBody.createBodyDef(BodyType.DynamicBody, x, y);
     bodyDef.linearDamping = 2.2f;
+    bodyDef.gravityScale = 0f;
     final PolygonShape shape = new PolygonShape();
     final float size = 16f / PPM;
     final float size2 = size - 0.2f;
@@ -57,10 +58,16 @@ public class Player extends Entity {
     final float offsetY = 0.05f;
     shape.set(
         new float[] {
+          // top
           -size2,
+          size - corner,
+          -size2 + corner,
+          size,
+          size2 - corner,
           size,
           size2,
-          size,
+          size - corner,
+          // bottom
           size2,
           corner - size + offsetY,
           size2 - corner,
@@ -72,15 +79,20 @@ public class Player extends Entity {
         });
     final PhysicalBody physicalBody = new PhysicalBody(bodyDef);
     final Body body = physicalBody.getBody();
-    final Fixture fixture = body.createFixture(shape, 1f);
-    fixture.setFriction(0);
+    Fixture fixture = body.createFixture(shape, 1f);
+    fixture.setFriction(0.5f);
     fixture.setUserData("PLAYER");
 
-    final PolygonShape shapeLegs = new PolygonShape();
-    shapeLegs.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, -size2 - 0.15f), 0f);
-    final Fixture fixtureLegs = body.createFixture(shapeLegs, 1f);
-    fixtureLegs.setSensor(true);
-    fixtureLegs.setUserData("PLAYER_BOTTOM");
+    shape.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, size), 0f);
+    fixture = body.createFixture(shape, 1f);
+    fixture.setFriction(0.5f);
+    fixture.setRestitution(0.3f);
+    fixture.setUserData("PLAYER");
+
+    shape.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, offsetY - size), 0f);
+    fixture = body.createFixture(shape, 1f);
+    fixture.setSensor(true);
+    fixture.setUserData("PLAYER_BOTTOM");
 
     final MassData massData = body.getMassData();
     massData.mass = 0.73851955f;

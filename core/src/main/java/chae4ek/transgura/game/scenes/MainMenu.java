@@ -3,6 +3,7 @@ package chae4ek.transgura.game.scenes;
 import chae4ek.transgura.engine.ecs.Entity;
 import chae4ek.transgura.engine.ecs.ResourceLoader;
 import chae4ek.transgura.engine.ecs.Scene;
+import chae4ek.transgura.engine.util.debug.GameSettings;
 import chae4ek.transgura.engine.util.resources.TextureType;
 import chae4ek.transgura.engine.util.resources.TextureType.AtlasType;
 import chae4ek.transgura.game.ecs.component.Position;
@@ -12,10 +13,13 @@ import chae4ek.transgura.game.ecs.entity.SolidBlock;
 import chae4ek.transgura.game.ecs.entity.TestRock;
 import chae4ek.transgura.game.ecs.system.Menu;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.math.Vector2;
 
 public class MainMenu extends Scene {
 
   public MainMenu() {
+    world.setGravity(new Vector2(0, -9.81f / GameSettings.PPM));
+
     ResourceLoader.loadAtlases(AtlasType.TEST);
     final AtlasRegion testBlock = ResourceLoader.loadAtlasRegion(TextureType.TEST_BLOCK);
     final AtlasRegion wood = ResourceLoader.loadAtlasRegion(TextureType.WOOD);

@@ -3,6 +3,7 @@ package chae4ek.transgura.game.scenes;
 import chae4ek.transgura.engine.ecs.Entity;
 import chae4ek.transgura.engine.ecs.ResourceLoader;
 import chae4ek.transgura.engine.ecs.Scene;
+import chae4ek.transgura.engine.ecs.WorldSerializer;
 import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.resources.TextureType;
 import chae4ek.transgura.engine.util.resources.TextureType.AtlasType;
@@ -39,5 +40,7 @@ public class MainMenu extends Scene {
 
     // debug test
     new TestRock(400f, 300f);
+
+    WorldSerializer.saveWorld("saves/test_world_0");
   }
 }

@@ -1,6 +1,6 @@
 package chae4ek.transgura.engine.util;
 
-public class GameConfig {
+public final class GameConfig {
 
   /** The first scene that will be loaded */
   public static Runnable mainScene;
@@ -10,6 +10,8 @@ public class GameConfig {
 
   public static float fixedDeltaTime = 1f / 60f;
   public static float timeStepForPhysics = 1f / 60f;
+
+  public static int worldSizeInBytes = 8192;
 
   public static boolean isBox2DDebugRendererOn;
   /** Whether to throw an exception at the WARN log level */

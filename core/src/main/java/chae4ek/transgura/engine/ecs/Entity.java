@@ -1,5 +1,6 @@
 package chae4ek.transgura.engine.ecs;
 
+import chae4ek.transgura.engine.util.SerializationEvent;
 import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import java.io.IOException;
@@ -15,7 +16,7 @@ import org.nustaq.serialization.FSTClazzInfo.FSTFieldInfo;
 import org.nustaq.serialization.FSTObjectInput;
 import org.nustaq.serialization.FSTObjectOutput;
 
-public class Entity implements Iterable<Component>, Serializable {
+public class Entity extends SerializationEvent implements Iterable<Component>, Serializable {
 
   private static final GameAlert gameAlert = new GameAlert(Entity.class);
 
@@ -155,6 +156,16 @@ public class Entity implements Iterable<Component>, Serializable {
     return components.values().spliterator();
   }
 
+  @Override
+  protected void beforeSerialize() {
+    for (final Component component : components.values()) component.beforeSerialize();
+  }
+
+  @Override
+  protected void afterDeserialize() {
+    for (final Component component : components.values()) component.afterDeserialize();
+  }
+
   public static class FSTEntitySerializer extends FSTBasicObjectSerializer {
 
     @Override
@@ -165,6 +176,7 @@ public class Entity implements Iterable<Component>, Serializable {
         final FSTFieldInfo referencedBy,
         final int streamPosition)
         throws IOException {
+      ((Entity) toWrite).beforeSerialize();
       out.defaultWriteObject(toWrite, clzInfo);
     }
 
@@ -177,6 +189,7 @@ public class Entity implements Iterable<Component>, Serializable {
       in.defaultReadObject(referencedBy, clzInfo, toRead);
       final Entity entity = (Entity) toRead;
       for (final Component component : entity) component.bind(entity);
+      entity.afterDeserialize();
     }
   }
 }

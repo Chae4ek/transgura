@@ -1,6 +1,6 @@
 package chae4ek.transgura.engine.util.exceptions;
 
-public class GameException extends RuntimeException {
+public final class GameException extends RuntimeException {
 
   GameException(final String message) {
     super(message);

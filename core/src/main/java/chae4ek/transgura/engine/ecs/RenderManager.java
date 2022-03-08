@@ -49,7 +49,7 @@ public class RenderManager {
     spriteBatch.dispose();
   }
 
-  void setNewFrameBuffer(final int width, final int height) {
+  final void setNewFrameBuffer(final int width, final int height) {
     if (frameBuffer.getWidth() == width && frameBuffer.getHeight() == height) return;
     frameBuffer.dispose();
     frameBuffer = new FrameBuffer(Format.RGBA8888, width, height, false, false);
@@ -60,7 +60,7 @@ public class RenderManager {
    *
    * <p>Note: oldZOrder != newZOrder && oldZOrder == renderComponent.zOrder
    */
-  void changeZOrder(
+  final void changeZOrder(
       final RenderComponent renderComponent, final int oldZOrder, final int newZOrder) {
     renderComponents.computeIfPresent(
         oldZOrder,
@@ -82,7 +82,7 @@ public class RenderManager {
    *
    * <p>Note: the renderComponent should NOT exist in the {@link #renderComponents}
    */
-  void addRenderComponent(final RenderComponent renderComponent) {
+  final void addRenderComponent(final RenderComponent renderComponent) {
     renderComponents.compute(
         renderComponent.getZOrder(),
         (z, rcomps) -> {
@@ -97,7 +97,7 @@ public class RenderManager {
    *
    * <p>Note: the renderComponent SHOULD exist in the {@link #renderComponents}
    */
-  void removeRenderComponent(final RenderComponent renderComponent) {
+  final void removeRenderComponent(final RenderComponent renderComponent) {
     renderComponents.computeIfPresent(
         renderComponent.getZOrder(),
         (z, rcomps) -> {

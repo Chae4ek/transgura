@@ -3,7 +3,7 @@ package chae4ek.transgura.engine.ecs;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SystemManager {
+public final class SystemManager {
 
   // using to change the systems while iterating
   private static Runnable[] deferredEvents = new Runnable[12];

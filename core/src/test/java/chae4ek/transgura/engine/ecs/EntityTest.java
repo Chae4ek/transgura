@@ -5,7 +5,6 @@ import static org.mockito.internal.verification.VerificationModeFactory.only;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import chae4ek.transgura.engine.util.GameSettings;
-import chae4ek.transgura.engine.util.Serializer;
 import chae4ek.transgura.engine.util.exceptions.GameException;
 import chae4ek.transgura.util.ReflectUtils;
 import java.lang.reflect.Field;
@@ -249,8 +248,8 @@ public class EntityTest {
       final Entity1 entity = new Entity1(342);
       entity.addComponent(new Component1());
 
-      final byte[] data = Serializer.serialize(entity);
-      final Entity1 jsonEntity = Serializer.deserialize(data);
+      final byte[] data = WorldSerializer.serialize(entity);
+      final Entity1 jsonEntity = WorldSerializer.deserialize(data);
 
       Assertions.assertEquals(entity.i, jsonEntity.i);
       Assertions.assertEquals(Game.scene, jsonEntity.scene);

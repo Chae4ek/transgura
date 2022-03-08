@@ -1,7 +1,6 @@
 package chae4ek.transgura.engine.util;
 
-/** You can change these values at runtime if you know something more */
-public class GameSettings {
+public final class GameSettings {
 
   /** Max drawable objects without flushing */
   public static final int defaultSpriteBatchSize = GameConfig.defaultSpriteBatchSize;
@@ -40,6 +39,8 @@ public class GameSettings {
 
   public static final float fixedDeltaTime = GameConfig.fixedDeltaTime;
   public static final float timeStepForPhysics = GameConfig.timeStepForPhysics;
+
+  public static final int worldSizeInBytes = GameConfig.worldSizeInBytes;
 
   public static final boolean isBox2DDebugRendererOn = GameConfig.isBox2DDebugRendererOn;
   /** Whether to throw an exception at the WARN log level */

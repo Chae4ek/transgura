@@ -1,10 +1,11 @@
 package chae4ek.transgura.engine.ecs;
 
+import chae4ek.transgura.engine.util.SerializationEvent;
 import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import java.io.Serializable;
 
-public abstract class Component implements Serializable {
+public abstract class Component extends SerializationEvent implements Serializable {
 
   private static final GameAlert gameAlert = new GameAlert(Component.class);
 
@@ -126,5 +127,15 @@ public abstract class Component implements Serializable {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  @Override
+  protected void beforeSerialize() {
+    // even if there is no code, you should call super.beforeSerialize()
+  }
+
+  @Override
+  protected void afterDeserialize() {
+    // even if there is no code, you should call super.afterDeserialize()
   }
 }

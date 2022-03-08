@@ -7,7 +7,7 @@ public class SystemManager {
 
   // using to change the systems while iterating
   private static Runnable[] deferredEvents = new Runnable[12];
-  protected final Set<System> systems = new HashSet<>();
+  private final Set<System> systems = new HashSet<>();
   private int eventCount;
 
   /**
@@ -15,7 +15,7 @@ public class SystemManager {
    *
    * <p>Note: the system should NOT exist in the {@link #systems}
    */
-  protected void addSystem(final System system) {
+  void addSystem(final System system) {
     addDeferredEvent(() -> systems.add(system));
   }
 
@@ -24,12 +24,12 @@ public class SystemManager {
    *
    * <p>Note: the system SHOULD exist in the {@link #systems}
    */
-  protected void removeSystem(final System system) {
+  void removeSystem(final System system) {
     addDeferredEvent(() -> systems.remove(system));
   }
 
   /** Invoke update() and fixedUpdate() in all enabled systems */
-  protected void updateAndFixedUpdate(int fixedUpdateCount) {
+  void updateAndFixedUpdate(int fixedUpdateCount) {
     runDeferredEvents();
     // the fix of immediately enabling
     for (final System system : systems) system.wasEnabled = system.isEnabled();

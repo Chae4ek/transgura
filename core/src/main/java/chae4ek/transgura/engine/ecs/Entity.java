@@ -2,10 +2,20 @@ package chae4ek.transgura.engine.ecs;
 
 import chae4ek.transgura.engine.util.annotations.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import org.nustaq.serialization.FSTBasicObjectSerializer;
+import org.nustaq.serialization.FSTClazzInfo;
+import org.nustaq.serialization.FSTClazzInfo.FSTFieldInfo;
+import org.nustaq.serialization.FSTObjectInput;
+import org.nustaq.serialization.FSTObjectOutput;
 
-public class Entity {
+public class Entity implements Iterable<Component>, Serializable {
 
   private static final GameAlert gameAlert = new GameAlert(Entity.class);
 
@@ -128,5 +138,45 @@ public class Entity {
   @Override
   public final int hashCode() {
     return super.hashCode();
+  }
+
+  @Override
+  public Iterator<Component> iterator() {
+    return components.values().iterator();
+  }
+
+  @Override
+  public void forEach(final Consumer<? super Component> action) {
+    components.values().forEach(action);
+  }
+
+  @Override
+  public Spliterator<Component> spliterator() {
+    return components.values().spliterator();
+  }
+
+  public static class FSTEntitySerializer extends FSTBasicObjectSerializer {
+
+    @Override
+    public void writeObject(
+        final FSTObjectOutput out,
+        final Object toWrite,
+        final FSTClazzInfo clzInfo,
+        final FSTFieldInfo referencedBy,
+        final int streamPosition)
+        throws IOException {
+      out.defaultWriteObject(toWrite, clzInfo);
+    }
+
+    @Override
+    public void readObject(
+        final FSTObjectInput in,
+        final Object toRead,
+        final FSTClazzInfo clzInfo,
+        final FSTFieldInfo referencedBy) {
+      in.defaultReadObject(referencedBy, clzInfo, toRead);
+      final Entity entity = (Entity) toRead;
+      for (final Component component : entity) component.bind(entity);
+    }
   }
 }

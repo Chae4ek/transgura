@@ -48,6 +48,14 @@ public class GameAlert {
     logErrorThrow(new GameException(format));
   }
 
+  /**
+   * @throws GameException always, but after log with ERROR level
+   */
+  public void error(final String format, final Throwable arg) throws GameException {
+    logger.error(format, arg);
+    logErrorThrow(new GameException(arg));
+  }
+
   /** Log at the WARN level */
   public void warn(final String message) {
     logger.warn(message);
@@ -72,6 +80,12 @@ public class GameAlert {
     logWarnThrow(format);
   }
 
+  /** Log at the WARN level */
+  public void warn(final String format, final Throwable arg) {
+    logger.warn(format, arg);
+    logWarnThrow(arg);
+  }
+
   private void logErrorThrow(final GameException e) throws GameException {
     logger.error(getStackTraceToString(e.getStackTrace()));
     throw e;
@@ -85,6 +99,17 @@ public class GameAlert {
     }
     if (isWARNStackTraceOn) {
       logger.warn(getStackTraceToString(Thread.currentThread().getStackTrace()));
+    }
+  }
+
+  private void logWarnThrow(final Throwable error) throws GameException {
+    if (isWARNThrowOn) {
+      final GameException e = new GameException(error);
+      if (isWARNStackTraceOn) logger.warn(getStackTraceToString(e.getStackTrace()));
+      throw e;
+    }
+    if (isWARNStackTraceOn) {
+      logger.warn(getStackTraceToString(error.getStackTrace()));
     }
   }
 
@@ -114,5 +139,10 @@ public class GameAlert {
   /** Log at the DEBUG level */
   public void debug(final String format, final Object... args) {
     logger.debug(format, args);
+  }
+
+  /** Log at the DEBUG level */
+  public void debug(final String format, final Throwable arg) {
+    logger.debug(format, arg);
   }
 }

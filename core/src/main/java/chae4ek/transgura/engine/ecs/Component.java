@@ -2,15 +2,16 @@ package chae4ek.transgura.engine.ecs;
 
 import chae4ek.transgura.engine.util.annotations.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
+import java.io.Serializable;
 
-public abstract class Component {
+public abstract class Component implements Serializable {
 
   private static final GameAlert gameAlert = new GameAlert(Component.class);
 
   /** The scene where this component is created */
   public final Scene scene = Game.scene;
 
-  private Entity parent;
+  private transient Entity parent;
   private boolean isEnabled = true;
   private boolean isDestroyed;
 

@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.internal.verification.VerificationModeFactory.only;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+import chae4ek.transgura.engine.util.Serializer;
 import chae4ek.transgura.engine.util.debug.GameSettings;
 import chae4ek.transgura.engine.util.exceptions.GameException;
 import chae4ek.transgura.util.ReflectUtils;
@@ -36,6 +37,14 @@ public class EntityTest {
   private static class Component1 extends Component {}
 
   private static class Component2 extends Component {}
+
+  private static class Entity1 extends Entity {
+    int i;
+
+    public Entity1(final int i) {
+      this.i = i;
+    }
+  }
 
   @Nested
   public class CreatingEntityTest {
@@ -229,6 +238,23 @@ public class EntityTest {
       entity.destroy();
 
       Assertions.assertNull(entity.getComponent(Component.class));
+    }
+  }
+
+  @Nested
+  public class SerializationTest {
+
+    @Test
+    void serialize_deserialize__correctScene() {
+      final Entity1 entity = new Entity1(342);
+      entity.addComponent(new Component1());
+
+      final byte[] data = Serializer.serialize(entity);
+      final Entity1 jsonEntity = Serializer.deserialize(data);
+
+      Assertions.assertEquals(entity.i, jsonEntity.i);
+      Assertions.assertEquals(Game.scene, jsonEntity.scene);
+      Assertions.assertEquals(jsonEntity, jsonEntity.getComponent(Component1.class).getParent());
     }
   }
 }

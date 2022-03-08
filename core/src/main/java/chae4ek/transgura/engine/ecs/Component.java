@@ -1,6 +1,6 @@
 package chae4ek.transgura.engine.ecs;
 
-import chae4ek.transgura.engine.util.annotations.CallOnce;
+import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import java.io.Serializable;
 
@@ -77,7 +77,7 @@ public abstract class Component implements Serializable {
     destroyThis();
   }
 
-  /** Invoke before actually destroying, but {@link #isDestroyed()} returns true now */
+  /** Invokes before actually destroying, but {@link #isDestroyed()} returns true now */
   @CallOnce
   protected void onDestroy() {}
 

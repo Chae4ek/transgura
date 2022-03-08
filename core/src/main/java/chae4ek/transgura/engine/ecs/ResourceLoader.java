@@ -22,6 +22,7 @@ public class ResourceLoader implements AssetErrorListener {
   private static final ResourceLoader resourceLoader = new ResourceLoader();
   private static final AssetManager assetManager = new AssetManager();
 
+  // TODO: Types should be used by user
   private static Map<ParticlesType, ParticleEffect> particleEffects =
       new EnumMap<>(ParticlesType.class);
   private static Map<AtlasType, TextureAtlas> textureAtlases = new EnumMap<>(AtlasType.class);

@@ -1,6 +1,6 @@
 package chae4ek.transgura.game.ecs.entity;
 
-import static chae4ek.transgura.engine.util.debug.GameSettings.PPM;
+import static chae4ek.transgura.engine.util.GameSettings.PPM;
 
 import chae4ek.transgura.engine.ecs.Entity;
 import chae4ek.transgura.engine.ecs.ResourceLoader;

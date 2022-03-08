@@ -1,8 +1,8 @@
 package chae4ek.transgura.engine.ecs;
 
-import static chae4ek.transgura.engine.util.debug.GameSettings.fixedDeltaTime;
+import static chae4ek.transgura.engine.util.GameSettings.fixedDeltaTime;
 
-import chae4ek.transgura.engine.util.debug.GameSettings;
+import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;

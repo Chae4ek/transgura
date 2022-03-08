@@ -1,7 +1,7 @@
 package chae4ek.transgura;
 
 import chae4ek.transgura.engine.ecs.Game;
-import chae4ek.transgura.engine.util.debug.GameConfig;
+import chae4ek.transgura.engine.util.GameConfig;
 import chae4ek.transgura.game.scenes.MainMenu;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;

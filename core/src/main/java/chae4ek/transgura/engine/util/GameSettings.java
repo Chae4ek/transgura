@@ -1,4 +1,4 @@
-package chae4ek.transgura.engine.util.debug;
+package chae4ek.transgura.engine.util;
 
 /** You can change these values at runtime if you know something more */
 public class GameSettings {

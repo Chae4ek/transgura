@@ -1,6 +1,7 @@
 package chae4ek.transgura.engine.util.debug;
 
 import chae4ek.transgura.engine.ecs.RenderManager;
+import chae4ek.transgura.engine.util.GameSettings;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 

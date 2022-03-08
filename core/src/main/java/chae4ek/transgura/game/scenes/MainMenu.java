@@ -3,7 +3,7 @@ package chae4ek.transgura.game.scenes;
 import chae4ek.transgura.engine.ecs.Entity;
 import chae4ek.transgura.engine.ecs.ResourceLoader;
 import chae4ek.transgura.engine.ecs.Scene;
-import chae4ek.transgura.engine.util.debug.GameSettings;
+import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.resources.TextureType;
 import chae4ek.transgura.engine.util.resources.TextureType.AtlasType;
 import chae4ek.transgura.game.ecs.component.Position;

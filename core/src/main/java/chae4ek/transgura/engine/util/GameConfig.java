@@ -1,4 +1,4 @@
-package chae4ek.transgura.engine.util.debug;
+package chae4ek.transgura.engine.util;
 
 public class GameConfig {
 

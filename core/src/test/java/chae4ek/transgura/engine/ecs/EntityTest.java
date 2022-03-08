@@ -4,8 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.internal.verification.VerificationModeFactory.only;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.Serializer;
-import chae4ek.transgura.engine.util.debug.GameSettings;
 import chae4ek.transgura.engine.util.exceptions.GameException;
 import chae4ek.transgura.util.ReflectUtils;
 import java.lang.reflect.Field;

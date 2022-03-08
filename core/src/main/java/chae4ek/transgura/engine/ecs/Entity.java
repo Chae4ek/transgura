@@ -1,6 +1,6 @@
 package chae4ek.transgura.engine.ecs;
 
-import chae4ek.transgura.engine.util.annotations.CallOnce;
+import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import java.io.IOException;
 import java.io.Serializable;
@@ -126,7 +126,7 @@ public class Entity implements Iterable<Component>, Serializable {
     components.clear();
   }
 
-  /** Invoke before actually destroying, but {@link #isDestroyed()} returns true now */
+  /** Invokes before actually destroying, but {@link #isDestroyed()} returns true now */
   @CallOnce
   protected void onDestroy() {}
 

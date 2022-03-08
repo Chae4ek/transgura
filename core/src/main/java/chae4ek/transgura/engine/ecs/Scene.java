@@ -1,10 +1,10 @@
 package chae4ek.transgura.engine.ecs;
 
-import static chae4ek.transgura.engine.util.debug.GameSettings.timeStepForPhysics;
+import static chae4ek.transgura.engine.util.GameSettings.timeStepForPhysics;
 
+import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.collision.CollisionListener;
 import chae4ek.transgura.engine.util.debug.DebugRenderManager;
-import chae4ek.transgura.engine.util.debug.GameSettings;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;

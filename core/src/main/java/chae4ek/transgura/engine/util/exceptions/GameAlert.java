@@ -1,7 +1,7 @@
 package chae4ek.transgura.engine.util.exceptions;
 
-import static chae4ek.transgura.engine.util.debug.GameSettings.isWARNStackTraceOn;
-import static chae4ek.transgura.engine.util.debug.GameSettings.isWARNThrowOn;
+import static chae4ek.transgura.engine.util.GameSettings.isWARNStackTraceOn;
+import static chae4ek.transgura.engine.util.GameSettings.isWARNThrowOn;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -6,7 +6,7 @@ public final class GameException extends RuntimeException {
     super(message);
   }
 
-  GameException(final Throwable e) {
-    super(e);
+  GameException(final String message, final Throwable e) {
+    super(message, e);
   }
 }

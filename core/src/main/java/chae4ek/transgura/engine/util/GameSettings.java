@@ -1,5 +1,7 @@
 package chae4ek.transgura.engine.util;
 
+import chae4ek.transgura.engine.ecs.ResourceManager;
+
 public final class GameSettings {
 
   /** Max drawable objects without flushing */
@@ -33,6 +35,8 @@ public final class GameSettings {
 
   /** The first scene that will be loaded */
   public static final Runnable mainScene = GameConfig.mainScene;
+
+  public static final ResourceManager resourceManager = GameConfig.resourceManager.get();
 
   /** Pixels Per Meter */
   public static final float PPM = GameConfig.PPM;

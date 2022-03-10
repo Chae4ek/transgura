@@ -1,9 +1,14 @@
 package chae4ek.transgura.engine.util;
 
+import chae4ek.transgura.engine.ecs.ResourceManager;
+import java.util.function.Supplier;
+
 public final class GameConfig {
 
   /** The first scene that will be loaded */
   public static Runnable mainScene;
+
+  public static Supplier<ResourceManager> resourceManager = ResourceManager::new;
 
   /** Pixels Per Meter */
   public static float PPM = 32f;

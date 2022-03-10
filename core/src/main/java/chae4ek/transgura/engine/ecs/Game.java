@@ -54,7 +54,7 @@ public final class Game implements ApplicationListener {
   public void dispose() {
     scene.dispose();
     scene.renderManager.dispose();
-    ResourceLoader.dispose();
+    GameSettings.resourceManager.dispose();
   }
 
   @Override
@@ -74,14 +74,14 @@ public final class Game implements ApplicationListener {
       if (nextScene != null) {
         InputProcessor.postUpdate();
 
-        ResourceLoader.unloadSceneResources();
+        GameSettings.resourceManager.unloadSceneResources();
 
         scene.dispose();
         sceneChanging = true;
         nextScene.run();
         if (sceneChanging) gameAlert.error("Scene should create inside Game.setScene() method");
 
-        gameAlert.debug("Scene {} is loaded", scene.getClass().getName());
+        gameAlert.debug("Scene {} is loaded", scene);
       }
       return;
     }

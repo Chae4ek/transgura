@@ -15,111 +15,124 @@ public final class GameAlert {
     logger = LoggerFactory.getLogger(classForLog);
   }
 
+  /* -------------------------- ERROR level -------------------------- */
+
   /**
    * @throws GameException always, but after log at the ERROR level
    */
   public void error(final String message) throws GameException {
-    logger.error(message);
-    logErrorThrow(new GameException(message));
+    error0(message);
+    logStacktraceErrorAndThrow(message);
   }
 
   /**
-   * @throws GameException always, but after log with ERROR level
+   * @throws GameException always, but after log at the ERROR level
    */
   public void error(final String format, final Object arg) throws GameException {
-    logger.error(format, arg);
-    logErrorThrow(new GameException(format));
+    error0(format, arg);
+    logStacktraceErrorAndThrow(null);
   }
 
   /**
-   * @throws GameException always, but after log with ERROR level
+   * @throws GameException always, but after log at the ERROR level
    */
   public void error(final String format, final Object arg1, final Object arg2)
       throws GameException {
-    logger.error(format, arg1, arg2);
-    logErrorThrow(new GameException(format));
+    error0(format, arg1, arg2);
+    logStacktraceErrorAndThrow(null);
   }
 
   /**
-   * @throws GameException always, but after log with ERROR level
+   * @throws GameException always, but after log at the ERROR level
    */
   public void error(final String format, final Object... args) throws GameException {
-    logger.error(format, args);
-    logErrorThrow(new GameException(format));
+    error0(format, args);
+    logStacktraceErrorAndThrow(null);
   }
 
   /**
-   * @throws GameException always, but after log with ERROR level
+   * @throws GameException always, but after log at the ERROR level
    */
-  public void error(final String format, final Throwable arg) throws GameException {
-    logger.error(format, arg);
-    logErrorThrow(new GameException(arg));
+  public void error(final String message, final Throwable arg) throws GameException {
+    error0(message, arg);
+    throw new GameException(message, arg);
   }
+
+  private void logStacktraceErrorAndThrow(final String message) throws GameException {
+    final GameException e = new GameException(message);
+    logger.error("Stacktrace:", e);
+    throw e;
+  }
+
+  /* -------------------------- ERROR-0 level (without throwing) -------------------------- */
+
+  /** Log at the ERROR level without throwing an exception */
+  public void error0(final String message) {
+    logger.error(message);
+  }
+
+  /** Log at the ERROR level without throwing an exception */
+  public void error0(final String format, final Object arg) {
+    logger.error(format, arg);
+  }
+
+  /** Log at the ERROR level without throwing an exception */
+  public void error0(final String format, final Object arg1, final Object arg2) {
+    logger.error(format, arg1, arg2);
+  }
+
+  /** Log at the ERROR level without throwing an exception */
+  public void error0(final String format, final Object... args) {
+    logger.error(format, args);
+  }
+
+  /** Log at the ERROR level without throwing an exception */
+  public void error0(final String format, final Throwable arg) {
+    logger.error(format, arg);
+  }
+
+  /* -------------------------- WARN level -------------------------- */
 
   /** Log at the WARN level */
   public void warn(final String message) {
     logger.warn(message);
-    logWarnThrow(message);
+    logStacktraceWarnAndThrow(message);
   }
 
   /** Log at the WARN level */
   public void warn(final String format, final Object arg) {
     logger.warn(format, arg);
-    logWarnThrow(format);
+    logStacktraceWarnAndThrow(null);
   }
 
   /** Log at the WARN level */
   public void warn(final String format, final Object arg1, final Object arg2) {
     logger.warn(format, arg1, arg2);
-    logWarnThrow(format);
+    logStacktraceWarnAndThrow(null);
   }
 
   /** Log at the WARN level */
   public void warn(final String format, final Object... args) {
     logger.warn(format, args);
-    logWarnThrow(format);
+    logStacktraceWarnAndThrow(null);
   }
 
   /** Log at the WARN level */
-  public void warn(final String format, final Throwable arg) {
-    logger.warn(format, arg);
-    logWarnThrow(arg);
+  public void warn(final String message, final Throwable arg) {
+    logger.warn(message, arg);
+    if (isWARNThrowOn) throw new GameException(message, arg);
   }
 
-  private void logErrorThrow(final GameException e) throws GameException {
-    logger.error(getStackTraceToString(e.getStackTrace()));
-    throw e;
-  }
-
-  private void logWarnThrow(final String message) throws GameException {
+  private void logStacktraceWarnAndThrow(final String message) {
     if (isWARNThrowOn) {
       final GameException e = new GameException(message);
-      if (isWARNStackTraceOn) logger.warn(getStackTraceToString(e.getStackTrace()));
+      logger.warn("Stacktrace:", e);
       throw e;
     }
-    if (isWARNStackTraceOn) {
-      logger.warn(getStackTraceToString(Thread.currentThread().getStackTrace()));
-    }
+    if (isWARNStackTraceOn) logger.warn("Stacktrace:", new GameException(message));
   }
 
-  private void logWarnThrow(final Throwable error) throws GameException {
-    if (isWARNThrowOn) {
-      final GameException e = new GameException(error);
-      if (isWARNStackTraceOn) logger.warn(getStackTraceToString(e.getStackTrace()));
-      throw e;
-    }
-    if (isWARNStackTraceOn) {
-      logger.warn(getStackTraceToString(error.getStackTrace()));
-    }
-  }
-
-  private String getStackTraceToString(final StackTraceElement[] stackTrace) {
-    final StringBuilder sb = new StringBuilder();
-    for (final StackTraceElement element : stackTrace) {
-      sb.append(element.toString()).append(System.lineSeparator());
-    }
-    return sb.toString();
-  }
+  /* -------------------------- DEBUG level -------------------------- */
 
   /** Log at the DEBUG level */
   public void debug(final String message) {
@@ -142,7 +155,7 @@ public final class GameAlert {
   }
 
   /** Log at the DEBUG level */
-  public void debug(final String format, final Throwable arg) {
-    logger.debug(format, arg);
+  public void debug(final String message, final Throwable arg) {
+    logger.debug(message, arg);
   }
 }

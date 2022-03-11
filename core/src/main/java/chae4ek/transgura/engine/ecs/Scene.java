@@ -10,11 +10,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import org.nustaq.serialization.FSTBasicObjectSerializer;
-import org.nustaq.serialization.FSTClazzInfo;
-import org.nustaq.serialization.FSTClazzInfo.FSTFieldInfo;
-import org.nustaq.serialization.FSTObjectInput;
-import org.nustaq.serialization.FSTObjectOutput;
 
 public abstract class Scene {
 
@@ -72,26 +67,5 @@ public abstract class Scene {
     systemManager.updateAndFixedUpdate(fixedUpdateCount);
 
     renderManager.renderAll();
-  }
-
-  public static class FSTSceneSerializer extends FSTBasicObjectSerializer {
-
-    @Override
-    public void writeObject(
-        final FSTObjectOutput out,
-        final Object toWrite,
-        final FSTClazzInfo clzInfo,
-        final FSTFieldInfo referencedBy,
-        final int streamPosition) {}
-
-    @Override
-    public Object instantiate(
-        final Class objectClass,
-        final FSTObjectInput in,
-        final FSTClazzInfo serializationInfo,
-        final FSTFieldInfo referencee,
-        final int streamPosition) {
-      return Game.scene;
-    }
   }
 }

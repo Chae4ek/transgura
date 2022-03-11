@@ -11,7 +11,7 @@ public final class Game implements ApplicationListener {
 
   private static final GameAlert gameAlert = new GameAlert(Game.class);
 
-  static boolean sceneChanging;
+  static boolean sceneChanging; // to prevent (new)scene inside (Runnable)nextScene
   static Scene scene;
   private static Runnable nextScene;
 
@@ -27,6 +27,13 @@ public final class Game implements ApplicationListener {
    */
   public static float getDeltaTime() {
     return deltaTime;
+  }
+
+  /**
+   * @return the current scene
+   */
+  public static Scene getScene() {
+    return scene;
   }
 
   /**

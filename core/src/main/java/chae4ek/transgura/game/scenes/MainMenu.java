@@ -2,6 +2,7 @@ package chae4ek.transgura.game.scenes;
 
 import chae4ek.transgura.engine.ecs.Entity;
 import chae4ek.transgura.engine.ecs.Scene;
+import chae4ek.transgura.engine.ecs.WorldSerializer;
 import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.game.ecs.component.Position;
 import chae4ek.transgura.game.ecs.component.Sprite;
@@ -40,6 +41,6 @@ public class MainMenu extends Scene {
     // debug test
     new TestRock(400f, 300f);
 
-    // WorldSerializer.saveWorld("saves/test_world_0");
+    WorldSerializer.saveWorld("saves/test_world_0");
   }
 }

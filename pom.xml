@@ -23,7 +23,7 @@
     <surefire.version>3.0.0-M5</surefire.version>
     <mockito.version>4.3.1</mockito.version>
     <slf4j-api.version>1.7.36</slf4j-api.version>
-    <logback-classic.version>1.2.10</logback-classic.version>
+    <logback-classic.version>1.2.11</logback-classic.version>
 
     <java.version>14</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>

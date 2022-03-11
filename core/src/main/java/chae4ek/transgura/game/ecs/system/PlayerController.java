@@ -1,6 +1,7 @@
 package chae4ek.transgura.game.ecs.system;
 
 import chae4ek.transgura.engine.ecs.Entity;
+import chae4ek.transgura.engine.ecs.Game;
 import chae4ek.transgura.engine.ecs.InputProcessor;
 import chae4ek.transgura.engine.ecs.System;
 import chae4ek.transgura.engine.util.collision.CollisionProcessor;
@@ -24,7 +25,7 @@ public class PlayerController extends System implements CollisionSubscriber {
   private boolean dash;
 
   public PlayerController() {
-    scene.collisionListener.addCollisionSubscriber(this);
+    Game.getScene().collisionListener.addCollisionSubscriber(this);
   }
 
   @Override
@@ -117,7 +118,7 @@ public class PlayerController extends System implements CollisionSubscriber {
 
   @Override
   protected void onDestroy() {
-    scene.collisionListener.removeCollisionSubscriber(this);
+    Game.getScene().collisionListener.removeCollisionSubscriber(this);
   }
 
   @Override

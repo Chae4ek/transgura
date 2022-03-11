@@ -1,5 +1,6 @@
 package chae4ek.transgura.engine.util.debug;
 
+import chae4ek.transgura.engine.ecs.Game;
 import chae4ek.transgura.engine.ecs.RenderManager;
 import chae4ek.transgura.engine.util.GameSettings;
 import com.badlogic.gdx.math.Matrix4;
@@ -19,6 +20,8 @@ public final class DebugRenderManager extends RenderManager {
   @Override
   protected void renderAll() {
     super.renderAll();
-    debugRenderer.render(scene.world, debugMatrix.set(scene.camera.combined).scl(GameSettings.PPM));
+    debugRenderer.render(
+        Game.getScene().world,
+        debugMatrix.set(Game.getScene().camera.combined).scl(GameSettings.PPM));
   }
 }

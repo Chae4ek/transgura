@@ -14,7 +14,7 @@ public abstract class System extends Component {
   @Override
   final boolean bind(final Entity parentEntity) {
     if (super.bind(parentEntity)) {
-      scene.systemManager.addSystem(this);
+      Game.getScene().systemManager.addSystem(this);
       return true;
     }
     return false;
@@ -23,7 +23,7 @@ public abstract class System extends Component {
   @Override
   final void destroyThis() {
     super.destroyThis();
-    scene.systemManager.removeSystem(this);
+    Game.getScene().systemManager.removeSystem(this);
   }
 
   /** Update the system logic every frame */

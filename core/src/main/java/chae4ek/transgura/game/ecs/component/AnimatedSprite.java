@@ -1,5 +1,6 @@
 package chae4ek.transgura.game.ecs.component;
 
+import chae4ek.transgura.engine.ecs.Game;
 import chae4ek.transgura.engine.ecs.RenderComponent;
 import chae4ek.transgura.engine.ecs.RenderManager;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -28,7 +29,7 @@ public class AnimatedSprite extends RenderComponent {
   @Override
   public void draw() {
     final Vector2 position = getParent().getComponent(Position.class).getVec();
-    final AtlasRegion atlasRegion = animation.getKeyFrame(scene.getSceneLifetimeInSec());
+    final AtlasRegion atlasRegion = animation.getKeyFrame(Game.getScene().getSceneLifetimeInSec());
     final int width = atlasRegion.getRegionWidth();
     final int height = atlasRegion.getRegionHeight();
     RenderManager.spriteBatch.draw(

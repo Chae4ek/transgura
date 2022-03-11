@@ -39,9 +39,6 @@ public class RenderManager {
       new FrameBuffer(
           Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, false);
 
-  /** The scene where this manager is created */
-  public final Scene scene = Game.scene;
-
   private final NavigableMap<Integer, Set<RenderComponent>> renderComponents = new TreeMap<>();
 
   protected void dispose() {
@@ -108,8 +105,8 @@ public class RenderManager {
 
   /** Render all render components */
   protected void renderAll() {
-    scene.camera.update();
-    spriteBatch.setProjectionMatrix(scene.camera.combined);
+    Game.getScene().camera.update();
+    spriteBatch.setProjectionMatrix(Game.getScene().camera.combined);
 
     frameBuffer.begin();
     Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1f);

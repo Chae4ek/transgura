@@ -1,33 +1,24 @@
 package chae4ek.transgura.engine.ecs;
 
-import chae4ek.transgura.engine.util.SerializationEvent;
+import chae4ek.transgura.engine.util.HierarchicallySerializable;
 import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.function.Consumer;
-import org.nustaq.serialization.FSTBasicObjectSerializer;
-import org.nustaq.serialization.FSTClazzInfo;
-import org.nustaq.serialization.FSTClazzInfo.FSTFieldInfo;
-import org.nustaq.serialization.FSTObjectInput;
-import org.nustaq.serialization.FSTObjectOutput;
 
-public class Entity extends SerializationEvent implements Iterable<Component>, Serializable {
+public class Entity implements Iterable<Component>, HierarchicallySerializable {
 
   private static final GameAlert gameAlert = new GameAlert(Entity.class);
-
-  /** The scene where this entity is created */
-  public final Scene scene = Game.scene;
 
   private Map<Class<? extends Component>, Component> components = new HashMap<>();
   private boolean isDestroyed;
 
   public Entity(final Component... components) {
-    scene.entityManager.addEntity(this);
+    Game.getScene().entityManager.addEntity(this);
     for (final Component component : components) addComponent(component);
   }
 
@@ -118,7 +109,7 @@ public class Entity extends SerializationEvent implements Iterable<Component>, S
     }
     isDestroyed = true;
     onDestroy();
-    scene.entityManager.removeEntity(this);
+    Game.getScene().entityManager.removeEntity(this);
 
     final Map<Class<? extends Component>, Component> temp = components;
     components = null;
@@ -157,39 +148,13 @@ public class Entity extends SerializationEvent implements Iterable<Component>, S
   }
 
   @Override
-  protected void beforeSerialize() {
-    for (final Component component : components.values()) component.beforeSerialize();
+  public void serialize(final DefaultSerializer defaultSerializer) throws IOException {
+    defaultSerializer.run();
   }
 
   @Override
-  protected void afterDeserialize() {
-    for (final Component component : components.values()) component.afterDeserialize();
-  }
-
-  public static class FSTEntitySerializer extends FSTBasicObjectSerializer {
-
-    @Override
-    public void writeObject(
-        final FSTObjectOutput out,
-        final Object toWrite,
-        final FSTClazzInfo clzInfo,
-        final FSTFieldInfo referencedBy,
-        final int streamPosition)
-        throws IOException {
-      ((Entity) toWrite).beforeSerialize();
-      out.defaultWriteObject(toWrite, clzInfo);
-    }
-
-    @Override
-    public void readObject(
-        final FSTObjectInput in,
-        final Object toRead,
-        final FSTClazzInfo clzInfo,
-        final FSTFieldInfo referencedBy) {
-      in.defaultReadObject(referencedBy, clzInfo, toRead);
-      final Entity entity = (Entity) toRead;
-      for (final Component component : entity) component.bind(entity);
-      entity.afterDeserialize();
-    }
+  public void deserialize(final DefaultDeserializer defaultDeserializer) throws Exception {
+    defaultDeserializer.run();
+    for (final Component component : components.values()) component.bind(this);
   }
 }

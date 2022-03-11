@@ -20,7 +20,7 @@ public abstract class RenderComponent extends Component {
 
   /** Set the priority for rendering */
   public final void setZOrder(final int zOrder) {
-    scene.renderManager.changeZOrder(this, this.zOrder, zOrder);
+    Game.getScene().renderManager.changeZOrder(this, this.zOrder, zOrder);
     this.zOrder = zOrder;
   }
 
@@ -32,7 +32,7 @@ public abstract class RenderComponent extends Component {
   @Override
   final boolean bind(final Entity parentEntity) {
     if (super.bind(parentEntity)) {
-      scene.renderManager.addRenderComponent(this);
+      Game.getScene().renderManager.addRenderComponent(this);
       return true;
     }
     return false;
@@ -41,7 +41,7 @@ public abstract class RenderComponent extends Component {
   @Override
   final void destroyThis() {
     super.destroyThis();
-    scene.renderManager.removeRenderComponent(this);
+    Game.getScene().renderManager.removeRenderComponent(this);
   }
 
   @Override

@@ -51,7 +51,6 @@ public class EntityTest {
     @Test
     void noneComponents__addEntity() {
       final Entity entity = new Entity();
-      Assertions.assertSame(Game.scene, entity.scene);
       Mockito.verify(entityManager, only()).addEntity(entity);
     }
 
@@ -252,7 +251,6 @@ public class EntityTest {
       final Entity1 jsonEntity = WorldSerializer.deserialize(data);
 
       Assertions.assertEquals(entity.i, jsonEntity.i);
-      Assertions.assertEquals(Game.scene, jsonEntity.scene);
       Assertions.assertEquals(jsonEntity, jsonEntity.getComponent(Component1.class).getParent());
     }
   }

@@ -1,16 +1,13 @@
 package chae4ek.transgura.engine.ecs;
 
-import chae4ek.transgura.engine.util.SerializationEvent;
+import chae4ek.transgura.engine.util.HierarchicallySerializable;
 import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
-import java.io.Serializable;
+import java.io.IOException;
 
-public abstract class Component extends SerializationEvent implements Serializable {
+public abstract class Component implements HierarchicallySerializable {
 
   private static final GameAlert gameAlert = new GameAlert(Component.class);
-
-  /** The scene where this component is created */
-  public final Scene scene = Game.scene;
 
   private transient Entity parent;
   private boolean isEnabled = true;
@@ -30,8 +27,7 @@ public abstract class Component extends SerializationEvent implements Serializab
   }
 
   /**
-   * Bind this component to its parent entity. Checks that the scene of this component is equal to
-   * the parent's one
+   * Bind this component to its parent entity
    *
    * <p>Note: the parentEntity should NOT destroyed
    *
@@ -39,13 +35,6 @@ public abstract class Component extends SerializationEvent implements Serializab
    */
   @CallOnce
   boolean bind(final Entity parentEntity) {
-    if (scene != parentEntity.scene) {
-      gameAlert.warn(
-          "The component's scene {} is not equal to the entity's scene {}",
-          scene,
-          parentEntity.scene);
-      return false;
-    }
     if (parent != null) {
       gameAlert.warn(
           "The component {} wasn't bound cause it already has a parent entity {}. The new parent is {}",
@@ -130,12 +119,12 @@ public abstract class Component extends SerializationEvent implements Serializab
   }
 
   @Override
-  protected void beforeSerialize() {
-    // even if there is no code, you should call super.beforeSerialize()
+  public void serialize(final DefaultSerializer defaultSerializer) throws IOException {
+    defaultSerializer.run();
   }
 
   @Override
-  protected void afterDeserialize() {
-    // even if there is no code, you should call super.afterDeserialize()
+  public void deserialize(final DefaultDeserializer defaultDeserializer) throws Exception {
+    defaultDeserializer.run();
   }
 }

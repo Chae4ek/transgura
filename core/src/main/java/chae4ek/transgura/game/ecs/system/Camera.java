@@ -2,6 +2,7 @@ package chae4ek.transgura.game.ecs.system;
 
 import chae4ek.transgura.engine.ecs.Game;
 import chae4ek.transgura.engine.ecs.InputProcessor;
+import chae4ek.transgura.engine.ecs.Scene;
 import chae4ek.transgura.engine.ecs.System;
 import chae4ek.transgura.game.ecs.component.Position;
 import com.badlogic.gdx.Gdx;
@@ -22,7 +23,7 @@ public class Camera extends System {
   private int zoomIndex = 2;
 
   public Camera() {
-    scene.camera.zoom = pixelPerfectZoom[zoomIndex];
+    Game.getScene().camera.zoom = pixelPerfectZoom[zoomIndex];
   }
 
   @Override
@@ -35,6 +36,7 @@ public class Camera extends System {
       --zoomIndex;
       if (zoomIndex < 0) zoomIndex = 0;
     }
+    final Scene scene = Game.getScene();
     final float lerpZoom = 5f * Game.getDeltaTime();
     scene.camera.zoom += (pixelPerfectZoom[zoomIndex] - scene.camera.zoom) * lerpZoom;
 

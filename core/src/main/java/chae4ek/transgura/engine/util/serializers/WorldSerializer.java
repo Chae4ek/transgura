@@ -4,6 +4,8 @@ import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable.DefaultDeserializer;
 import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable.DefaultSerializer;
 import com.badlogic.gdx.utils.ObjectSet;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import org.nustaq.serialization.FSTBasicObjectSerializer;
 import org.nustaq.serialization.FSTClazzInfo;
 import org.nustaq.serialization.FSTClazzInfo.FSTFieldInfo;
@@ -33,19 +35,18 @@ public final class WorldSerializer {
   }
 
   // TODO: make (de)serialize non-static and make this class a GameSettings member
-  public static byte[] serialize(final Object obj) {
+  public static void serialize(final DataOutputStream out, final Object obj) {
     try {
-      return fst.asByteArray(obj);
+      fst.encodeToStream(out, obj);
     } catch (final Exception e) {
       gameAlert.error("Serialization error", e);
-      throw new IllegalStateException(e);
     }
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> T deserialize(final byte[] data) {
+  public static <T> T deserialize(final DataInputStream in) {
     try {
-      return (T) fst.asObject(data);
+      return (T) fst.decodeFromStream(in);
     } catch (final Exception e) {
       gameAlert.error("Serialization error", e);
       throw new IllegalStateException(e);
@@ -56,6 +57,7 @@ public final class WorldSerializer {
       final Class<? extends T> clazz,
       final InstantiationSerializer<T> instantiator,
       final boolean alsoForAllSubclasses) {
+    instantiators.add(instantiator);
     final FSTInstantiator<T> fstInstantiator = new FSTInstantiator<>(instantiator);
     fst.registerSerializer(clazz, fstInstantiator, alsoForAllSubclasses);
   }

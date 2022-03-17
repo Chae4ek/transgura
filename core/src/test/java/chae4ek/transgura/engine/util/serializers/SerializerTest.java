@@ -9,10 +9,8 @@ import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable.DefaultDeserializer;
 import chae4ek.transgura.util.ReflectUtils;
 import java.lang.reflect.Field;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class SerializerTest {
@@ -31,7 +29,9 @@ public class SerializerTest {
     ReflectUtils.setFieldValue(Game.getScene(), entityManagerField, entityManager);
   }
 
-  @Test
+  // TODO
+
+  /*@Test
   void serialize_deserialize__correctSerDes() {
     final Entity1 entity = new Entity1(342);
     entity.addComponent(new Component1());
@@ -67,7 +67,7 @@ public class SerializerTest {
     final Entity3 jsonEntity = WorldSerializer.deserialize(data);
 
     Assertions.assertEquals(1, jsonEntity.i);
-  }
+  }*/
 
   private static class Component1 extends Component {}
 

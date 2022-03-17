@@ -72,9 +72,7 @@ public abstract class Scene {
   /** Save current scene */
   public void saveWorld(final DataOutputStream out) throws IOException {
     WorldSerializer.cleanSerializedCache();
-    final byte[] data = entityManager.serialize();
-    out.writeInt(data.length);
-    out.write(data);
+    entityManager.serialize(out);
     WorldSerializer.cleanSerializedCache();
 
     out.writeFloat(sceneLifetimeInSec);
@@ -83,8 +81,7 @@ public abstract class Scene {
   /** Load current scene */
   public void loadWorld(final DataInputStream in) throws IOException {
     WorldSerializer.cleanDeserializedCache();
-    final int size = in.readInt();
-    entityManager.deserialize(in.readNBytes(size));
+    entityManager.deserialize(in);
     WorldSerializer.cleanDeserializedCache();
 
     sceneLifetimeInSec = in.readFloat();

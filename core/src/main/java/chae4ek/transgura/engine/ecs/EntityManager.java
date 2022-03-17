@@ -1,6 +1,8 @@
 package chae4ek.transgura.engine.ecs;
 
 import chae4ek.transgura.engine.util.serializers.WorldSerializer;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,13 +28,13 @@ public final class EntityManager {
     entities.remove(entity);
   }
 
-  byte[] serialize() {
-    return WorldSerializer.serialize(entities);
+  void serialize(final DataOutputStream out) {
+    WorldSerializer.serialize(out, entities);
   }
 
-  void deserialize(final byte[] data) {
+  void deserialize(final DataInputStream in) {
     for (final Entity entity : entities) entity.destroy();
     entities.clear();
-    entities.addAll(WorldSerializer.deserialize(data));
+    entities.addAll(WorldSerializer.deserialize(in));
   }
 }

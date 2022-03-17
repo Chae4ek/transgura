@@ -12,8 +12,8 @@ public final class DebugRenderManager extends RenderManager {
   private static final Matrix4 debugMatrix = new Matrix4();
 
   @Override
-  protected void dispose() {
-    super.dispose();
+  protected void disposeStatic() {
+    super.disposeStatic();
     debugRenderer.dispose();
   }
 
@@ -21,7 +21,7 @@ public final class DebugRenderManager extends RenderManager {
   protected void renderAll() {
     super.renderAll();
     debugRenderer.render(
-        Game.getScene().world,
+        Game.getScene().b2dWorld,
         debugMatrix.set(Game.getScene().camera.combined).scl(GameSettings.PPM));
   }
 }

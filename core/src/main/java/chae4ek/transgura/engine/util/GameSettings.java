@@ -1,7 +1,5 @@
 package chae4ek.transgura.engine.util;
 
-import chae4ek.transgura.engine.ecs.ResourceManager;
-
 public final class GameSettings {
 
   /** Max drawable objects without flushing */
@@ -44,7 +42,7 @@ public final class GameSettings {
   public static final float fixedDeltaTime = GameConfig.fixedDeltaTime;
   public static final float timeStepForPhysics = GameConfig.timeStepForPhysics;
 
-  public static final int worldSizeInBytes = GameConfig.worldSizeInBytes;
+  public static final int worldBufferSize = GameConfig.worldBufferSize;
 
   public static final boolean isBox2DDebugRendererOn = GameConfig.isBox2DDebugRendererOn;
   /** Whether to throw an exception at the WARN log level */

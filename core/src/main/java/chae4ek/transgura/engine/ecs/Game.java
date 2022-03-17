@@ -59,8 +59,8 @@ public final class Game implements ApplicationListener {
 
   @Override
   public void dispose() {
-    scene.dispose();
-    scene.renderManager.dispose();
+    scene.softDispose();
+    scene.disposeStatic();
     GameSettings.resourceManager.dispose();
   }
 
@@ -76,14 +76,14 @@ public final class Game implements ApplicationListener {
     } else fixedUpdateCount = 0;
 
     try {
-      scene.updateAll(fixedUpdateCount);
+      scene.update(fixedUpdateCount);
     } catch (final SceneExit exit) {
       if (nextScene != null) {
         InputProcessor.postUpdate();
 
         GameSettings.resourceManager.unloadSceneResources();
 
-        scene.dispose();
+        scene.softDispose();
         sceneChanging = true;
         nextScene.run();
         if (sceneChanging) gameAlert.error("Scene should create inside Game.setScene() method");
@@ -106,7 +106,7 @@ public final class Game implements ApplicationListener {
     if (scene != null) {
       scene.camera.viewportWidth = width;
       scene.camera.viewportHeight = height;
-      scene.renderManager.setNewFrameBuffer(width, height);
+      RenderManager.setNewFrameBuffer(width, height);
     }
   }
 

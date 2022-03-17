@@ -28,8 +28,7 @@ public final class SystemManager {
     addDeferredEvent(() -> systems.remove(system));
   }
 
-  /** Invoke update() and fixedUpdate() in all enabled systems */
-  void updateAndFixedUpdate(int fixedUpdateCount) {
+  void updateAndOneFixedUpdate(final boolean dofixedUpdate) {
     runDeferredEvents();
     // the fix of immediately enabling
     for (final System system : systems) system.wasEnabled = system.isEnabled();
@@ -37,17 +36,16 @@ public final class SystemManager {
       if (system.wasEnabled) {
         system.update();
         // the first fixed update is called with the update together to accelerate the cycle
-        if (fixedUpdateCount > 0 && system.isEnabled()) system.fixedUpdate();
+        if (dofixedUpdate && system.isEnabled()) system.fixedUpdate();
       }
     }
+  }
 
-    while (--fixedUpdateCount > 0) {
-      InputProcessor.postUpdate(); // updating just pressed/released keys
-      runDeferredEvents();
-      // for (final System system : systems) system.wasEnabled = system.isEnabled();
-      for (final System system : systems) {
-        if (system.isEnabled()) system.fixedUpdate();
-      }
+  void fixedUpdateAll() {
+    runDeferredEvents();
+    // for (final System system : systems) system.wasEnabled = system.isEnabled();
+    for (final System system : systems) {
+      if (system.isEnabled()) system.fixedUpdate();
     }
   }
 

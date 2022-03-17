@@ -1,9 +1,8 @@
 package chae4ek.transgura.engine.ecs;
 
-import chae4ek.transgura.engine.util.HierarchicallySerializable;
 import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
-import java.io.IOException;
+import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable;
 
 public abstract class Component implements HierarchicallySerializable {
 
@@ -11,7 +10,7 @@ public abstract class Component implements HierarchicallySerializable {
 
   private transient Entity parent;
   private boolean isEnabled = true;
-  private boolean isDestroyed;
+  private transient boolean isDestroyed;
 
   public Component() {}
 
@@ -119,12 +118,12 @@ public abstract class Component implements HierarchicallySerializable {
   }
 
   @Override
-  public void serialize(final DefaultSerializer defaultSerializer) throws IOException {
-    defaultSerializer.run();
+  public void serialize(final DefaultSerializer serializer) throws Exception {
+    serializer.write(this);
   }
 
   @Override
-  public void deserialize(final DefaultDeserializer defaultDeserializer) throws Exception {
-    defaultDeserializer.run();
+  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
+    deserializer.readTo(this);
   }
 }

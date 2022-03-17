@@ -16,7 +16,7 @@ public class PhysicalBody extends System {
   private boolean isAwake = true;
 
   public PhysicalBody(final BodyDef bodyDef) {
-    body = Game.getScene().world.createBody(bodyDef);
+    body = Game.getScene().b2dWorld.createBody(bodyDef);
   }
 
   /**
@@ -32,7 +32,7 @@ public class PhysicalBody extends System {
 
   @Override
   protected void onDestroy() {
-    Game.getScene().world.destroyBody(body);
+    Game.getScene().b2dWorld.destroyBody(body);
   }
 
   public Body getBody() {

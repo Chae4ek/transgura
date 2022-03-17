@@ -2,7 +2,6 @@ package chae4ek.transgura.game.scenes;
 
 import chae4ek.transgura.engine.ecs.Entity;
 import chae4ek.transgura.engine.ecs.Scene;
-import chae4ek.transgura.engine.ecs.WorldSerializer;
 import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.game.ecs.component.Position;
 import chae4ek.transgura.game.ecs.component.Sprite;
@@ -10,16 +9,19 @@ import chae4ek.transgura.game.ecs.entity.Player;
 import chae4ek.transgura.game.ecs.entity.SolidBlock;
 import chae4ek.transgura.game.ecs.entity.TestRock;
 import chae4ek.transgura.game.ecs.system.Menu;
-import chae4ek.transgura.game.resources.ResourceLoader;
-import chae4ek.transgura.game.resources.TextureType;
-import chae4ek.transgura.game.resources.TextureType.AtlasType;
+import chae4ek.transgura.game.util.resources.ResourceLoader;
+import chae4ek.transgura.game.util.resources.TextureType;
+import chae4ek.transgura.game.util.resources.TextureType.AtlasType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class MainMenu extends Scene {
 
   public MainMenu() {
-    world.setGravity(new Vector2(0, -9.81f / GameSettings.PPM));
+    b2dWorld.setGravity(new Vector2(0, -9.81f / GameSettings.PPM));
 
     ResourceLoader.loadAtlases(AtlasType.TEST);
     final AtlasRegion testBlock = ResourceLoader.loadAtlasRegion(TextureType.TEST_BLOCK);
@@ -41,6 +43,12 @@ public class MainMenu extends Scene {
     // debug test
     new TestRock(400f, 300f);
 
-    WorldSerializer.saveWorld("saves/test_world_0");
+    try (final DataOutputStream out =
+        new DataOutputStream(
+            Gdx.files.local("saves/test_world").write(false, GameSettings.worldBufferSize))) {
+      saveWorld(out);
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
   }
 }

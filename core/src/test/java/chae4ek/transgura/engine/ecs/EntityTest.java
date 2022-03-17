@@ -23,27 +23,19 @@ public class EntityTest {
 
   @BeforeAll
   static void setUp() {
-    Game.scene = Mockito.mock(Scene.class);
+    ReflectUtils.setFieldValue(null, Game.class, "scene", Mockito.mock(Scene.class));
   }
 
   @BeforeEach
   void setUpEach() {
     GameSettings.isWARNThrowOn = true;
     entityManager = Mockito.mock(EntityManager.class);
-    ReflectUtils.setFieldValue(Game.scene, entityManagerField, entityManager);
+    ReflectUtils.setFieldValue(Game.getScene(), entityManagerField, entityManager);
   }
 
   private static class Component1 extends Component {}
 
   private static class Component2 extends Component {}
-
-  private static class Entity1 extends Entity {
-    int i;
-
-    public Entity1(final int i) {
-      this.i = i;
-    }
-  }
 
   @Nested
   public class CreatingEntityTest {
@@ -236,22 +228,6 @@ public class EntityTest {
       entity.destroy();
 
       Assertions.assertNull(entity.getComponent(Component.class));
-    }
-  }
-
-  @Nested
-  public class SerializationTest {
-
-    @Test
-    void serialize_deserialize__correctScene() {
-      final Entity1 entity = new Entity1(342);
-      entity.addComponent(new Component1());
-
-      final byte[] data = WorldSerializer.serialize(entity);
-      final Entity1 jsonEntity = WorldSerializer.deserialize(data);
-
-      Assertions.assertEquals(entity.i, jsonEntity.i);
-      Assertions.assertEquals(jsonEntity, jsonEntity.getComponent(Component1.class).getParent());
     }
   }
 }

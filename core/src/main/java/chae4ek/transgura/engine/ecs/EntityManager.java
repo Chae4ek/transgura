@@ -1,6 +1,6 @@
 package chae4ek.transgura.engine.ecs;
 
-import java.io.IOException;
+import chae4ek.transgura.engine.util.serializers.WorldSerializer;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,8 +30,7 @@ public final class EntityManager {
     return WorldSerializer.serialize(entities);
   }
 
-  void deserialize(final byte[] data) throws IOException {
-    // TODO: destroying is unsafe (may delete an entity)
+  void deserialize(final byte[] data) {
     for (final Entity entity : entities) entity.destroy();
     entities.clear();
     entities.addAll(WorldSerializer.deserialize(data));

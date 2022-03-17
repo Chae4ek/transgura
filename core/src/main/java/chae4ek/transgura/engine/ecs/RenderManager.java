@@ -41,15 +41,15 @@ public class RenderManager {
 
   private final NavigableMap<Integer, Set<RenderComponent>> renderComponents = new TreeMap<>();
 
-  protected void dispose() {
-    frameBuffer.dispose();
-    spriteBatch.dispose();
-  }
-
-  final void setNewFrameBuffer(final int width, final int height) {
+  public static void setNewFrameBuffer(final int width, final int height) {
     if (frameBuffer.getWidth() == width && frameBuffer.getHeight() == height) return;
     frameBuffer.dispose();
     frameBuffer = new FrameBuffer(Format.RGBA8888, width, height, false, false);
+  }
+
+  protected void disposeStatic() {
+    frameBuffer.dispose();
+    spriteBatch.dispose();
   }
 
   /**

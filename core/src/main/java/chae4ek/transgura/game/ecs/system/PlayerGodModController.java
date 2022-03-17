@@ -3,7 +3,7 @@ package chae4ek.transgura.game.ecs.system;
 import chae4ek.transgura.engine.ecs.Entity;
 import chae4ek.transgura.engine.ecs.InputProcessor;
 import chae4ek.transgura.engine.ecs.System;
-import chae4ek.transgura.game.ecs.component.AnimatedSprite;
+import chae4ek.transgura.game.ecs.component.AnimatedSprites;
 import chae4ek.transgura.game.ecs.entity.Player;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -36,7 +36,7 @@ public class PlayerGodModController extends System {
   @Override
   public void fixedUpdate() {
     final Entity player = getParent();
-    final AnimatedSprite animation = player.getComponent(AnimatedSprite.class);
+    final AnimatedSprites animation = player.getComponent(AnimatedSprites.class);
     final Body body = player.getComponent(PhysicalBody.class).getBody();
 
     final boolean right = InputProcessor.isKeyDown(Player.PLAYER_RIGHT);

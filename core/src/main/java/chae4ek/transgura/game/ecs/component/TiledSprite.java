@@ -1,6 +1,5 @@
 package chae4ek.transgura.game.ecs.component;
 
-import chae4ek.transgura.engine.ecs.RenderManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -27,8 +26,7 @@ public class TiledSprite extends Sprite {
     for (int x = 0; x < countX; ++x) {
       posY = parentPosY;
       for (int y = 0; y < countY; ++y) {
-        sprite.setPosition(posX, posY);
-        sprite.draw(RenderManager.spriteBatch);
+        draw(posX, posY);
         posY += scaledHeight;
       }
       posX += scaledWidth;

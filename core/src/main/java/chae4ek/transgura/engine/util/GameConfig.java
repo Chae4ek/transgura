@@ -1,6 +1,6 @@
 package chae4ek.transgura.engine.util;
 
-import chae4ek.transgura.engine.ecs.ResourceManager;
+import chae4ek.transgura.engine.util.ResourceManager.NullResourceLoader;
 import java.util.function.Supplier;
 
 public final class GameConfig {
@@ -8,7 +8,7 @@ public final class GameConfig {
   /** The first scene that will be loaded */
   public static Runnable mainScene;
 
-  public static Supplier<ResourceManager> resourceManager = ResourceManager::new;
+  public static Supplier<ResourceManager> resourceManager = NullResourceLoader::new;
 
   /** Pixels Per Meter */
   public static float PPM = 32f;
@@ -16,7 +16,7 @@ public final class GameConfig {
   public static float fixedDeltaTime = 1f / 60f;
   public static float timeStepForPhysics = 1f / 60f;
 
-  public static int worldSizeInBytes = 8192;
+  public static int worldBufferSize = 8192;
 
   public static boolean isBox2DDebugRendererOn;
   /** Whether to throw an exception at the WARN log level */

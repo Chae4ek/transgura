@@ -2,7 +2,7 @@ package chae4ek.transgura.engine.ecs;
 
 public abstract class System extends Component {
 
-  boolean wasEnabled = true;
+  transient boolean wasEnabled = true;
 
   public System() {}
 

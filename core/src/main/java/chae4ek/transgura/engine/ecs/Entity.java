@@ -1,9 +1,8 @@
 package chae4ek.transgura.engine.ecs;
 
-import chae4ek.transgura.engine.util.HierarchicallySerializable;
 import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
-import java.io.IOException;
+import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -15,7 +14,7 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
   private static final GameAlert gameAlert = new GameAlert(Entity.class);
 
   private Map<Class<? extends Component>, Component> components = new HashMap<>();
-  private boolean isDestroyed;
+  private transient boolean isDestroyed;
 
   public Entity(final Component... components) {
     Game.getScene().entityManager.addEntity(this);
@@ -148,13 +147,13 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
   }
 
   @Override
-  public void serialize(final DefaultSerializer defaultSerializer) throws IOException {
-    defaultSerializer.run();
+  public void serialize(final DefaultSerializer serializer) throws Exception {
+    serializer.write(this);
   }
 
   @Override
-  public void deserialize(final DefaultDeserializer defaultDeserializer) throws Exception {
-    defaultDeserializer.run();
+  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
+    deserializer.readTo(this);
     for (final Component component : components.values()) component.bind(this);
   }
 }

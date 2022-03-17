@@ -16,8 +16,6 @@ public final class GameConfig {
   public static float fixedDeltaTime = 1f / 60f;
   public static float timeStepForPhysics = 1f / 60f;
 
-  public static int worldBufferSize = 8192;
-
   public static boolean isBox2DDebugRendererOn;
   /** Whether to throw an exception at the WARN log level */
   public static boolean isWARNThrowOn;

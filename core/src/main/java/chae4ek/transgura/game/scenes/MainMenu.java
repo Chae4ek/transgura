@@ -44,8 +44,7 @@ public class MainMenu extends Scene {
     new TestRock(400f, 300f);
 
     try (final DataOutputStream out =
-        new DataOutputStream(
-            Gdx.files.local("saves/test_world").write(false, GameSettings.worldBufferSize))) {
+        new DataOutputStream(Gdx.files.local("saves/world0").write(false, 8192))) {
       saveWorld(out);
     } catch (final IOException e) {
       e.printStackTrace();

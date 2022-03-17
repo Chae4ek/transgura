@@ -8,9 +8,15 @@ import chae4ek.transgura.engine.ecs.Scene;
 import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable.DefaultDeserializer;
 import chae4ek.transgura.util.ReflectUtils;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.lang.reflect.Field;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class SerializerTest {
@@ -29,15 +35,18 @@ public class SerializerTest {
     ReflectUtils.setFieldValue(Game.getScene(), entityManagerField, entityManager);
   }
 
-  // TODO
-
-  /*@Test
+  @Test
   void serialize_deserialize__correctSerDes() {
     final Entity1 entity = new Entity1(342);
     entity.addComponent(new Component1());
 
-    final byte[] data = WorldSerializer.serialize(entity);
-    final Entity1 jsonEntity = WorldSerializer.deserialize(data);
+    final ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+    final DataOutputStream out = new DataOutputStream(streamOut);
+    WorldSerializer.serialize(out, entity);
+
+    final ByteArrayInputStream streamIn = new ByteArrayInputStream(streamOut.toByteArray());
+    final DataInputStream in = new DataInputStream(streamIn);
+    final Entity1 jsonEntity = WorldSerializer.deserialize(in);
 
     Assertions.assertEquals(entity.i, jsonEntity.i);
     Assertions.assertEquals(jsonEntity, jsonEntity.getComponent(Component1.class).getParent());
@@ -49,8 +58,13 @@ public class SerializerTest {
 
     final Entity2 entity = new Entity2(9);
 
-    final byte[] data = WorldSerializer.serialize(entity);
-    final Entity2 jsonEntity = WorldSerializer.deserialize(data);
+    final ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+    final DataOutputStream out = new DataOutputStream(streamOut);
+    WorldSerializer.serialize(out, entity);
+
+    final ByteArrayInputStream streamIn = new ByteArrayInputStream(streamOut.toByteArray());
+    final DataInputStream in = new DataInputStream(streamIn);
+    final Entity2 jsonEntity = WorldSerializer.deserialize(in);
 
     Assertions.assertEquals(entity.i, jsonEntity.i);
     Assertions.assertEquals(entity.j, jsonEntity.j);
@@ -63,11 +77,16 @@ public class SerializerTest {
 
     final Entity3 entity = new Entity3(9);
 
-    final byte[] data = WorldSerializer.serialize(entity);
-    final Entity3 jsonEntity = WorldSerializer.deserialize(data);
+    final ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+    final DataOutputStream out = new DataOutputStream(streamOut);
+    WorldSerializer.serialize(out, entity);
+
+    final ByteArrayInputStream streamIn = new ByteArrayInputStream(streamOut.toByteArray());
+    final DataInputStream in = new DataInputStream(streamIn);
+    final Entity3 jsonEntity = WorldSerializer.deserialize(in);
 
     Assertions.assertEquals(1, jsonEntity.i);
-  }*/
+  }
 
   private static class Component1 extends Component {}
 

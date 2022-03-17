@@ -4,7 +4,6 @@ import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable.DefaultDeserializer;
 import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable.DefaultSerializer;
 
-// TODO(?): make abstract class
 public interface InstantiationSerializer<T> {
 
   /**
@@ -24,6 +23,8 @@ public interface InstantiationSerializer<T> {
    * @return the deserialized object
    */
   T instantiate(Class<? extends T> clazz, DefaultDeserializer deserializer) throws Exception;
+
+  // TODO: make interface for cache cleaning
 
   /** Prepare to start/end of serialization the {@link chae4ek.transgura.engine.ecs.Scene world} */
   default void cleanSerializedCache() {}

@@ -119,7 +119,7 @@ public abstract class Component implements HierarchicallySerializable {
 
   @Override
   public void serialize(final DefaultSerializer serializer) throws Exception {
-    serializer.write(this);
+    serializer.writeThis();
   }
 
   @Override

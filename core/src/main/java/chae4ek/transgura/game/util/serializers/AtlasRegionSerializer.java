@@ -13,7 +13,7 @@ public class AtlasRegionSerializer implements InstantiationSerializer<AtlasRegio
   public <E extends AtlasRegion> void serialize(final E object, final DefaultSerializer serializer)
       throws Exception {
     serializer.write(object.name);
-    serializer.write(object.index == -1 ? 0 : object.index);
+    serializer.writeInt(object.index);
   }
 
   @Override
@@ -22,6 +22,8 @@ public class AtlasRegionSerializer implements InstantiationSerializer<AtlasRegio
       throws Exception {
     final String name = (String) deserializer.read();
     final int index = deserializer.readInt();
-    return ResourceLoader.loadAtlasRegions(TextureType.map.get(name))[index];
+    return index == -1
+        ? ResourceLoader.loadAtlasRegion(TextureType.map.get(name))
+        : ResourceLoader.loadAtlasRegions(TextureType.map.get(name))[index];
   }
 }

@@ -21,23 +21,23 @@ public class BodySerializer implements InstantiationSerializer<Body> {
   public <E extends Body> void serialize(final E object, final DefaultSerializer serializer)
       throws Exception {
     final int addr = System.identityHashCode(object);
-    serializer.write(addr);
+    serializer.writeInt(addr);
     if (!cacheSer.add(addr)) return; // already serialized
 
     // TODO: refactoring
     serializer.write(object.getType());
     serializer.write(object.getPosition());
-    serializer.write(object.getAngle());
+    serializer.writeFloat(object.getAngle());
     serializer.write(object.getLinearVelocity());
-    serializer.write(object.getAngularVelocity());
-    serializer.write(object.getLinearDamping());
-    serializer.write(object.getAngularDamping());
-    serializer.write(object.isSleepingAllowed());
-    serializer.write(object.isAwake());
-    serializer.write(object.isFixedRotation());
-    serializer.write(object.isBullet());
-    serializer.write(object.isActive());
-    serializer.write(object.getGravityScale());
+    serializer.writeFloat(object.getAngularVelocity());
+    serializer.writeFloat(object.getLinearDamping());
+    serializer.writeFloat(object.getAngularDamping());
+    serializer.writeBoolean(object.isSleepingAllowed());
+    serializer.writeBoolean(object.isAwake());
+    serializer.writeBoolean(object.isFixedRotation());
+    serializer.writeBoolean(object.isBullet());
+    serializer.writeBoolean(object.isActive());
+    serializer.writeFloat(object.getGravityScale());
     serializer.write(object.getUserData());
     // TODO: Array<Fixture> fixtures
     // TODO: Array<JointEdge> joints

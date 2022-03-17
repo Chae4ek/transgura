@@ -41,7 +41,7 @@ public class Player extends Entity {
   public static float JUMP_FORCE = 0.85f;
   public static float DASH_FORCE = 5.5f;
 
-  // TODO: animation resource?
+  // TODO(?): animation resource
   public final ARAnimation idle;
   public final ARAnimation run;
 

@@ -108,9 +108,9 @@ public class SerializerTest {
 
     @Override
     public void serialize(final DefaultSerializer serializer) throws Exception {
-      serializer.write(j);
-      serializer.write(k = 123);
-      serializer.write(this);
+      serializer.writeInt(j);
+      serializer.writeInt(k = 123);
+      serializer.writeThis();
     }
 
     @Override

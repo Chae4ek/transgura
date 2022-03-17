@@ -153,34 +153,53 @@ public final class WorldSerializer {
     }
 
     @Override
+    public void writeThis() throws Exception {
+      out.defaultWriteObject(toWrite, clzInfo);
+    }
+
+    @Override
     public void write(final Object data) throws Exception {
-      if (data == toWrite) out.defaultWriteObject(toWrite, clzInfo);
-      else out.writeObject(data);
+      out.writeObject(data);
     }
 
     @Override
-    public void write(final int i) throws Exception {
-      out.writeInt(i);
+    public void writeInt(final int value) throws Exception {
+      out.writeInt(value);
     }
 
     @Override
-    public void write(final long l) throws Exception {
-      out.writeLong(l);
+    public void writeLong(final long value) throws Exception {
+      out.writeLong(value);
     }
 
     @Override
-    public void write(final float f) throws Exception {
-      out.writeFloat(f);
+    public void writeFloat(final float value) throws Exception {
+      out.writeFloat(value);
     }
 
     @Override
-    public void write(final double d) throws Exception {
-      out.writeDouble(d);
+    public void writeDouble(final double value) throws Exception {
+      out.writeDouble(value);
     }
 
     @Override
-    public void write(final boolean b) throws Exception {
-      out.writeBoolean(b);
+    public void writeBoolean(final boolean value) throws Exception {
+      out.writeBoolean(value);
+    }
+
+    @Override
+    public void writeByte(final byte value) throws Exception {
+      out.writeByte(value);
+    }
+
+    @Override
+    public void writeShort(final short value) throws Exception {
+      out.writeShort(value);
+    }
+
+    @Override
+    public void writeChar(final char value) throws Exception {
+      out.writeChar(value);
     }
   }
 
@@ -230,6 +249,21 @@ public final class WorldSerializer {
     @Override
     public boolean readBoolean() throws Exception {
       return in.readBoolean();
+    }
+
+    @Override
+    public byte readByte() throws Exception {
+      return in.readByte();
+    }
+
+    @Override
+    public short readShort() throws Exception {
+      return in.readShort();
+    }
+
+    @Override
+    public char readChar() throws Exception {
+      return in.readChar();
     }
   }
 }

@@ -33,18 +33,17 @@ public final class ResourceLoader implements ResourceManager, AssetErrorListener
 
   /** Load a particle effect if it hasn't already loaded */
   public static ParticleEffect loadParticleEffect(final ParticlesType particlesType) {
-    // TODO: wierd load
-    final ParticleEffect particleEffect =
-        particleEffects.computeIfAbsent(
-            particlesType,
-            type -> {
-              final String particlePath = "particles/" + type.particleName;
-              assetManager.load(particlePath, ParticleEffect.class);
-              assetManager.finishLoading();
-              return assetManager.get(particlePath, ParticleEffect.class);
-            });
-    particles.put(particleEffect, particlesType.ordinal());
-    return particleEffect;
+    return particleEffects.computeIfAbsent(
+        particlesType,
+        type -> {
+          final String particlePath = "particles/" + type.particleName;
+          assetManager.load(particlePath, ParticleEffect.class);
+          assetManager.finishLoading();
+          final ParticleEffect particleEffect =
+              assetManager.get(particlePath, ParticleEffect.class);
+          particles.put(particleEffect, particlesType.ordinal());
+          return particleEffect;
+        });
   }
 
   /**

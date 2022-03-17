@@ -148,7 +148,7 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
 
   @Override
   public void serialize(final DefaultSerializer serializer) throws Exception {
-    serializer.write(this);
+    serializer.writeThis();
   }
 
   @Override

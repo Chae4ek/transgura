@@ -12,7 +12,7 @@ public class ParticleEffectSerializer implements InstantiationSerializer<Particl
   @Override
   public <E extends ParticleEffect> void serialize(
       final E object, final DefaultSerializer serializer) throws Exception {
-    serializer.write(ResourceLoader.getLoadedParticleTypeOrdinal(object));
+    serializer.writeInt(ResourceLoader.getLoadedParticleTypeOrdinal(object));
   }
 
   @Override

@@ -19,12 +19,12 @@ public class AnimationSerializer implements InstantiationSerializer<ARAnimation>
   public <E extends ARAnimation> void serialize(final E object, final DefaultSerializer serializer)
       throws Exception {
     final int addr = System.identityHashCode(object);
-    serializer.write(addr);
+    serializer.writeInt(addr);
     if (!cacheSer.add(addr)) return; // already serialized
 
-    serializer.write(object.getKeyFrames().length);
+    serializer.writeInt(object.getKeyFrames().length);
     for (final Object r : object.getKeyFrames()) serializer.write(r);
-    serializer.write(object.getFrameDuration());
+    serializer.writeFloat(object.getFrameDuration());
     serializer.write(object.getPlayMode());
   }
 

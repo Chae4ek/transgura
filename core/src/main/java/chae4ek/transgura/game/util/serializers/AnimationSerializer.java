@@ -4,6 +4,7 @@ import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable.Defa
 import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable.DefaultSerializer;
 import chae4ek.transgura.engine.util.serializers.InstantiationSerializer;
 import chae4ek.transgura.game.util.ARAnimation;
+import chae4ek.transgura.game.util.SerializationUtils;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
@@ -22,8 +23,7 @@ public class AnimationSerializer implements InstantiationSerializer<ARAnimation>
     serializer.writeInt(addr);
     if (!cacheSer.add(addr)) return; // already serialized
 
-    serializer.writeInt(object.getKeyFrames().length);
-    for (final Object r : object.getKeyFrames()) serializer.write(r);
+    SerializationUtils.writeArray(serializer, object.getKeyFrames());
     serializer.writeFloat(object.getFrameDuration());
     serializer.write(object.getPlayMode());
   }
@@ -36,9 +36,7 @@ public class AnimationSerializer implements InstantiationSerializer<ARAnimation>
     ARAnimation animation = cacheDes.get(addr);
     if (animation != null) return animation; // already deserialized
 
-    final int size = deserializer.readInt();
-    final AtlasRegion[] keyFrames = new AtlasRegion[size];
-    for (int i = 0; i < size; ++i) keyFrames[i] = (AtlasRegion) deserializer.read();
+    final AtlasRegion[] keyFrames = SerializationUtils.readArray(deserializer, AtlasRegion.class);
     final float frameDuration = deserializer.readFloat();
     final PlayMode playMode = (PlayMode) deserializer.read();
 

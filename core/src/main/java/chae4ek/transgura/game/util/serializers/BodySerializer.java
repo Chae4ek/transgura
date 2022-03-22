@@ -4,10 +4,14 @@ import chae4ek.transgura.engine.ecs.Game;
 import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable.DefaultDeserializer;
 import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable.DefaultSerializer;
 import chae4ek.transgura.engine.util.serializers.InstantiationSerializer;
+import chae4ek.transgura.game.util.SerializationUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.JointEdge;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.IntSet;
 
@@ -24,7 +28,6 @@ public class BodySerializer implements InstantiationSerializer<Body> {
     serializer.writeInt(addr);
     if (!cacheSer.add(addr)) return; // already serialized
 
-    // TODO: refactoring
     serializer.write(object.getType());
     serializer.write(object.getPosition());
     serializer.writeFloat(object.getAngle());
@@ -38,9 +41,14 @@ public class BodySerializer implements InstantiationSerializer<Body> {
     serializer.writeBoolean(object.isBullet());
     serializer.writeBoolean(object.isActive());
     serializer.writeFloat(object.getGravityScale());
+
     serializer.write(object.getUserData());
-    // TODO: Array<Fixture> fixtures
-    // TODO: Array<JointEdge> joints
+    SerializationUtils.writeArray(serializer, object.getFixtureList());
+
+    serializer.writeFloat(object.getMass());
+    // TODO: other stuff
+
+    SerializationUtils.writeArray(serializer, object.getJointList());
   }
 
   @Override
@@ -50,7 +58,6 @@ public class BodySerializer implements InstantiationSerializer<Body> {
     Body body = cacheDes.get(addr);
     if (body != null) return body; // already deserialized
 
-    // TODO: refactoring
     bodyDef.type = (BodyType) deserializer.read();
     bodyDef.position.set((Vector2) deserializer.read());
     bodyDef.angle = deserializer.readFloat();
@@ -66,12 +73,18 @@ public class BodySerializer implements InstantiationSerializer<Body> {
     bodyDef.gravityScale = deserializer.readFloat();
 
     body = Game.getScene().b2dWorld.createBody(bodyDef);
+    cacheDes.put(addr, body);
 
     body.setUserData(deserializer.read());
-    // TODO: Array<Fixture> fixtures
-    // TODO: Array<JointEdge> joints
+    SerializationUtils.readArray(deserializer, Fixture.class); // auto binding
 
-    cacheDes.put(addr, body);
+    final MassData massData = body.getMassData();
+    massData.mass = deserializer.readFloat();
+    body.setMassData(massData);
+
+    // TODO: JointEdge Serializer
+    SerializationUtils.readArray(deserializer, JointEdge.class); // auto binding
+
     return body;
   }
 

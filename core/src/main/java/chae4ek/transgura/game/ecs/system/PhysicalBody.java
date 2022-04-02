@@ -1,7 +1,8 @@
 package chae4ek.transgura.game.ecs.system;
 
-import static chae4ek.transgura.engine.util.debug.GameSettings.PPM;
+import static chae4ek.transgura.engine.util.GameSettings.PPM;
 
+import chae4ek.transgura.engine.ecs.Game;
 import chae4ek.transgura.engine.ecs.System;
 import chae4ek.transgura.game.ecs.component.Position;
 import com.badlogic.gdx.math.Vector2;
@@ -15,7 +16,7 @@ public class PhysicalBody extends System {
   private boolean isAwake = true;
 
   public PhysicalBody(final BodyDef bodyDef) {
-    body = scene.world.createBody(bodyDef);
+    body = Game.getScene().b2dWorld.createBody(bodyDef);
   }
 
   /**
@@ -31,7 +32,7 @@ public class PhysicalBody extends System {
 
   @Override
   protected void onDestroy() {
-    scene.world.destroyBody(body);
+    Game.getScene().b2dWorld.destroyBody(body);
   }
 
   public Body getBody() {

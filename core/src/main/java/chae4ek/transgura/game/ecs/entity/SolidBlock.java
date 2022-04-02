@@ -1,9 +1,9 @@
 package chae4ek.transgura.game.ecs.entity;
 
-import static chae4ek.transgura.engine.util.debug.GameSettings.PPM;
+import static chae4ek.transgura.engine.util.GameSettings.PPM;
 
 import chae4ek.transgura.engine.ecs.Entity;
-import chae4ek.transgura.game.ecs.component.AnimatedSprite;
+import chae4ek.transgura.game.ecs.component.AnimatedSprites;
 import chae4ek.transgura.game.ecs.component.Position;
 import chae4ek.transgura.game.ecs.component.Sprite;
 import chae4ek.transgura.game.ecs.component.TiledSprite;
@@ -30,8 +30,8 @@ public class SolidBlock extends Entity {
     create(x, y);
   }
 
-  public SolidBlock(final float x, final float y, final AnimatedSprite animatedSprite) {
-    super(new Position(x, y), animatedSprite);
+  public SolidBlock(final float x, final float y, final AnimatedSprites animatedSprites) {
+    super(new Position(x, y), animatedSprites);
     create(x, y);
   }
 

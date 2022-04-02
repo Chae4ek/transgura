@@ -4,7 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.internal.verification.VerificationModeFactory.only;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-import chae4ek.transgura.engine.util.debug.GameSettings;
+import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.exceptions.GameException;
 import chae4ek.transgura.util.ReflectUtils;
 import java.lang.reflect.Field;
@@ -23,14 +23,14 @@ public class EntityTest {
 
   @BeforeAll
   static void setUp() {
-    Game.scene = Mockito.mock(Scene.class);
+    ReflectUtils.setFieldValue(null, Game.class, "scene", Mockito.mock(Scene.class));
   }
 
   @BeforeEach
   void setUpEach() {
     GameSettings.isWARNThrowOn = true;
     entityManager = Mockito.mock(EntityManager.class);
-    ReflectUtils.setFieldValue(Game.scene, entityManagerField, entityManager);
+    ReflectUtils.setFieldValue(Game.getScene(), entityManagerField, entityManager);
   }
 
   private static class Component1 extends Component {}
@@ -43,7 +43,6 @@ public class EntityTest {
     @Test
     void noneComponents__addEntity() {
       final Entity entity = new Entity();
-      Assertions.assertSame(Game.scene, entity.scene);
       Mockito.verify(entityManager, only()).addEntity(entity);
     }
 

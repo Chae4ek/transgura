@@ -1,11 +1,12 @@
 package chae4ek.transgura.game.ecs.system;
 
 import chae4ek.transgura.engine.ecs.Entity;
+import chae4ek.transgura.engine.ecs.Game;
 import chae4ek.transgura.engine.ecs.InputProcessor;
 import chae4ek.transgura.engine.ecs.System;
 import chae4ek.transgura.engine.util.collision.CollisionProcessor;
 import chae4ek.transgura.engine.util.collision.CollisionSubscriber;
-import chae4ek.transgura.game.ecs.component.AnimatedSprite;
+import chae4ek.transgura.game.ecs.component.AnimatedSprites;
 import chae4ek.transgura.game.ecs.entity.Player;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -24,7 +25,7 @@ public class PlayerController extends System implements CollisionSubscriber {
   private boolean dash;
 
   public PlayerController() {
-    scene.collisionListener.addCollisionSubscriber(this);
+    Game.getScene().collisionListener.addCollisionSubscriber(this);
   }
 
   @Override
@@ -51,7 +52,7 @@ public class PlayerController extends System implements CollisionSubscriber {
   @Override
   public void fixedUpdate() {
     final Entity player = getParent();
-    final AnimatedSprite animation = player.getComponent(AnimatedSprite.class);
+    final AnimatedSprites animation = player.getComponent(AnimatedSprites.class);
     final Body body = player.getComponent(PhysicalBody.class).getBody();
 
     final boolean right = InputProcessor.isKeyDown(Player.PLAYER_RIGHT);
@@ -112,12 +113,12 @@ public class PlayerController extends System implements CollisionSubscriber {
       body.setLinearVelocity(vel);
     }
 
-    animation.setAnimation(isRunning ? Player.run : Player.idle);
+    animation.setAnimation(isRunning ? ((Player) getParent()).run : ((Player) getParent()).idle);
   }
 
   @Override
   protected void onDestroy() {
-    scene.collisionListener.removeCollisionSubscriber(this);
+    Game.getScene().collisionListener.removeCollisionSubscriber(this);
   }
 
   @Override
@@ -132,5 +133,11 @@ public class PlayerController extends System implements CollisionSubscriber {
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_BOTTOM", "GROUND")) {
       --touchedGrounds;
     }
+  }
+
+  @Override
+  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
+    super.deserialize(deserializer);
+    Game.getScene().collisionListener.addCollisionSubscriber(this);
   }
 }

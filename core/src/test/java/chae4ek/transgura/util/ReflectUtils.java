@@ -22,6 +22,11 @@ public class ReflectUtils {
     }
   }
 
+  public static void setFieldValue(
+      final Object obj, final Class<?> clazz, final String fieldName, final Object value) {
+    setFieldValue(obj, getField(clazz, fieldName), value);
+  }
+
   @SuppressWarnings("unchecked")
   public static <T> T getFieldValue(
       final Class<?> clazz, final Object obj, final String fieldName) {

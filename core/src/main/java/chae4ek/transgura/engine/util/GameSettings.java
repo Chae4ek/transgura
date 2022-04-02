@@ -1,7 +1,6 @@
-package chae4ek.transgura.engine.util.debug;
+package chae4ek.transgura.engine.util;
 
-/** You can change these values at runtime if you know something more */
-public class GameSettings {
+public final class GameSettings {
 
   /** Max drawable objects without flushing */
   public static final int defaultSpriteBatchSize = GameConfig.defaultSpriteBatchSize;
@@ -34,6 +33,8 @@ public class GameSettings {
 
   /** The first scene that will be loaded */
   public static final Runnable mainScene = GameConfig.mainScene;
+
+  public static final ResourceManager resourceManager = GameConfig.resourceManager.get();
 
   /** Pixels Per Meter */
   public static final float PPM = GameConfig.PPM;

@@ -1,4 +1,4 @@
-package chae4ek.transgura.engine.util.resources;
+package chae4ek.transgura.game.util.resources;
 
 public enum ParticlesType {
   BLUE("blue.p");

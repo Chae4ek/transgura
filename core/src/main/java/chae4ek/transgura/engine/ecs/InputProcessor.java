@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import java.util.HashSet;
 import java.util.Set;
 
-public class InputProcessor implements com.badlogic.gdx.InputProcessor {
+public final class InputProcessor implements com.badlogic.gdx.InputProcessor {
 
   private static final InputProcessor instance = new InputProcessor();
 

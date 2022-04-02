@@ -1,6 +1,6 @@
 package chae4ek.transgura.engine.ecs;
 
-import chae4ek.transgura.engine.util.debug.GameSettings;
+import chae4ek.transgura.engine.util.GameSettings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -21,7 +21,7 @@ public class RenderManager {
           GameSettings.defaultSpriteBatchSize,
           new ShaderProgram(GameSettings.defaultVertexShader, GameSettings.defaultFragmentShader));
 
-  protected static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
+  private static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
 
   /** Shader that will be applied after rendering */
   public static ShaderProgram postProcessingShader;
@@ -35,25 +35,21 @@ public class RenderManager {
    */
   public static Runnable postProcessingSetUp;
 
-  protected static FrameBuffer frameBuffer =
+  private static FrameBuffer frameBuffer =
       new FrameBuffer(
           Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, false);
-  protected final NavigableMap<Integer, Set<RenderComponent>> renderComponents = new TreeMap<>();
-  protected final Scene scene;
 
-  public RenderManager(final Scene scene) {
-    this.scene = scene;
-  }
+  private final NavigableMap<Integer, Set<RenderComponent>> renderComponents = new TreeMap<>();
 
-  protected void dispose() {
-    frameBuffer.dispose();
-    spriteBatch.dispose();
-  }
-
-  protected void setNewFrameBuffer(final int width, final int height) {
+  public static void setNewFrameBuffer(final int width, final int height) {
     if (frameBuffer.getWidth() == width && frameBuffer.getHeight() == height) return;
     frameBuffer.dispose();
     frameBuffer = new FrameBuffer(Format.RGBA8888, width, height, false, false);
+  }
+
+  protected void disposeStatic() {
+    frameBuffer.dispose();
+    spriteBatch.dispose();
   }
 
   /**
@@ -61,7 +57,7 @@ public class RenderManager {
    *
    * <p>Note: oldZOrder != newZOrder && oldZOrder == renderComponent.zOrder
    */
-  protected void changeZOrder(
+  final void changeZOrder(
       final RenderComponent renderComponent, final int oldZOrder, final int newZOrder) {
     renderComponents.computeIfPresent(
         oldZOrder,
@@ -83,7 +79,7 @@ public class RenderManager {
    *
    * <p>Note: the renderComponent should NOT exist in the {@link #renderComponents}
    */
-  protected void addRenderComponent(final RenderComponent renderComponent) {
+  final void addRenderComponent(final RenderComponent renderComponent) {
     renderComponents.compute(
         renderComponent.getZOrder(),
         (z, rcomps) -> {
@@ -98,7 +94,7 @@ public class RenderManager {
    *
    * <p>Note: the renderComponent SHOULD exist in the {@link #renderComponents}
    */
-  protected void removeRenderComponent(final RenderComponent renderComponent) {
+  final void removeRenderComponent(final RenderComponent renderComponent) {
     renderComponents.computeIfPresent(
         renderComponent.getZOrder(),
         (z, rcomps) -> {
@@ -109,8 +105,8 @@ public class RenderManager {
 
   /** Render all render components */
   protected void renderAll() {
-    scene.camera.update();
-    spriteBatch.setProjectionMatrix(scene.camera.combined);
+    Game.getScene().camera.update();
+    spriteBatch.setProjectionMatrix(Game.getScene().camera.combined);
 
     frameBuffer.begin();
     Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1f);

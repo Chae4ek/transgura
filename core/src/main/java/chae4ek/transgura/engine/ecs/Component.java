@@ -1,18 +1,16 @@
 package chae4ek.transgura.engine.ecs;
 
-import chae4ek.transgura.engine.util.annotations.CallOnce;
+import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
+import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable;
 
-public abstract class Component {
+public abstract class Component implements HierarchicallySerializable {
 
   private static final GameAlert gameAlert = new GameAlert(Component.class);
 
-  /** The scene where this component is created */
-  public final Scene scene = Game.scene;
-
-  private Entity parent;
+  private transient Entity parent;
   private boolean isEnabled = true;
-  private boolean isDestroyed;
+  private transient boolean isDestroyed;
 
   public Component() {}
 
@@ -28,8 +26,7 @@ public abstract class Component {
   }
 
   /**
-   * Bind this component to its parent entity. Checks that the scene of this component is equal to
-   * the parent's one
+   * Bind this component to its parent entity
    *
    * <p>Note: the parentEntity should NOT destroyed
    *
@@ -37,13 +34,6 @@ public abstract class Component {
    */
   @CallOnce
   boolean bind(final Entity parentEntity) {
-    if (scene != parentEntity.scene) {
-      gameAlert.warn(
-          "The component's scene {} is not equal to the entity's scene {}",
-          scene,
-          parentEntity.scene);
-      return false;
-    }
     if (parent != null) {
       gameAlert.warn(
           "The component {} wasn't bound cause it already has a parent entity {}. The new parent is {}",
@@ -76,7 +66,7 @@ public abstract class Component {
     destroyThis();
   }
 
-  /** Invoke before actually destroying, but {@link #isDestroyed()} returns true now */
+  /** Invokes before actually destroying, but {@link #isDestroyed()} returns true now */
   @CallOnce
   protected void onDestroy() {}
 
@@ -125,5 +115,15 @@ public abstract class Component {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  @Override
+  public void serialize(final DefaultSerializer serializer) throws Exception {
+    serializer.writeThis();
+  }
+
+  @Override
+  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
+    deserializer.readTo(this);
   }
 }

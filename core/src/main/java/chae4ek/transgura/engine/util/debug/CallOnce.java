@@ -1,4 +1,4 @@
-package chae4ek.transgura.engine.util.annotations;
+package chae4ek.transgura.engine.util.debug;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

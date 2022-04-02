@@ -1,8 +1,8 @@
 package chae4ek.transgura.engine.ecs;
 
-import static chae4ek.transgura.engine.util.debug.GameSettings.fixedDeltaTime;
+import static chae4ek.transgura.engine.util.GameSettings.fixedDeltaTime;
 
-import chae4ek.transgura.engine.util.debug.GameSettings;
+import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -11,7 +11,7 @@ public final class Game implements ApplicationListener {
 
   private static final GameAlert gameAlert = new GameAlert(Game.class);
 
-  static boolean sceneChanging;
+  static boolean sceneChanging; // to prevent (new)scene inside (Runnable)nextScene
   static Scene scene;
   private static Runnable nextScene;
 
@@ -27,6 +27,13 @@ public final class Game implements ApplicationListener {
    */
   public static float getDeltaTime() {
     return deltaTime;
+  }
+
+  /**
+   * @return the current scene
+   */
+  public static Scene getScene() {
+    return scene;
   }
 
   /**
@@ -52,9 +59,9 @@ public final class Game implements ApplicationListener {
 
   @Override
   public void dispose() {
-    scene.dispose();
-    scene.renderManager.dispose();
-    ResourceLoader.dispose();
+    scene.softDispose();
+    scene.disposeStatic();
+    GameSettings.resourceManager.dispose();
   }
 
   @Override
@@ -69,19 +76,19 @@ public final class Game implements ApplicationListener {
     } else fixedUpdateCount = 0;
 
     try {
-      scene.updateAll(fixedUpdateCount);
+      scene.update(fixedUpdateCount);
     } catch (final SceneExit exit) {
       if (nextScene != null) {
         InputProcessor.postUpdate();
 
-        ResourceLoader.unloadSceneResources();
+        GameSettings.resourceManager.unloadSceneResources();
 
-        scene.dispose();
+        scene.softDispose();
         sceneChanging = true;
         nextScene.run();
         if (sceneChanging) gameAlert.error("Scene should create inside Game.setScene() method");
 
-        gameAlert.debug("Scene {} is loaded", scene.getClass().getName());
+        gameAlert.debug("Scene {} is loaded", scene);
       }
       return;
     }
@@ -99,7 +106,7 @@ public final class Game implements ApplicationListener {
     if (scene != null) {
       scene.camera.viewportWidth = width;
       scene.camera.viewportHeight = height;
-      scene.renderManager.setNewFrameBuffer(width, height);
+      RenderManager.setNewFrameBuffer(width, height);
     }
   }
 

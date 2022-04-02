@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CollisionListener implements ContactListener {
+public final class CollisionListener implements ContactListener {
 
   private static final GameAlert gameAlert = new GameAlert(CollisionListener.class);
 

@@ -1,18 +1,21 @@
 package chae4ek.transgura.engine.ecs;
 
+import chae4ek.transgura.engine.util.serializers.WorldSerializer;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EntityManager {
+public final class EntityManager {
 
-  protected final Set<Entity> entities = new HashSet<>();
+  private final Set<Entity> entities = new HashSet<>();
 
   /**
    * Add an entity to this enitity manager
    *
    * <p>Note: the entity should NOT exist in the {@link #entities}
    */
-  protected void addEntity(final Entity entity) {
+  void addEntity(final Entity entity) {
     entities.add(entity);
   }
 
@@ -21,7 +24,17 @@ public class EntityManager {
    *
    * <p>Note: the entity SHOULD exist in the {@link #entities}
    */
-  protected void removeEntity(final Entity entity) {
+  void removeEntity(final Entity entity) {
     entities.remove(entity);
+  }
+
+  void serialize(final DataOutputStream out) {
+    WorldSerializer.serialize(out, entities);
+  }
+
+  void deserialize(final DataInputStream in) {
+    for (final Entity entity : entities) entity.destroy();
+    entities.clear();
+    entities.addAll(WorldSerializer.deserialize(in));
   }
 }

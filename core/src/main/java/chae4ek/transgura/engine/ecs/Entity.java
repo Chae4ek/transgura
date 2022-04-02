@@ -1,22 +1,23 @@
 package chae4ek.transgura.engine.ecs;
 
-import chae4ek.transgura.engine.util.annotations.CallOnce;
+import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
+import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
-public class Entity {
+public class Entity implements Iterable<Component>, HierarchicallySerializable {
 
   private static final GameAlert gameAlert = new GameAlert(Entity.class);
 
-  /** The scene where this entity is created */
-  public final Scene scene = Game.scene;
-
   private Map<Class<? extends Component>, Component> components = new HashMap<>();
-  private boolean isDestroyed;
+  private transient boolean isDestroyed;
 
   public Entity(final Component... components) {
-    scene.entityManager.addEntity(this);
+    Game.getScene().entityManager.addEntity(this);
     for (final Component component : components) addComponent(component);
   }
 
@@ -107,7 +108,7 @@ public class Entity {
     }
     isDestroyed = true;
     onDestroy();
-    scene.entityManager.removeEntity(this);
+    Game.getScene().entityManager.removeEntity(this);
 
     final Map<Class<? extends Component>, Component> temp = components;
     components = null;
@@ -116,7 +117,7 @@ public class Entity {
     components.clear();
   }
 
-  /** Invoke before actually destroying, but {@link #isDestroyed()} returns true now */
+  /** Invokes before actually destroying, but {@link #isDestroyed()} returns true now */
   @CallOnce
   protected void onDestroy() {}
 
@@ -128,5 +129,31 @@ public class Entity {
   @Override
   public final int hashCode() {
     return super.hashCode();
+  }
+
+  @Override
+  public Iterator<Component> iterator() {
+    return components.values().iterator();
+  }
+
+  @Override
+  public void forEach(final Consumer<? super Component> action) {
+    components.values().forEach(action);
+  }
+
+  @Override
+  public Spliterator<Component> spliterator() {
+    return components.values().spliterator();
+  }
+
+  @Override
+  public void serialize(final DefaultSerializer serializer) throws Exception {
+    serializer.writeThis();
+  }
+
+  @Override
+  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
+    deserializer.readTo(this);
+    for (final Component component : components.values()) component.bind(this);
   }
 }

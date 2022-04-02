@@ -1,22 +1,22 @@
 package chae4ek.transgura.game.ecs.entity;
 
-import static chae4ek.transgura.engine.util.debug.GameSettings.PPM;
+import static chae4ek.transgura.engine.util.GameSettings.PPM;
 
 import chae4ek.transgura.engine.ecs.Entity;
-import chae4ek.transgura.engine.ecs.ResourceLoader;
-import chae4ek.transgura.engine.util.resources.ParticlesType;
-import chae4ek.transgura.engine.util.resources.TextureType;
-import chae4ek.transgura.engine.util.resources.TextureType.AtlasType;
-import chae4ek.transgura.game.ecs.component.AnimatedSprite;
+import chae4ek.transgura.game.ecs.component.AnimatedSprites;
 import chae4ek.transgura.game.ecs.component.Particles;
 import chae4ek.transgura.game.ecs.component.Position;
 import chae4ek.transgura.game.ecs.system.Camera;
 import chae4ek.transgura.game.ecs.system.PhysicalBody;
 import chae4ek.transgura.game.ecs.system.PlayerController;
 import chae4ek.transgura.game.ecs.system.PlayerGodModController;
+import chae4ek.transgura.game.util.ARAnimation;
+import chae4ek.transgura.game.util.resources.ParticlesType;
+import chae4ek.transgura.game.util.resources.ResourceLoader;
+import chae4ek.transgura.game.util.resources.TextureType;
+import chae4ek.transgura.game.util.resources.TextureType.AtlasType;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -26,7 +26,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.utils.Array;
 
 public class Player extends Entity {
 
@@ -42,11 +41,22 @@ public class Player extends Entity {
   public static float JUMP_FORCE = 0.85f;
   public static float DASH_FORCE = 5.5f;
 
-  public static Animation<AtlasRegion> idle;
-  public static Animation<AtlasRegion> run;
+  // TODO(?): animation resource
+  public final ARAnimation idle;
+  public final ARAnimation run;
 
   public Player(final float x, final float y) {
-    initResources();
+    ResourceLoader.loadAtlases(AtlasType.OLD_MAN);
+
+    final AtlasRegion[] idleFrames = ResourceLoader.loadAtlasRegions(TextureType.OLD_MAN_IDLE);
+    for (final AtlasRegion region : idleFrames) region.offsetY = 8.5f;
+    idle = new ARAnimation(0.1f, idleFrames);
+    idle.setPlayMode(PlayMode.LOOP);
+
+    final AtlasRegion[] runFrames = ResourceLoader.loadAtlasRegions(TextureType.OLD_MAN_RUN);
+    for (final AtlasRegion region : runFrames) region.offsetY = 8.5f;
+    run = new ARAnimation(0.08f, runFrames);
+    run.setPlayMode(PlayMode.LOOP);
 
     final BodyDef bodyDef = PhysicalBody.createBodyDef(BodyType.DynamicBody, x, y);
     bodyDef.linearDamping = 2.2f;
@@ -101,7 +111,7 @@ public class Player extends Entity {
     shape.dispose();
 
     addComponent(
-        new AnimatedSprite(1, idle),
+        new AnimatedSprites(1, idle),
         new PlayerController(),
         new PlayerGodModController(),
         new Position(x, y),
@@ -110,17 +120,10 @@ public class Player extends Entity {
         physicalBody);
   }
 
-  private static void initResources() {
-    ResourceLoader.loadAtlases(AtlasType.OLD_MAN);
-
-    final Array<AtlasRegion> idleFrames = ResourceLoader.loadAtlasRegions(TextureType.OLD_MAN_IDLE);
-    idleFrames.forEach(atlasRegion -> atlasRegion.offsetY = 8.5f);
-    idle = new Animation<>(0.1f, idleFrames);
-    idle.setPlayMode(PlayMode.LOOP);
-
-    final Array<AtlasRegion> runFrames = ResourceLoader.loadAtlasRegions(TextureType.OLD_MAN_RUN);
-    runFrames.forEach(atlasRegion -> atlasRegion.offsetY = 8.5f);
-    run = new Animation<>(0.08f, runFrames);
-    run.setPlayMode(PlayMode.LOOP);
+  @Override
+  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
+    super.deserialize(deserializer);
+    for (final AtlasRegion region : idle.getKeyFrames()) region.offsetY = 8.5f;
+    for (final AtlasRegion region : run.getKeyFrames()) region.offsetY = 8.5f;
   }
 }

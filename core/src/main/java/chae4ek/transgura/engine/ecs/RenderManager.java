@@ -4,6 +4,7 @@ import chae4ek.transgura.engine.util.GameSettings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -21,35 +22,63 @@ public class RenderManager {
           GameSettings.defaultSpriteBatchSize,
           new ShaderProgram(GameSettings.defaultVertexShader, GameSettings.defaultFragmentShader));
 
-  private static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
+  /** Sprite batch for shaders or post-processing */
+  public static final SpriteBatch shaderBatch =
+      new SpriteBatch(
+          GameSettings.defaultSpriteBatchSize,
+          new ShaderProgram(GameSettings.defaultVertexShader, GameSettings.defaultFragmentShader));
 
-  /** Shader that will be applied after rendering */
-  public static ShaderProgram postProcessingShader;
-  /**
-   * Calls after setting the {@link #postProcessingShader}
-   *
-   * <pre>Example:{@code
-   * postProcessingSetUp = () ->
-   *   postProcessingShader.setUniformf("u_time", Game.getScene().getSceneLifetimeInSec());
-   * }</pre>
-   */
-  public static Runnable postProcessingSetUp;
+  public static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
 
-  private static FrameBuffer frameBuffer =
+  static {
+    shaderBatch.setProjectionMatrix(SHADER_MATRIX_IDENTITY);
+  }
+
+  private static FrameBuffer frontFrameBuffer =
+      new FrameBuffer(
+          Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, false);
+  private static FrameBuffer backFrameBuffer =
       new FrameBuffer(
           Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, false);
 
   private final NavigableMap<Integer, Set<RenderComponent>> renderComponents = new TreeMap<>();
 
   public static void setNewFrameBuffer(final int width, final int height) {
-    if (frameBuffer.getWidth() == width && frameBuffer.getHeight() == height) return;
-    frameBuffer.dispose();
-    frameBuffer = new FrameBuffer(Format.RGBA8888, width, height, false, false);
+    if (frontFrameBuffer.getWidth() == width && frontFrameBuffer.getHeight() == height) return;
+    frontFrameBuffer.dispose();
+    frontFrameBuffer = new FrameBuffer(Format.RGBA8888, width, height, false, false);
+  }
+
+  public static Texture getBackFrameBufferTexture() {
+    return backFrameBuffer.getColorBufferTexture();
+  }
+
+  public static void switchFrontAndBackFrameBuffers() {
+    if (backFrameBuffer.getWidth() == frontFrameBuffer.getWidth()
+        && backFrameBuffer.getHeight() == frontFrameBuffer.getHeight()) {
+      final FrameBuffer temp = backFrameBuffer;
+      backFrameBuffer = frontFrameBuffer;
+      frontFrameBuffer = temp;
+    } else {
+      backFrameBuffer.dispose();
+      backFrameBuffer = frontFrameBuffer;
+      frontFrameBuffer =
+          new FrameBuffer(
+              Format.RGBA8888,
+              frontFrameBuffer.getWidth(),
+              frontFrameBuffer.getHeight(),
+              false,
+              false);
+    }
+    backFrameBuffer.end();
+    frontFrameBuffer.begin();
   }
 
   protected void disposeStatic() {
-    frameBuffer.dispose();
+    frontFrameBuffer.dispose();
+    backFrameBuffer.dispose();
     spriteBatch.dispose();
+    shaderBatch.dispose();
   }
 
   /**
@@ -108,7 +137,7 @@ public class RenderManager {
     Game.getScene().camera.update();
     spriteBatch.setProjectionMatrix(Game.getScene().camera.combined);
 
-    frameBuffer.begin();
+    frontFrameBuffer.begin();
     Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1f);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     spriteBatch.begin();
@@ -120,19 +149,10 @@ public class RenderManager {
     }
 
     spriteBatch.end();
-    frameBuffer.end();
+    frontFrameBuffer.end();
 
-    // post-processing
-    if (postProcessingShader != null) {
-      spriteBatch.setShader(postProcessingShader);
-      postProcessingSetUp.run();
-    }
-
-    spriteBatch.setProjectionMatrix(SHADER_MATRIX_IDENTITY);
-    spriteBatch.begin();
-    spriteBatch.draw(frameBuffer.getColorBufferTexture(), -1f, 1f, 2f, -2f);
-    spriteBatch.end();
-
-    if (postProcessingShader != null) spriteBatch.setShader(null);
+    shaderBatch.begin();
+    shaderBatch.draw(frontFrameBuffer.getColorBufferTexture(), -1f, 1f, 2f, -2f);
+    shaderBatch.end();
   }
 }

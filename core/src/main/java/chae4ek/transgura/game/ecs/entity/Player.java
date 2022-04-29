@@ -111,7 +111,7 @@ public class Player extends Entity {
     shape.dispose();
 
     addComponent(
-        new AnimatedSprites(1, idle),
+        new AnimatedSprites(100, idle),
         new PlayerController(),
         new PlayerGodModController(),
         new Position(x, y),

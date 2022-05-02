@@ -19,9 +19,13 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.slf4j.MDC;
 
 public final class Main {
   public static void main(final String[] args) {
+    MDC.put("time", new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss").format(new Date()));
     final Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
     config.setTitle("Transgura");

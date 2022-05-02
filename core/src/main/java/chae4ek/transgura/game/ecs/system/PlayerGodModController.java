@@ -27,7 +27,6 @@ public class PlayerGodModController extends System {
       for (final Fixture fixture : array) {
         if (fixture.getUserData() == "PLAYER") {
           fixture.setSensor(false);
-          break;
         }
       }
     }

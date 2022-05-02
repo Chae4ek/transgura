@@ -43,7 +43,6 @@ public class PlayerController extends System implements CollisionSubscriber {
       for (final Fixture fixture : array) {
         if (fixture.getUserData() == "PLAYER") {
           fixture.setSensor(true);
-          break;
         }
       }
     }

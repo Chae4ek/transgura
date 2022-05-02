@@ -52,10 +52,11 @@ public interface HierarchicallySerializable extends Serializable {
 
     /**
      * Call {@link #deserialize} on all {@link HierarchicallySerializable} fields of
-     * <strong>this</strong> object, then write data to <strong>this</strong> object without calling
-     * {@link #deserialize} on <strong>this</strong> object
+     * <strong>writeToThis</strong> object, then write data to <strong>writeToThis</strong> object.
+     * If <strong>writeToThis</strong> is a {@link HierarchicallySerializable} object the {@link
+     * #deserialize} method <strong>will NOT</strong> be called
      *
-     * @param writeToThis the object for writing read data of <strong>this</strong> object
+     * @param writeToThis the object for writing read data of <strong>writeToThis</strong> object
      */
     @CallOnce
     void readTo(Object writeToThis) throws Exception;

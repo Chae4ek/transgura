@@ -3,9 +3,8 @@ package chae4ek.transgura.engine.ecs;
 import chae4ek.transgura.engine.util.debug.CallOnce;
 import chae4ek.transgura.engine.util.exceptions.GameAlert;
 import chae4ek.transgura.engine.util.serializers.HierarchicallySerializable;
-import java.util.HashMap;
+import com.badlogic.gdx.utils.ObjectMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
@@ -13,7 +12,7 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
 
   private static final GameAlert gameAlert = new GameAlert(Entity.class);
 
-  private Map<Class<? extends Component>, Component> components = new HashMap<>();
+  private transient ObjectMap<Class<? extends Component>, Component> components = new ObjectMap<>();
   private transient boolean isDestroyed;
 
   public Entity(final Component... components) {
@@ -110,7 +109,7 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
     onDestroy();
     Game.getScene().entityManager.removeEntity(this);
 
-    final Map<Class<? extends Component>, Component> temp = components;
+    final ObjectMap<Class<? extends Component>, Component> temp = components;
     components = null;
     for (final Component component : temp.values()) component.destroy();
     components = temp;
@@ -148,12 +147,20 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
 
   @Override
   public void serialize(final DefaultSerializer serializer) throws Exception {
+    serializer.writeInt(components.size);
+    for (final Component comp : components.values()) serializer.write(comp);
     serializer.writeThis();
   }
 
   @Override
   public void deserialize(final DefaultDeserializer deserializer) throws Exception {
+    int size = deserializer.readInt();
+    components = new ObjectMap<>(size);
+    for (; size > 0; --size) {
+      final Component component = (Component) deserializer.read();
+      components.put(component.getClass(), component);
+      component.bind(this);
+    }
     deserializer.readTo(this);
-    for (final Component component : components.values()) component.bind(this);
   }
 }

@@ -1,13 +1,12 @@
 package chae4ek.transgura.engine.ecs;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.badlogic.gdx.utils.ObjectSet;
 
 public final class SystemManager {
 
   // using to change the systems while iterating
   private static Runnable[] deferredEvents = new Runnable[12];
-  private final Set<System> systems = new HashSet<>();
+  private final ObjectSet<System> systems = new ObjectSet<>();
   private int eventCount;
 
   /**

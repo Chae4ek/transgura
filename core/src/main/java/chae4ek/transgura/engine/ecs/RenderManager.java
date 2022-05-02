@@ -9,9 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
-import java.util.HashSet;
+import com.badlogic.gdx.utils.ObjectSet;
 import java.util.NavigableMap;
-import java.util.Set;
 import java.util.TreeMap;
 
 public class RenderManager {
@@ -41,7 +40,8 @@ public class RenderManager {
       new FrameBuffer(
           Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, false);
 
-  private final NavigableMap<Integer, Set<RenderComponent>> renderComponents = new TreeMap<>();
+  private final NavigableMap<Integer, ObjectSet<RenderComponent>> renderComponents =
+      new TreeMap<>();
 
   public static void setNewFrameBuffer(final int width, final int height) {
     if (frontFrameBuffer.getWidth() == width && frontFrameBuffer.getHeight() == height) return;
@@ -97,7 +97,7 @@ public class RenderManager {
     renderComponents.compute(
         newZOrder,
         (z, rcomps) -> {
-          if (rcomps == null) rcomps = new HashSet<>();
+          if (rcomps == null) rcomps = new ObjectSet<>();
           rcomps.add(renderComponent);
           return rcomps;
         });
@@ -112,7 +112,7 @@ public class RenderManager {
     renderComponents.compute(
         renderComponent.getZOrder(),
         (z, rcomps) -> {
-          if (rcomps == null) rcomps = new HashSet<>();
+          if (rcomps == null) rcomps = new ObjectSet<>();
           rcomps.add(renderComponent);
           return rcomps;
         });
@@ -142,7 +142,7 @@ public class RenderManager {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     spriteBatch.begin();
 
-    for (final Set<RenderComponent> renderComponents : renderComponents.values()) {
+    for (final ObjectSet<RenderComponent> renderComponents : renderComponents.values()) {
       for (final RenderComponent renderComponent : renderComponents) {
         if (renderComponent.isEnabled()) renderComponent.draw();
       }

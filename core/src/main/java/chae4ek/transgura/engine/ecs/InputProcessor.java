@@ -2,8 +2,7 @@ package chae4ek.transgura.engine.ecs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import java.util.HashSet;
-import java.util.Set;
+import com.badlogic.gdx.utils.ObjectSet;
 
 public final class InputProcessor implements com.badlogic.gdx.InputProcessor {
 
@@ -13,8 +12,8 @@ public final class InputProcessor implements com.badlogic.gdx.InputProcessor {
   private static final Key[] keys = new Key[Keys.MAX_KEYCODE + 1]; // without Keys.ANY_KEY
   private static final Button[] buttons = new Button[5];
 
-  private static final Set<Key> keysThatJustChanged = new HashSet<>();
-  private static final Set<Button> buttonsThatJustChanged = new HashSet<>();
+  private static final ObjectSet<Key> keysThatJustChanged = new ObjectSet<>();
+  private static final ObjectSet<Button> buttonsThatJustChanged = new ObjectSet<>();
 
   private static float justScrolledX;
   private static float justScrolledY;

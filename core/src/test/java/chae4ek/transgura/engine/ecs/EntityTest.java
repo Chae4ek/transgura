@@ -7,8 +7,8 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.exceptions.GameException;
 import chae4ek.transgura.util.ReflectUtils;
+import com.badlogic.gdx.utils.ObjectMap;
 import java.lang.reflect.Field;
-import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,8 +81,9 @@ public class EntityTest {
 
       Mockito.verify(comp, times(2)).bind(entity);
       Assertions.assertEquals(comp, entity.getComponent(comp.getClass()));
-      final Map<?, ?> components = ReflectUtils.getFieldValue(Entity.class, entity, "components");
-      Assertions.assertEquals(1, components.size());
+      final ObjectMap<?, ?> components =
+          ReflectUtils.getFieldValue(Entity.class, entity, "components");
+      Assertions.assertEquals(1, components.size);
     }
 
     @Test

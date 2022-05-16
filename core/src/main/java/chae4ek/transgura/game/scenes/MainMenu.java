@@ -6,7 +6,7 @@ import chae4ek.transgura.engine.ecs.Scene;
 import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.game.ecs.component.Position;
 import chae4ek.transgura.game.ecs.component.Sprite;
-import chae4ek.transgura.game.ecs.component.shaders.Zpow2;
+import chae4ek.transgura.game.ecs.component.shaders.Vignette;
 import chae4ek.transgura.game.ecs.entity.Player;
 import chae4ek.transgura.game.ecs.entity.SolidBlock;
 import chae4ek.transgura.game.ecs.entity.TestRock;
@@ -49,7 +49,7 @@ public class MainMenu extends Scene {
     // debug test
     new TestRock(400f, 300f);
 
-    new Entity(new Zpow2(999));
+    new Entity(new Vignette(999));
 
     try (final DataOutputStream out =
         new DataOutputStream(Gdx.files.local("saves/world0").write(false, 8192))) {

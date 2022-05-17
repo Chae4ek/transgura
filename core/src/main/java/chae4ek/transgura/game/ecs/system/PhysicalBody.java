@@ -1,6 +1,7 @@
 package chae4ek.transgura.game.ecs.system;
 
 import static chae4ek.transgura.engine.util.GameSettings.PPM;
+import static chae4ek.transgura.engine.util.GameSettings.reversePPM;
 
 import chae4ek.transgura.engine.ecs.Game;
 import chae4ek.transgura.engine.ecs.System;
@@ -26,7 +27,7 @@ public class PhysicalBody extends System {
     final BodyDef bodyDef = new BodyDef();
     bodyDef.type = bodyType;
     bodyDef.fixedRotation = true;
-    bodyDef.position.set(x / PPM, y / PPM);
+    bodyDef.position.set(x * reversePPM, y * reversePPM);
     return bodyDef;
   }
 

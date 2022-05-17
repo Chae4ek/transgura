@@ -39,7 +39,10 @@ public final class GameSettings {
   /** Pixels Per Meter */
   public static final float PPM = GameConfig.PPM;
 
+  public static final float reversePPM = 1f / PPM;
+
   public static final float renderScale = GameConfig.renderScale;
+  public static final float reverseRenderScale = 1f / renderScale;
 
   public static final float fixedDeltaTime = GameConfig.fixedDeltaTime;
   public static final float timeStepForPhysics = GameConfig.timeStepForPhysics;

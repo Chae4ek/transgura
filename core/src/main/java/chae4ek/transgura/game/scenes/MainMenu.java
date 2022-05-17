@@ -28,7 +28,7 @@ public class MainMenu extends Scene {
         .camera
         .position
         .set(Gdx.graphics.getWidth() >> 1, Gdx.graphics.getHeight() >> 1, 0f);
-    b2dWorld.setGravity(new Vector2(0, -9.81f / GameSettings.PPM));
+    b2dWorld.setGravity(new Vector2(0, -9.81f * GameSettings.reversePPM));
 
     ResourceLoader.loadAtlases(AtlasType.TEST);
     final AtlasRegion testBlock = ResourceLoader.loadAtlasRegion(TextureType.TEST_BLOCK);

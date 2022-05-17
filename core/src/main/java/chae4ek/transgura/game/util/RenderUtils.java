@@ -16,8 +16,8 @@ public class RenderUtils {
     final int height = atlasRegion.getRegionHeight();
     RenderManager.spriteBatch.draw(
         atlasRegion.getTexture(),
-        x / GameSettings.renderScale - (float) (width / 2) + atlasRegion.offsetX,
-        y / GameSettings.renderScale - (float) (height / 2) + atlasRegion.offsetY,
+        x * GameSettings.reverseRenderScale - (width >> 1) + atlasRegion.offsetX,
+        y * GameSettings.reverseRenderScale - (height >> 1) + atlasRegion.offsetY,
         width,
         height,
         atlasRegion.getRegionX(),

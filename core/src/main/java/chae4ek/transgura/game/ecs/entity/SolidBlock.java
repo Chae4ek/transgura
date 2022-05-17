@@ -1,6 +1,6 @@
 package chae4ek.transgura.game.ecs.entity;
 
-import static chae4ek.transgura.engine.util.GameSettings.PPM;
+import static chae4ek.transgura.engine.util.GameSettings.reversePPM;
 
 import chae4ek.transgura.engine.ecs.Entity;
 import chae4ek.transgura.game.ecs.component.AnimatedSprites;
@@ -22,7 +22,7 @@ public class SolidBlock extends Entity {
   private static final Vector2 center = new Vector2();
 
   static {
-    shape.setAsBox(16 / PPM, 16 / PPM);
+    shape.setAsBox(16 * reversePPM, 16 * reversePPM);
   }
 
   public SolidBlock(final float x, final float y, final AtlasRegion texture) {
@@ -39,10 +39,10 @@ public class SolidBlock extends Entity {
       final float x, final float y, final int countX, final int countY, final AtlasRegion texture) {
     super(new Position(x, y), new TiledSprite(texture, countX, countY));
 
-    center.set((countX - 1) * 16 / PPM, (countY - 1) * 16 / PPM);
-    shape.setAsBox(16 * countX / PPM, 16 * countY / PPM, center, 0f);
+    center.set((countX - 1) * 16 * reversePPM, (countY - 1) * 16 * reversePPM);
+    shape.setAsBox(16 * countX * reversePPM, 16 * countY * reversePPM, center, 0f);
     create(x, y);
-    shape.setAsBox(16 / PPM, 16 / PPM);
+    shape.setAsBox(16 * reversePPM, 16 * reversePPM);
   }
 
   private void create(final float x, final float y) {

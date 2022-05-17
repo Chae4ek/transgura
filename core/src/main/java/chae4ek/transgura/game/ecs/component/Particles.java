@@ -25,7 +25,8 @@ public class Particles extends RenderComponent {
   @Override
   public void draw() {
     final Vector2 pos = getParent().getComponent(Position.class).getVec();
-    particleEffect.setPosition(pos.x / GameSettings.renderScale, pos.y / GameSettings.renderScale);
+    particleEffect.setPosition(
+        pos.x * GameSettings.reverseRenderScale, pos.y * GameSettings.reverseRenderScale);
     if (loop && particleEffect.isComplete()) particleEffect.reset();
     particleEffect.update(Game.getDeltaTime());
     particleEffect.draw(RenderManager.spriteBatch);

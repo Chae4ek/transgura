@@ -41,7 +41,7 @@ public class PlayerController extends System implements CollisionSubscriber {
       final Array<Fixture> array =
           parent.getComponent(PhysicalBody.class).getBody().getFixtureList();
       for (final Fixture fixture : array) {
-        if (fixture.getUserData() == "PLAYER") {
+        if ("PLAYER".equals(fixture.getUserData())) {
           fixture.setSensor(true);
         }
       }

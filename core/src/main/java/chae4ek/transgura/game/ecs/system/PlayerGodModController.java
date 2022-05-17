@@ -25,7 +25,7 @@ public class PlayerGodModController extends System {
       final Array<Fixture> array =
           parent.getComponent(PhysicalBody.class).getBody().getFixtureList();
       for (final Fixture fixture : array) {
-        if (fixture.getUserData() == "PLAYER") {
+        if ("PLAYER".equals(fixture.getUserData())) {
           fixture.setSensor(false);
         }
       }

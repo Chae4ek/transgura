@@ -3,6 +3,7 @@ package chae4ek.transgura.game.ecs.component;
 import chae4ek.transgura.engine.ecs.Game;
 import chae4ek.transgura.engine.ecs.RenderComponent;
 import chae4ek.transgura.engine.ecs.RenderManager;
+import chae4ek.transgura.engine.util.GameSettings;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Vector2;
 
@@ -24,7 +25,7 @@ public class Particles extends RenderComponent {
   @Override
   public void draw() {
     final Vector2 pos = getParent().getComponent(Position.class).getVec();
-    particleEffect.setPosition(pos.x, pos.y);
+    particleEffect.setPosition(pos.x / GameSettings.renderScale, pos.y / GameSettings.renderScale);
     if (loop && particleEffect.isComplete()) particleEffect.reset();
     particleEffect.update(Game.getDeltaTime());
     particleEffect.draw(RenderManager.spriteBatch);

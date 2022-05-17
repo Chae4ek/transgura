@@ -1,7 +1,6 @@
 package chae4ek.transgura.game.ecs.component.shaders;
 
 import chae4ek.transgura.engine.ecs.Game;
-import chae4ek.transgura.game.ecs.component.Shader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class Vignette extends Shader {
@@ -12,7 +11,7 @@ public class Vignette extends Shader {
           "uniform float u_cameraZoom;",
           "void main() {",
           "  vec2 st = v_texCoords - 0.5;",
-          "  float vignette = smoothstep(0.6, 0.3, length(st));",
+          "  float vignette = smoothstep(0.7, 0.4, length(st));",
           "  float shift = (1.0 - vignette) * 0.003 / u_cameraZoom;",
           "  vec4 color = texture2D(u_texture, v_texCoords);",
           "  color.r = texture2D(u_texture, v_texCoords + shift).r;",

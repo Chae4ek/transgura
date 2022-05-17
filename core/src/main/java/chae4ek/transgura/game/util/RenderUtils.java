@@ -1,6 +1,7 @@
 package chae4ek.transgura.game.util;
 
 import chae4ek.transgura.engine.ecs.RenderManager;
+import chae4ek.transgura.engine.util.GameSettings;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 
 public class RenderUtils {
@@ -15,15 +16,10 @@ public class RenderUtils {
     final int height = atlasRegion.getRegionHeight();
     RenderManager.spriteBatch.draw(
         atlasRegion.getTexture(),
-        x + atlasRegion.offsetX,
-        y + atlasRegion.offsetY,
+        x / GameSettings.renderScale - (float) (width / 2) + atlasRegion.offsetX,
+        y / GameSettings.renderScale - (float) (height / 2) + atlasRegion.offsetY,
         width,
         height,
-        width,
-        height,
-        2f,
-        2f,
-        0f,
         atlasRegion.getRegionX(),
         atlasRegion.getRegionY(),
         width,

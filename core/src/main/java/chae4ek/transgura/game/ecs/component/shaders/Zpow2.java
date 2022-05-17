@@ -1,7 +1,6 @@
 package chae4ek.transgura.game.ecs.component.shaders;
 
 import chae4ek.transgura.engine.ecs.Game;
-import chae4ek.transgura.game.ecs.component.Shader;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 

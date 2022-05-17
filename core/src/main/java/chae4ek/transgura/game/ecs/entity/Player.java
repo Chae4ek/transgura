@@ -1,7 +1,5 @@
 package chae4ek.transgura.game.ecs.entity;
 
-import static chae4ek.transgura.engine.util.GameSettings.PPM;
-
 import chae4ek.transgura.engine.ecs.Entity;
 import chae4ek.transgura.game.ecs.component.AnimatedSprites;
 import chae4ek.transgura.game.ecs.component.Particles;
@@ -49,12 +47,12 @@ public class Player extends Entity {
     ResourceLoader.loadAtlases(AtlasType.OLD_MAN);
 
     final AtlasRegion[] idleFrames = ResourceLoader.loadAtlasRegions(TextureType.OLD_MAN_IDLE);
-    for (final AtlasRegion region : idleFrames) region.offsetY = 8.5f;
+    for (final AtlasRegion region : idleFrames) region.offsetY = 4f;
     idle = new ARAnimation(0.1f, idleFrames);
     idle.setPlayMode(PlayMode.LOOP);
 
     final AtlasRegion[] runFrames = ResourceLoader.loadAtlasRegions(TextureType.OLD_MAN_RUN);
-    for (final AtlasRegion region : runFrames) region.offsetY = 8.5f;
+    for (final AtlasRegion region : runFrames) region.offsetY = 4f;
     run = new ARAnimation(0.08f, runFrames);
     run.setPlayMode(PlayMode.LOOP);
 
@@ -62,7 +60,7 @@ public class Player extends Entity {
     bodyDef.linearDamping = 2.2f;
     bodyDef.gravityScale = 0f;
     final PolygonShape shape = new PolygonShape();
-    final float size = 16f / PPM;
+    final float size = 0.5f;
     final float size2 = size - 0.2f;
     final float corner = 0.02f;
     final float offsetY = 0.05f;
@@ -123,7 +121,7 @@ public class Player extends Entity {
   @Override
   public void deserialize(final DefaultDeserializer deserializer) throws Exception {
     super.deserialize(deserializer);
-    for (final AtlasRegion region : idle.getKeyFrames()) region.offsetY = 8.5f;
-    for (final AtlasRegion region : run.getKeyFrames()) region.offsetY = 8.5f;
+    for (final AtlasRegion region : idle.getKeyFrames()) region.offsetY = 4f;
+    for (final AtlasRegion region : run.getKeyFrames()) region.offsetY = 4f;
   }
 }

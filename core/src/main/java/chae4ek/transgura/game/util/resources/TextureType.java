@@ -7,6 +7,8 @@ import java.util.Map;
 public enum TextureType {
   TEST_BLOCK(AtlasType.TEST, "test_block"),
   WOOD(AtlasType.TEST, "wood"),
+  BRICK_WALL(AtlasType.TEST, "brick_wall"),
+  BRICK_WALL_2(AtlasType.TEST, "brick_wall2"),
   OLD_MAN_IDLE(AtlasType.OLD_MAN, "idle"),
   OLD_MAN_RUN(AtlasType.OLD_MAN, "run");
 

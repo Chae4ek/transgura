@@ -39,6 +39,8 @@ public final class GameSettings {
   /** Pixels Per Meter */
   public static final float PPM = GameConfig.PPM;
 
+  public static final float renderScale = GameConfig.renderScale;
+
   public static final float fixedDeltaTime = GameConfig.fixedDeltaTime;
   public static final float timeStepForPhysics = GameConfig.timeStepForPhysics;
 

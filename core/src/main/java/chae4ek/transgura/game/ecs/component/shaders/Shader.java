@@ -1,4 +1,4 @@
-package chae4ek.transgura.game.ecs.component;
+package chae4ek.transgura.game.ecs.component.shaders;
 
 import chae4ek.transgura.engine.ecs.RenderComponent;
 import chae4ek.transgura.engine.ecs.RenderManager;

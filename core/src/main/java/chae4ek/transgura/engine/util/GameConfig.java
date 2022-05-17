@@ -13,6 +13,8 @@ public final class GameConfig {
   /** Pixels Per Meter */
   public static float PPM = 32f;
 
+  public static float renderScale = 2f;
+
   public static float fixedDeltaTime = 1f / 60f;
   public static float timeStepForPhysics = 1f / 60f;
 

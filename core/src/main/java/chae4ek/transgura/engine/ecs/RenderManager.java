@@ -28,6 +28,7 @@ public class RenderManager {
           new ShaderProgram(GameSettings.defaultVertexShader, GameSettings.defaultFragmentShader));
 
   public static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
+  public static final Matrix4 PROJECTION_MATRIX = new Matrix4();
 
   static {
     shaderBatch.setProjectionMatrix(SHADER_MATRIX_IDENTITY);
@@ -135,7 +136,8 @@ public class RenderManager {
   /** Render all render components */
   protected void renderAll() {
     Game.getScene().camera.update();
-    spriteBatch.setProjectionMatrix(Game.getScene().camera.combined);
+    PROJECTION_MATRIX.set(Game.getScene().camera.combined).scl(GameSettings.renderScale);
+    spriteBatch.setProjectionMatrix(PROJECTION_MATRIX);
 
     frontFrameBuffer.begin();
     Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1f);

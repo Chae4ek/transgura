@@ -1,8 +1,13 @@
 package chae4ek.transgura.game.ecs.entity;
 
+import box2dLight.RayHandler;
 import chae4ek.transgura.engine.ecs.Entity;
+import chae4ek.transgura.engine.ecs.Game;
+import chae4ek.transgura.engine.ecs.Scene;
+import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.game.ecs.component.AnimatedSprites;
 import chae4ek.transgura.game.ecs.component.Particles;
+import chae4ek.transgura.game.ecs.component.PointLight;
 import chae4ek.transgura.game.ecs.component.Position;
 import chae4ek.transgura.game.ecs.system.Camera;
 import chae4ek.transgura.game.ecs.system.PhysicalBody;
@@ -13,6 +18,7 @@ import chae4ek.transgura.game.util.resources.ParticlesType;
 import chae4ek.transgura.game.util.resources.ResourceLoader;
 import chae4ek.transgura.game.util.resources.TextureType;
 import chae4ek.transgura.game.util.resources.TextureType.AtlasType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
@@ -43,7 +49,16 @@ public class Player extends Entity {
   public final ARAnimation idle;
   public final ARAnimation run;
 
+  private void preLoadScene() {
+    final Scene scene = Game.getScene();
+    scene.camera.position.set(Gdx.graphics.getWidth() >> 1, Gdx.graphics.getHeight() >> 1, 0f);
+    scene.b2dWorld.setGravity(new Vector2(0, -9.81f * GameSettings.reversePPM));
+    scene.rayHandler.setAmbientLight(0.45f);
+    RayHandler.isDiffuse = true;
+  }
+
   public Player(final float x, final float y) {
+    preLoadScene();
     ResourceLoader.loadAtlases(AtlasType.OLD_MAN);
 
     final AtlasRegion[] idleFrames = ResourceLoader.loadAtlasRegions(TextureType.OLD_MAN_IDLE);
@@ -109,6 +124,8 @@ public class Player extends Entity {
     shape.dispose();
 
     addComponent(
+        new PointLight(body),
+        // new Vignette(999),
         new AnimatedSprites(100, idle),
         new PlayerController(),
         new PlayerGodModController(),
@@ -120,6 +137,7 @@ public class Player extends Entity {
 
   @Override
   public void deserialize(final DefaultDeserializer deserializer) throws Exception {
+    preLoadScene();
     super.deserialize(deserializer);
     for (final AtlasRegion region : idle.getKeyFrames()) region.offsetY = 4f;
     for (final AtlasRegion region : run.getKeyFrames()) region.offsetY = 4f;

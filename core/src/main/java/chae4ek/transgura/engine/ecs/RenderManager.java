@@ -1,8 +1,10 @@
 package chae4ek.transgura.engine.ecs;
 
+import box2dLight.RayHandler;
 import chae4ek.transgura.engine.util.GameSettings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,6 +31,7 @@ public class RenderManager {
 
   public static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
   public static final Matrix4 PROJECTION_MATRIX = new Matrix4();
+  public static final Matrix4 LIGHTS_MATRIX = new Matrix4();
 
   static {
     shaderBatch.setProjectionMatrix(SHADER_MATRIX_IDENTITY);
@@ -48,6 +51,7 @@ public class RenderManager {
     if (frontFrameBuffer.getWidth() == width && frontFrameBuffer.getHeight() == height) return;
     frontFrameBuffer.dispose();
     frontFrameBuffer = new FrameBuffer(Format.RGBA8888, width, height, false, false);
+    Game.getScene().rayHandler.resizeFBO(width >> 2, height >> 2);
   }
 
   public static Texture getBackFrameBufferTexture() {
@@ -73,6 +77,8 @@ public class RenderManager {
     }
     backFrameBuffer.end();
     frontFrameBuffer.begin();
+    Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
   }
 
   protected void disposeStatic() {
@@ -135,8 +141,10 @@ public class RenderManager {
 
   /** Render all render components */
   protected void renderAll() {
-    Game.getScene().camera.update();
-    PROJECTION_MATRIX.set(Game.getScene().camera.combined).scl(GameSettings.renderScale);
+    final OrthographicCamera camera = Game.getScene().camera;
+    camera.update();
+    PROJECTION_MATRIX.set(camera.combined).scl(GameSettings.renderScale);
+    LIGHTS_MATRIX.set(camera.combined).scl(GameSettings.PPM);
     spriteBatch.setProjectionMatrix(PROJECTION_MATRIX);
 
     frontFrameBuffer.begin();
@@ -144,17 +152,46 @@ public class RenderManager {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     spriteBatch.begin();
 
+    boolean isUILayout = false;
     for (final ObjectSet<RenderComponent> renderComponents : renderComponents.values()) {
       for (final RenderComponent renderComponent : renderComponents) {
-        if (renderComponent.isEnabled()) renderComponent.draw();
+        if (renderComponent.isEnabled()) {
+          if (!isUILayout && renderComponent.getZOrder() >= GameSettings.zOrderForUIRendering) {
+            isUILayout = true;
+            endDraw();
+            updateLights(camera);
+            // TODO: render lights to FBO
+            frontFrameBuffer.begin();
+            Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            spriteBatch.begin();
+          }
+          renderComponent.draw();
+        }
       }
     }
 
+    endDraw();
+    if (!isUILayout) updateLights(camera);
+  }
+
+  private static void endDraw() {
     spriteBatch.end();
     frontFrameBuffer.end();
 
     shaderBatch.begin();
     shaderBatch.draw(frontFrameBuffer.getColorBufferTexture(), -1f, 1f, 2f, -2f);
     shaderBatch.end();
+  }
+
+  private static void updateLights(final OrthographicCamera camera) {
+    final RayHandler rayHandler = Game.getScene().rayHandler;
+    rayHandler.setCombinedMatrix(
+        LIGHTS_MATRIX,
+        camera.position.x * GameSettings.reversePPM,
+        camera.position.y * GameSettings.reversePPM,
+        camera.viewportWidth * camera.zoom,
+        camera.viewportHeight * camera.zoom);
+    rayHandler.updateAndRender();
   }
 }

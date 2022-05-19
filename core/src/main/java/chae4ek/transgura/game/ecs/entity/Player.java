@@ -10,6 +10,7 @@ import chae4ek.transgura.game.ecs.component.Particles;
 import chae4ek.transgura.game.ecs.component.PointLight;
 import chae4ek.transgura.game.ecs.component.Position;
 import chae4ek.transgura.game.ecs.system.Camera;
+import chae4ek.transgura.game.ecs.system.Menu;
 import chae4ek.transgura.game.ecs.system.PhysicalBody;
 import chae4ek.transgura.game.ecs.system.PlayerController;
 import chae4ek.transgura.game.ecs.system.PlayerGodModController;
@@ -124,6 +125,7 @@ public class Player extends Entity {
     shape.dispose();
 
     addComponent(
+        new Menu(),
         new PointLight(body),
         // new Vignette(999),
         new AnimatedSprites(100, idle),

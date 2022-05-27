@@ -14,7 +14,7 @@ public class CollisionProcessor {
       final Contact contact, final Object userData1, final Object userData2) {
     final Object data1 = contact.getFixtureA().getUserData();
     final Object data2 = contact.getFixtureB().getUserData();
-    return data1.equals(userData1) && data2.equals(userData2)
-        || data1.equals(userData2) && data2.equals(userData1);
+    return userData1.equals(data1) && userData2.equals(data2)
+        || userData2.equals(data1) && userData1.equals(data2);
   }
 }

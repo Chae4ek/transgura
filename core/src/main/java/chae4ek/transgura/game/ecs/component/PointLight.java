@@ -9,18 +9,36 @@ public class PointLight extends Component {
 
   // TODO: improve serialization
   private transient box2dLight.PointLight pointLight;
+  private final float offsetX;
+  private final float offsetY;
 
-  public PointLight(final Body body) {
-    create(body);
+  public PointLight(final Body body, final Color color, final float distance) {
+    this(body, color, distance, 0f, 0f);
   }
 
-  private void create(final Body body) {
-    pointLight =
-        new box2dLight.PointLight(
-            Game.getScene().rayHandler, 120, new Color(0.75f, 0.75f, 0.75f, 0.75f), 15f, 0f, 0f);
-    pointLight.attachToBody(body);
+  public PointLight(
+      final Body body,
+      final Color color,
+      final float distance,
+      final float offsetX,
+      final float offsetY) {
+    this.offsetX = offsetX;
+    this.offsetY = offsetY;
+    pointLight = createPointLight(body, color, distance, offsetX, offsetY);
+  }
+
+  public static box2dLight.PointLight createPointLight(
+      final Body body,
+      final Color color,
+      final float distance,
+      final float offsetX,
+      final float offsetY) {
+    final box2dLight.PointLight pointLight =
+        new box2dLight.PointLight(Game.getScene().rayHandler, 120, color, distance, 0f, 0f);
+    pointLight.attachToBody(body, offsetX, offsetY);
     pointLight.setIgnoreAttachedBody(true);
     pointLight.setSoftnessLength(1.5f);
+    return pointLight;
   }
 
   public box2dLight.PointLight getPointLight() {
@@ -35,12 +53,24 @@ public class PointLight extends Component {
   @Override
   public void serialize(final DefaultSerializer serializer) throws Exception {
     serializer.write(pointLight.getBody());
+    final Color color = pointLight.getColor();
+    serializer.writeFloat(color.r);
+    serializer.writeFloat(color.g);
+    serializer.writeFloat(color.b);
+    serializer.writeFloat(color.a);
+    serializer.writeFloat(pointLight.getDistance());
     super.serialize(serializer);
   }
 
   @Override
   public void deserialize(final DefaultDeserializer deserializer) throws Exception {
-    create((Body) deserializer.read());
+    final Body body = (Body) deserializer.read();
+    final float r = deserializer.readFloat();
+    final float g = deserializer.readFloat();
+    final float b = deserializer.readFloat();
+    final float a = deserializer.readFloat();
+    final float distance = deserializer.readFloat();
     super.deserialize(deserializer);
+    pointLight = createPointLight(body, new Color(r, g, b, a), distance, offsetX, offsetY);
   }
 }

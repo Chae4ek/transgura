@@ -22,6 +22,7 @@ import chae4ek.transgura.game.util.resources.TextureType.AtlasType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -104,12 +105,12 @@ public class Player extends Entity {
     final PhysicalBody physicalBody = new PhysicalBody(bodyDef);
     final Body body = physicalBody.getBody();
     Fixture fixture = body.createFixture(shape, 1f);
-    fixture.setFriction(0.5f);
+    fixture.setFriction(0f);
     fixture.setUserData("PLAYER");
 
     shape.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, size), 0f);
     fixture = body.createFixture(shape, 1f);
-    fixture.setFriction(0.5f);
+    fixture.setFriction(0f);
     fixture.setRestitution(0.3f);
     fixture.setUserData("PLAYER");
 
@@ -126,7 +127,7 @@ public class Player extends Entity {
 
     addComponent(
         new Menu(),
-        new PointLight(body),
+        new PointLight(body, new Color(0.75f, 0.75f, 0.75f, 0.75f), 15f),
         // new Vignette(999),
         new AnimatedSprites(100, idle),
         new PlayerController(),

@@ -24,8 +24,9 @@ public class AnimatedSprites extends RenderComponent {
 
   @Override
   public void draw() {
-    final Vector2 pos = getParent().getComponent(Position.class).getVec();
+    final Position pos = getParent().getComponent(Position.class);
+    final Vector2 vec = pos.getVec();
     final AtlasRegion atlasRegion = animation.getKeyFrame(Game.getScene().getSceneLifetimeInSec());
-    RenderUtils.draw(atlasRegion, pos.x, pos.y, flipX, flipY);
+    RenderUtils.draw(atlasRegion, vec.x, vec.y, flipX, flipY, 0f, 0f, 0f);
   }
 }

@@ -10,6 +10,9 @@ public class Sprite extends RenderComponent {
   private final AtlasRegion atlasRegion;
   public boolean flipX;
   public boolean flipY;
+  public float angle;
+  public float originPivotOffsetX;
+  public float originPivotOffsetY;
 
   public Sprite(final AtlasRegion textureType) {
     atlasRegion = textureType;
@@ -20,13 +23,26 @@ public class Sprite extends RenderComponent {
     atlasRegion = textureType;
   }
 
+  public Sprite(
+      final int zOrder,
+      final AtlasRegion textureType,
+      final float originPivotOffsetX,
+      final float originPivotOffsetY) {
+    super(zOrder);
+    atlasRegion = textureType;
+    this.originPivotOffsetX = originPivotOffsetX;
+    this.originPivotOffsetY = originPivotOffsetY;
+  }
+
   @Override
   public void draw() {
-    final Vector2 pos = getParent().getComponent(Position.class).getVec();
-    draw(pos.x, pos.y);
+    final Position pos = getParent().getComponent(Position.class);
+    final Vector2 vec = pos.getVec();
+    draw(vec.x, vec.y);
   }
 
   public void draw(final float x, final float y) {
-    RenderUtils.draw(atlasRegion, x, y, flipX, flipY);
+    RenderUtils.draw(
+        atlasRegion, x, y, flipX, flipY, angle, originPivotOffsetX, originPivotOffsetY);
   }
 }

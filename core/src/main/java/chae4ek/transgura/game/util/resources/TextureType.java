@@ -11,6 +11,10 @@ public enum TextureType {
   BRICK_WALL_2(AtlasType.TEST, "brick_wall2"),
   OLD_MAN_IDLE(AtlasType.OLD_MAN, "idle"),
   OLD_MAN_RUN(AtlasType.OLD_MAN, "run"),
+
+  DECOR_CHANDELIER(AtlasType.DECOR, "chandelier"),
+  DECOR_CHANDELIER_MOUNTING(AtlasType.DECOR, "chandelier_mounting"),
+
   CASTLE_LT_CORNER(AtlasType.CASTLE, "castle1"),
   CASTLE_TOP(AtlasType.CASTLE, "castle2"),
   CASTLE_RT_CORNER(AtlasType.CASTLE, "castle3"),
@@ -56,6 +60,7 @@ public enum TextureType {
   public enum AtlasType {
     TEST("atlas/test_textures.atlas"),
     OLD_MAN("atlas/old_man.atlas"),
+    DECOR("atlas/decor.atlas"),
     CASTLE("atlas/castle.atlas");
 
     public final String atlasPath;

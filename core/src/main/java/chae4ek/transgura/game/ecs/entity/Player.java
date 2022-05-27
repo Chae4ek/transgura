@@ -1,10 +1,16 @@
 package chae4ek.transgura.game.ecs.entity;
 
+import box2dLight.RayHandler;
 import chae4ek.transgura.engine.ecs.Entity;
+import chae4ek.transgura.engine.ecs.Game;
+import chae4ek.transgura.engine.ecs.Scene;
+import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.game.ecs.component.AnimatedSprites;
 import chae4ek.transgura.game.ecs.component.Particles;
+import chae4ek.transgura.game.ecs.component.PointLight;
 import chae4ek.transgura.game.ecs.component.Position;
 import chae4ek.transgura.game.ecs.system.Camera;
+import chae4ek.transgura.game.ecs.system.Menu;
 import chae4ek.transgura.game.ecs.system.PhysicalBody;
 import chae4ek.transgura.game.ecs.system.PlayerController;
 import chae4ek.transgura.game.ecs.system.PlayerGodModController;
@@ -13,8 +19,10 @@ import chae4ek.transgura.game.util.resources.ParticlesType;
 import chae4ek.transgura.game.util.resources.ResourceLoader;
 import chae4ek.transgura.game.util.resources.TextureType;
 import chae4ek.transgura.game.util.resources.TextureType.AtlasType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -43,7 +51,16 @@ public class Player extends Entity {
   public final ARAnimation idle;
   public final ARAnimation run;
 
+  private void preLoadScene() {
+    final Scene scene = Game.getScene();
+    scene.camera.position.set(Gdx.graphics.getWidth() >> 1, Gdx.graphics.getHeight() >> 1, 0f);
+    scene.b2dWorld.setGravity(new Vector2(0, -9.81f * GameSettings.reversePPM));
+    scene.rayHandler.setAmbientLight(0.45f);
+    RayHandler.isDiffuse = true;
+  }
+
   public Player(final float x, final float y) {
+    preLoadScene();
     ResourceLoader.loadAtlases(AtlasType.OLD_MAN);
 
     final AtlasRegion[] idleFrames = ResourceLoader.loadAtlasRegions(TextureType.OLD_MAN_IDLE);
@@ -88,12 +105,12 @@ public class Player extends Entity {
     final PhysicalBody physicalBody = new PhysicalBody(bodyDef);
     final Body body = physicalBody.getBody();
     Fixture fixture = body.createFixture(shape, 1f);
-    fixture.setFriction(0.5f);
+    fixture.setFriction(0f);
     fixture.setUserData("PLAYER");
 
     shape.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, size), 0f);
     fixture = body.createFixture(shape, 1f);
-    fixture.setFriction(0.5f);
+    fixture.setFriction(0f);
     fixture.setRestitution(0.3f);
     fixture.setUserData("PLAYER");
 
@@ -109,6 +126,9 @@ public class Player extends Entity {
     shape.dispose();
 
     addComponent(
+        new Menu(),
+        new PointLight(body, new Color(0.75f, 0.75f, 0.75f, 0.75f), 15f),
+        // new Vignette(999),
         new AnimatedSprites(100, idle),
         new PlayerController(),
         new PlayerGodModController(),
@@ -120,6 +140,7 @@ public class Player extends Entity {
 
   @Override
   public void deserialize(final DefaultDeserializer deserializer) throws Exception {
+    preLoadScene();
     super.deserialize(deserializer);
     for (final AtlasRegion region : idle.getKeyFrames()) region.offsetY = 4f;
     for (final AtlasRegion region : run.getKeyFrames()) region.offsetY = 4f;

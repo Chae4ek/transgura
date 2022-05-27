@@ -2,6 +2,7 @@ package chae4ek.transgura.engine.ecs;
 
 import static chae4ek.transgura.engine.util.GameSettings.timeStepForPhysics;
 
+import box2dLight.RayHandler;
 import chae4ek.transgura.engine.util.GameSettings;
 import chae4ek.transgura.engine.util.collision.CollisionListener;
 import chae4ek.transgura.engine.util.debug.DebugRenderManager;
@@ -21,7 +22,8 @@ public abstract class Scene {
 
   public final OrthographicCamera camera;
 
-  public final com.badlogic.gdx.physics.box2d.World b2dWorld;
+  public final World b2dWorld;
+  public final RayHandler rayHandler;
   public final CollisionListener collisionListener;
 
   final EntityManager entityManager;
@@ -40,6 +42,7 @@ public abstract class Scene {
 
     camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     b2dWorld = new World(Vector2.Zero, true);
+    rayHandler = new RayHandler(b2dWorld);
     collisionListener = new CollisionListener();
     b2dWorld.setContactListener(collisionListener);
     entityManager = new EntityManager();
@@ -88,6 +91,7 @@ public abstract class Scene {
   }
 
   public void softDispose() {
+    rayHandler.dispose();
     b2dWorld.dispose();
   }
 

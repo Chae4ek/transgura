@@ -27,7 +27,7 @@ public final class SystemManager {
     addDeferredEvent(() -> systems.remove(system));
   }
 
-  void updateAndOneFixedUpdate(final boolean dofixedUpdate) {
+  void updateAndOneFixedUpdate(final boolean doFixedUpdate) {
     runDeferredEvents();
     // the fix of immediately enabling
     for (final System system : systems) system.wasEnabled = system.isEnabled();
@@ -35,7 +35,7 @@ public final class SystemManager {
       if (system.wasEnabled) {
         system.update();
         // the first fixed update is called with the update together to accelerate the cycle
-        if (dofixedUpdate && system.isEnabled()) system.fixedUpdate();
+        if (doFixedUpdate && system.isEnabled()) system.fixedUpdate();
       }
     }
   }

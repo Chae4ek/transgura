@@ -11,15 +11,25 @@ public class RenderUtils {
       final float x,
       final float y,
       final boolean flipX,
-      final boolean flipY) {
+      final boolean flipY,
+      final float angle,
+      final float originPivotOffsetX,
+      final float originPivotOffsetY) {
     final int width = atlasRegion.getRegionWidth();
     final int height = atlasRegion.getRegionHeight();
+    final int halfWidth = width >> 1;
+    final int halfHeight = height >> 1;
     RenderManager.spriteBatch.draw(
         atlasRegion.getTexture(),
-        x * GameSettings.reverseRenderScale - (width >> 1) + atlasRegion.offsetX,
-        y * GameSettings.reverseRenderScale - (height >> 1) + atlasRegion.offsetY,
+        x * GameSettings.reverseRenderScale - halfWidth + atlasRegion.offsetX,
+        y * GameSettings.reverseRenderScale - halfHeight + atlasRegion.offsetY,
+        halfWidth + originPivotOffsetX,
+        halfHeight + originPivotOffsetY,
         width,
         height,
+        1f,
+        1f,
+        angle,
         atlasRegion.getRegionX(),
         atlasRegion.getRegionY(),
         width,

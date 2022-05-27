@@ -108,16 +108,6 @@ public abstract class Component implements HierarchicallySerializable {
   }
 
   @Override
-  public boolean equals(final Object o) {
-    return this == o || o != null && getClass() == o.getClass();
-  }
-
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
-  }
-
-  @Override
   public void serialize(final DefaultSerializer serializer) throws Exception {
     serializer.writeThis();
   }

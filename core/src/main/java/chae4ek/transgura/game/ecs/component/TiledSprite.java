@@ -26,7 +26,8 @@ public class TiledSprite extends Sprite {
 
   @Override
   public void draw() {
-    final Vector2 parentVec = getParent().getComponent(Position.class).getVec();
+    final Position pos = getParent().getComponent(Position.class);
+    final Vector2 parentVec = pos.getVec();
     for (int x = 0; x < countX; ++x) {
       final float posX = parentVec.x + x * scaledWidth;
       for (int y = 0; y < countY; ++y) {

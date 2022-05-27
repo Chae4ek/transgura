@@ -37,6 +37,13 @@ public class EntityTest {
 
   private static class Component2 extends Component {}
 
+  private static class Component3 extends Component {
+    @Override
+    public boolean equals(final Object obj) {
+      return true;
+    }
+  }
+
   @Nested
   public class CreatingEntityTest {
 
@@ -87,14 +94,33 @@ public class EntityTest {
     }
 
     @Test
-    void twoSameComponentClasses__WARN_componentReplaced() {
+    void fiveSameComponentClasses__5x_addComponent() {
+      final Component comp1 = new Component1();
+      final Component comp2 = new Component1();
+      final Component comp3 = new Component1();
+      final Component comp4 = new Component1();
+      final Component comp5 = new Component1();
+
+      final Entity entity = new Entity(comp1, comp2, comp3, comp4, comp5);
+
+      int i = 0;
+      for (final Component component : entity) {
+        ++i;
+        if (i == 1) Assertions.assertEquals(comp1, component);
+        if (i == 2) Assertions.assertEquals(comp2, component);
+        if (i == 3) Assertions.assertEquals(comp3, component);
+        if (i == 4) Assertions.assertEquals(comp4, component);
+        if (i == 5) Assertions.assertEquals(comp5, component);
+      }
+    }
+
+    @Test
+    void twoEqualedComponents__WARN_componentReplaced() {
       Assertions.assertThrows(
           GameException.class,
           () -> {
-            final Component comp1 = Mockito.mock(Component.class);
-            final Component comp2 = Mockito.mock(Component.class);
-            Mockito.when(comp1.bind(any())).thenReturn(true);
-            Mockito.when(comp2.bind(any())).thenReturn(true);
+            final Component comp1 = new Component3();
+            final Component comp2 = new Component3();
 
             new Entity(comp1, comp2);
           },

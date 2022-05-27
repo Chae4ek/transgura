@@ -51,7 +51,7 @@ public class SolidBlock extends Entity {
     final Body body = physicalBody.getBody();
 
     final Fixture fixture = body.createFixture(shape, 0f);
-    fixture.setFriction(0);
+    fixture.setFriction(0.5f);
     fixture.setUserData("GROUND");
 
     addComponent(physicalBody);

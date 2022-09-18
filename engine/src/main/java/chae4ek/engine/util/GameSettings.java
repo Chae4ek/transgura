@@ -48,6 +48,8 @@ public final class GameSettings {
   public static final float timeStepForPhysics = GameConfig.timeStepForPhysics;
   public static final int zOrderForUIRendering = GameConfig.zOrderForUIRendering;
 
+  public static boolean renderLights = true;
+
   public static final boolean isBox2DDebugRendererOn = GameConfig.isBox2DDebugRendererOn;
   /** Whether to throw an exception at the WARN log level */
   public static boolean isWARNThrowOn = GameConfig.isWARNThrowOn;

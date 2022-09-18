@@ -27,6 +27,10 @@ public final class EntityManager {
     entities.remove(entity);
   }
 
+  Iterable<Entity> entityIterable() {
+    return entities;
+  }
+
   void serialize(final DataOutputStream out) {
     WorldSerializer.serialize(out, entities.size);
     for (final Entity entity : entities) WorldSerializer.serialize(out, entity);

@@ -156,7 +156,9 @@ public class RenderManager {
     for (final ObjectSet<RenderComponent> renderComponents : renderComponents.values()) {
       for (final RenderComponent renderComponent : renderComponents) {
         if (renderComponent.isEnabled()) {
-          if (!isUILayout && renderComponent.getZOrder() >= GameSettings.zOrderForUIRendering) {
+          if (GameSettings.renderLights
+              && !isUILayout
+              && renderComponent.getZOrder() >= GameSettings.zOrderForUIRendering) {
             isUILayout = true;
             endDraw();
             updateLights(camera);
@@ -172,7 +174,7 @@ public class RenderManager {
     }
 
     endDraw();
-    if (!isUILayout) updateLights(camera);
+    if (GameSettings.renderLights && !isUILayout) updateLights(camera);
   }
 
   private static void endDraw() {

@@ -49,6 +49,10 @@ public abstract class Scene {
         GameSettings.isBox2DDebugRendererOn ? new DebugRenderManager() : new RenderManager();
   }
 
+  public final Iterable<Entity> entityIterable() {
+    return entityManager.entityIterable();
+  }
+
   /**
    * The lifetime of this scene in seconds. When a scene creates and starts this method returns 0
    *

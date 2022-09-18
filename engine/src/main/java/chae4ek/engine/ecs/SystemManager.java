@@ -32,7 +32,7 @@ public final class SystemManager {
     // the fix of immediately enabling
     for (final System system : systems) system.wasEnabled = system.isEnabled();
     for (final System system : systems) {
-      if (system.wasEnabled) {
+      if (system.wasEnabled && !system.isDestroyed()) {
         system.update();
         // the first fixed update is called with the update together to accelerate the cycle
         if (doFixedUpdate && system.isEnabled()) system.fixedUpdate();
@@ -44,7 +44,7 @@ public final class SystemManager {
     runDeferredEvents();
     // for (final System system : systems) system.wasEnabled = system.isEnabled();
     for (final System system : systems) {
-      if (system.isEnabled()) system.fixedUpdate();
+      if (system.isEnabled() && !system.isDestroyed()) system.fixedUpdate();
     }
   }
 

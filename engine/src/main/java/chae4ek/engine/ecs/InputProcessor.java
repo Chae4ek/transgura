@@ -1,7 +1,9 @@
 package chae4ek.engine.ecs;
 
+import chae4ek.engine.util.GameSettings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ObjectSet;
 
 public final class InputProcessor implements com.badlogic.gdx.InputProcessor {
@@ -17,6 +19,8 @@ public final class InputProcessor implements com.badlogic.gdx.InputProcessor {
 
   private static float justScrolledX;
   private static float justScrolledY;
+  private static int mouseX;
+  private static int mouseY;
 
   static {
     for (int i = 0; i < keys.length; ++i) keys[i] = new Key();
@@ -59,6 +63,38 @@ public final class InputProcessor implements com.badlogic.gdx.InputProcessor {
    */
   public static float getJustScrolledY() {
     return justScrolledY;
+  }
+
+  /**
+   * @return the last mouse position X
+   */
+  public static int getMouseX() {
+    return mouseX;
+  }
+
+  /**
+   * @return the last mouse position Y
+   */
+  public static int getMouseY() {
+    return mouseY;
+  }
+
+  /**
+   * @return the last mouse global position X
+   */
+  public static float getMouseGlobalX() {
+    final OrthographicCamera cam = Game.getScene().camera;
+    return ((mouseX - Gdx.graphics.getWidth() * 0.5f) * cam.zoom + cam.position.x)
+        * GameSettings.reversePPM;
+  }
+
+  /**
+   * @return the last mouse global position Y
+   */
+  public static float getMouseGlobalY() {
+    final OrthographicCamera cam = Game.getScene().camera;
+    return ((Gdx.graphics.getHeight() * 0.5f - mouseY) * cam.zoom + cam.position.y)
+        * GameSettings.reversePPM;
   }
 
   /**
@@ -189,6 +225,8 @@ public final class InputProcessor implements com.badlogic.gdx.InputProcessor {
 
   @Override
   public boolean mouseMoved(final int screenX, final int screenY) {
+    mouseX = screenX;
+    mouseY = screenY;
     return true;
   }
 

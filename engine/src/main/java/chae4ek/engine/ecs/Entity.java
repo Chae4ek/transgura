@@ -166,10 +166,6 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
       return null;
     }
     if (getted.getClass() != ComponentArray.class) {
-      gameAlert.warn(
-          "There is only one component {} belong to this entity {}",
-          componentClass.getName(),
-          this);
       @SuppressWarnings("unchecked")
       final T component = (T) getted;
       return new SingleIterator<>(component);

@@ -160,6 +160,10 @@ public final class WorldSerializer {
 
     @Override
     public void write(final Object data) throws Exception {
+      if (data == toWrite) {
+        // TODO(?): replace with defaultWriteObject()
+        gameAlert.error("Use writeThis() to write this object.");
+      }
       out.writeObject(data);
     }
 

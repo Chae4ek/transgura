@@ -8,6 +8,7 @@ import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.component.Sprite;
 import chae4ek.transgura.ecs.component.TiledSprite;
 import chae4ek.transgura.ecs.system.PhysicalBody;
+import chae4ek.transgura.util.collision.EntityData;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -52,7 +53,7 @@ public class SolidBlock extends Entity {
 
     final Fixture fixture = body.createFixture(shape, 0f);
     fixture.setFriction(0.5f);
-    fixture.setUserData("GROUND");
+    fixture.setUserData(new EntityData(this, "GROUND"));
 
     addComponent(physicalBody);
   }

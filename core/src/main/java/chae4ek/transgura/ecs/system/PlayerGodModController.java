@@ -5,6 +5,8 @@ import chae4ek.engine.ecs.InputProcessor;
 import chae4ek.engine.ecs.System;
 import chae4ek.transgura.ecs.component.AnimatedSprites;
 import chae4ek.transgura.ecs.entity.Player;
+import chae4ek.transgura.util.collision.CollisionProcessor;
+import chae4ek.transgura.util.collision.EntityData;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
@@ -18,16 +20,18 @@ public class PlayerGodModController extends System {
   @Override
   public void update() {
     final boolean godMod = InputProcessor.isKeyJustDownNow(Player.GOD_MOD);
-    if (godMod) {
-      setEnabled(false);
-      final Entity parent = getParent();
-      parent.getComponent(PlayerController.class).setEnabled(true);
-      final Array<Fixture> array =
-          parent.getComponent(PhysicalBody.class).getBody().getFixtureList();
-      for (final Fixture fixture : array) {
-        if ("PLAYER".equals(fixture.getUserData())) {
-          fixture.setSensor(false);
-        }
+    if (godMod) switchToNormalMod();
+  }
+
+  public void switchToNormalMod() {
+    setEnabled(false);
+    final Entity parent = getParent();
+    parent.getComponent(PlayerController.class).setEnabled(true);
+    final Array<Fixture> array = parent.getComponent(PhysicalBody.class).getBody().getFixtureList();
+    for (final Fixture fixture : array) {
+      final EntityData entityData = CollisionProcessor.getEntityData(fixture.getUserData());
+      if (entityData != null && "PLAYER".equals(entityData.tag)) {
+        fixture.setSensor(false);
       }
     }
   }

@@ -6,7 +6,6 @@ import chae4ek.engine.ecs.Game;
 import chae4ek.engine.ecs.Scene;
 import chae4ek.engine.util.GameSettings;
 import chae4ek.transgura.ecs.component.AnimatedSprites;
-import chae4ek.transgura.ecs.component.Particles;
 import chae4ek.transgura.ecs.component.PointLight;
 import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.system.Camera;
@@ -15,7 +14,7 @@ import chae4ek.transgura.ecs.system.PhysicalBody;
 import chae4ek.transgura.ecs.system.PlayerController;
 import chae4ek.transgura.ecs.system.PlayerGodModController;
 import chae4ek.transgura.util.ARAnimation;
-import chae4ek.transgura.util.resources.ParticlesType;
+import chae4ek.transgura.util.collision.EntityData;
 import chae4ek.transgura.util.resources.ResourceLoader;
 import chae4ek.transgura.util.resources.TextureType;
 import chae4ek.transgura.util.resources.TextureType.AtlasType;
@@ -106,18 +105,18 @@ public class Player extends Entity {
     final Body body = physicalBody.getBody();
     Fixture fixture = body.createFixture(shape, 1f);
     fixture.setFriction(0f);
-    fixture.setUserData("PLAYER");
+    fixture.setUserData(new EntityData(this, "PLAYER"));
 
     shape.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, size), 0f);
     fixture = body.createFixture(shape, 1f);
     fixture.setFriction(0f);
     fixture.setRestitution(0.3f);
-    fixture.setUserData("PLAYER");
+    fixture.setUserData(new EntityData(this, "PLAYER"));
 
     shape.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, offsetY - size), 0f);
     fixture = body.createFixture(shape, 1f);
     fixture.setSensor(true);
-    fixture.setUserData("PLAYER_BOTTOM");
+    fixture.setUserData(new EntityData(this, "PLAYER_BOTTOM"));
 
     final MassData massData = body.getMassData();
     massData.mass = 0.73851955f;
@@ -134,7 +133,7 @@ public class Player extends Entity {
         new PlayerGodModController(),
         new Position(x, y),
         new Camera(),
-        new Particles(true, ResourceLoader.loadParticleEffect(ParticlesType.BLUE)),
+        // new Particles(true, ResourceLoader.loadParticleEffect(ParticlesType.BLUE)),
         physicalBody);
   }
 

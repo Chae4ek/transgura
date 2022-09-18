@@ -26,6 +26,10 @@ import org.slf4j.MDC;
 public final class Main {
   public static void main(final String[] args) {
     MDC.put("time", new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss").format(new Date()));
+    run(MainMenu::new);
+  }
+
+  public static void run(final Runnable scene) {
     final Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
     config.setTitle("Transgura");
@@ -33,7 +37,7 @@ public final class Main {
     config.useVsync(false);
     config.setForegroundFPS(500);
 
-    GameConfig.mainScene = MainMenu::new;
+    GameConfig.mainScene = scene;
     GameConfig.resourceManager = ResourceLoader::new;
     GameConfig.isBox2DDebugRendererOn = true;
 

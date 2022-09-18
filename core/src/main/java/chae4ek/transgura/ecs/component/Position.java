@@ -18,4 +18,16 @@ public class Position extends Component {
   public Vector2 getVec() {
     return vec;
   }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    return vec.equals(((Position) o).vec);
+  }
+
+  @Override
+  public int hashCode() {
+    return vec.hashCode();
+  }
 }

@@ -9,6 +9,7 @@ import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.component.Sprite;
 import chae4ek.transgura.ecs.system.FlickeringPointLight;
 import chae4ek.transgura.ecs.system.PhysicalBody;
+import chae4ek.transgura.util.collision.EntityData;
 import chae4ek.transgura.util.resources.ResourceLoader;
 import chae4ek.transgura.util.resources.TextureType;
 import com.badlogic.gdx.graphics.Color;
@@ -108,7 +109,7 @@ public class Chandelier extends Entity {
     final Fixture fixture = body.createFixture(chandelierShape, 1f);
     fixture.setFriction(0.5f);
     fixture.setRestitution(0.2f);
-    fixture.setUserData("GROUND");
+    fixture.setUserData(new EntityData(this, "GROUND"));
 
     addComponent(physicalBody, chandelierSprite, chandelierMountingSprite);
     return body;

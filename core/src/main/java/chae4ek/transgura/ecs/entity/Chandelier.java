@@ -44,10 +44,12 @@ public class Chandelier extends Entity {
 
   private void createChain(Body body, final float x, float y, final int chainFragmentCount) {
     final World world = Game.getScene().b2dWorld;
+    final AtlasRegion chainFragment =
+        ResourceLoader.loadAtlasRegion(TextureType.DECOR_CHAIN_FRAGMENT);
 
     y += 16;
     RevoluteJointDef startDef = new RevoluteJointDef();
-    final Body startBody = createChainBody(x, y, BodyType.DynamicBody);
+    final Body startBody = createChainBody(x, y, BodyType.DynamicBody, chainFragment);
     startDef.bodyA = body;
     startDef.bodyB = startBody;
     startDef.localAnchorA.set(-12 * reversePPM, -2 * reversePPM);
@@ -70,7 +72,8 @@ public class Chandelier extends Entity {
               createChainBody(
                   x,
                   y + i * 4,
-                  i == chainFragmentCount - 1 ? BodyType.StaticBody : BodyType.DynamicBody);
+                  i == chainFragmentCount - 1 ? BodyType.StaticBody : BodyType.DynamicBody,
+                  chainFragment);
       jointDef.localAnchorA.set(0f, 2 * reversePPM);
       jointDef.localAnchorB.set(0f, -2 * reversePPM);
 
@@ -78,17 +81,21 @@ public class Chandelier extends Entity {
     }
   }
 
-  private Body createChainBody(final float x, final float y, final BodyType type) {
+  private Body createChainBody(
+      final float x, final float y, final BodyType type, final AtlasRegion chainFragment) {
+    final Sprite chainFragmentSprite = new Sprite(0, chainFragment);
+
     final BodyDef bodyDef = PhysicalBody.createBodyDef(type, x, y);
     bodyDef.fixedRotation = false;
-    final PhysicalBody physicalBody = new PhysicalBody(bodyDef);
-    physicalBody.setEnabled(false);
+    final PhysicalBody physicalBody = new PhysicalBody(bodyDef, chainFragmentSprite);
+    physicalBody.setParentPositionUpdate(false);
+    chainFragmentSprite.setStickToBody(physicalBody);
     final Body body = physicalBody.getBody();
 
     final Fixture fixture = body.createFixture(chainShape, 1f);
     fixture.setSensor(true);
 
-    addComponent(physicalBody);
+    addComponent(physicalBody, chainFragmentSprite);
     return body;
   }
 
@@ -98,7 +105,7 @@ public class Chandelier extends Entity {
         ResourceLoader.loadAtlasRegion(TextureType.DECOR_CHANDELIER_MOUNTING);
     chandelierMounting.offsetY = 3f; // TODO: make a better approach to get resources
     final Sprite chandelierSprite = new Sprite(101, chandelier);
-    final Sprite chandelierMountingSprite = new Sprite(99, chandelierMounting, 0f, -3f);
+    final Sprite chandelierMountingSprite = new Sprite(0, chandelierMounting, 0f, -3f);
 
     final BodyDef bodyDef = PhysicalBody.createBodyDef(BodyType.DynamicBody, x, y);
     bodyDef.fixedRotation = false;

@@ -1,6 +1,7 @@
 package chae4ek.transgura.ecs.component;
 
 import chae4ek.engine.ecs.RenderComponent;
+import chae4ek.transgura.ecs.system.PhysicalBody;
 import chae4ek.transgura.util.RenderUtils;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -13,6 +14,7 @@ public class Sprite extends RenderComponent {
   public float angle;
   public float originPivotOffsetX;
   public float originPivotOffsetY;
+  private PhysicalBody stickToThis;
 
   public Sprite(final AtlasRegion textureType) {
     atlasRegion = textureType;
@@ -34,10 +36,17 @@ public class Sprite extends RenderComponent {
     this.originPivotOffsetY = originPivotOffsetY;
   }
 
+  /** This component will be drawn at the stickToThis body position instead of parent one */
+  public void setStickToBody(final PhysicalBody stickToThis) {
+    this.stickToThis = stickToThis;
+  }
+
   @Override
   public void draw() {
-    final Position pos = getParent().getComponent(Position.class);
-    final Vector2 vec = pos.getVec();
+    final Vector2 vec =
+        stickToThis != null
+            ? stickToThis.getPositionByPPM()
+            : getParent().getComponent(Position.class).getVec();
     draw(vec.x, vec.y);
   }
 

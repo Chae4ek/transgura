@@ -35,7 +35,7 @@ public class MainMenu extends Scene {
     new PhantomBlock(0f, 0f, 5, 5, brickWall, -1);
 
     new SolidBlock(0f, 192f, 27, 1, castleBottom);
-    new Chandelier(128f, 128f, 12);
+    new Chandelier(128f, 128f, 9);
 
     new Player(150f, 100f);
 

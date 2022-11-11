@@ -14,6 +14,7 @@ public enum TextureType {
 
   DECOR_CHANDELIER(AtlasType.DECOR, "chandelier"),
   DECOR_CHANDELIER_MOUNTING(AtlasType.DECOR, "chandelier_mounting"),
+  DECOR_CHAIN_FRAGMENT(AtlasType.DECOR, "chain_fragment"),
 
   CASTLE_LT_CORNER(AtlasType.CASTLE, "castle1"),
   CASTLE_TOP(AtlasType.CASTLE, "castle2"),

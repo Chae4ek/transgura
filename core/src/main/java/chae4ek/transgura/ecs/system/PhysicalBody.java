@@ -18,6 +18,8 @@ public class PhysicalBody extends System {
   private final Body body;
   private boolean isAwake = true;
   private final Sprite[] sprites;
+  private boolean updateParentPosition = true;
+  private final Vector2 positionByPPM = new Vector2();
 
   public PhysicalBody(final BodyDef bodyDef) {
     body = Game.getScene().b2dWorld.createBody(bodyDef);
@@ -49,14 +51,24 @@ public class PhysicalBody extends System {
     return body;
   }
 
+  public void setParentPositionUpdate(final boolean updateParentPosition) {
+    this.updateParentPosition = updateParentPosition;
+  }
+
+  public Vector2 getPositionByPPM() {
+    return positionByPPM.set(body.getPosition()).scl(PPM);
+  }
+
   @Override
   public void update() {
     final boolean isAwakeNow = body.isAwake();
     if (isAwakeNow || isAwake) {
       isAwake = isAwakeNow;
-      final Vector2 bodyPos = body.getPosition();
-      final Position pos = getParent().getComponent(Position.class);
-      pos.getVec().set(bodyPos.x * PPM, bodyPos.y * PPM);
+      if (updateParentPosition) {
+        final Vector2 bodyPos = body.getPosition();
+        final Position pos = getParent().getComponent(Position.class);
+        pos.getVec().set(bodyPos.x * PPM, bodyPos.y * PPM);
+      }
       if (sprites != null) {
         final float angle = body.getAngle() * RAD_TO_DEG;
         for (final Sprite sprite : sprites) sprite.angle = angle;

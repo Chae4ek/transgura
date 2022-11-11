@@ -22,12 +22,14 @@ public class SolidBlock extends Entity {
   private static final PolygonShape shape = new PolygonShape();
   private static final Vector2 center = new Vector2();
 
+  private static final int ZORDER = 50;
+
   static {
     shape.setAsBox(16 * reversePPM, 16 * reversePPM);
   }
 
   public SolidBlock(final float x, final float y, final AtlasRegion texture) {
-    super(new Position(x, y), new Sprite(texture));
+    super(new Position(x, y), new Sprite(ZORDER, texture));
     create(x, y);
   }
 
@@ -38,7 +40,7 @@ public class SolidBlock extends Entity {
 
   public SolidBlock(
       final float x, final float y, final int countX, final int countY, final AtlasRegion texture) {
-    super(new Position(x, y), new TiledSprite(texture, countX, countY));
+    super(new Position(x, y), new TiledSprite(ZORDER, texture, countX, countY));
 
     center.set((countX - 1) * 16 * reversePPM, (countY - 1) * 16 * reversePPM);
     shape.setAsBox(16 * countX * reversePPM, 16 * countY * reversePPM, center, 0f);

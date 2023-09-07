@@ -20,7 +20,7 @@
       <defaultValue>UNKNOWN_TIME</defaultValue>
     </discriminator>
     <sift>
-      <appender class="ch.qos.logback.core.FileAppender">
+      <appender class="ch.qos.logback.core.FileAppender" name="FILE-${time}">
         <append>false</append>
 
         <encoder>

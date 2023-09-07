@@ -26,6 +26,17 @@
       <artifactId>engine</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <!-- For LDtk -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -43,7 +54,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <executions>
           <execution>
             <phase>generate-resources</phase>
@@ -60,7 +71,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.6.0</version>
         <configuration>
           <finalName>${project.parent.artifactId}-v${project.version}</finalName>
           <archive>

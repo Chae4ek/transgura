@@ -13,12 +13,6 @@
   <artifactId>engine</artifactId>
 
   <dependencies>
-    <!-- FST -->
-    <dependency>
-      <groupId>de.ruedigermoeller</groupId>
-      <artifactId>fst</artifactId>
-      <version>${fst.version}</version>
-    </dependency>
     <!-- LibGDX -->
     <dependency>
       <groupId>com.badlogicgames.gdx</groupId>
@@ -80,12 +74,6 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-surefire-plugin</artifactId>
-      <version>${surefire.version}</version>
-      <scope>test</scope>
-    </dependency>
     <!-- Mockito -->
     <dependency>
       <groupId>org.mockito</groupId>
@@ -105,28 +93,5 @@
       <version>${logback-classic.version}</version>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <!-- For Junit -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefire.version}</version>
-        <configuration>
-          <!-- For FST -->
-          <argLine>
-            --add-opens=java.base/java.lang=ALL-UNNAMED
-            --add-opens=java.base/java.math=ALL-UNNAMED
-            --add-opens=java.base/java.util=ALL-UNNAMED
-            --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
-            --add-opens=java.base/java.net=ALL-UNNAMED
-            --add-opens=java.base/java.text=ALL-UNNAMED
-            --add-opens=java.sql/java.sql=ALL-UNNAMED
-          </argLine>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

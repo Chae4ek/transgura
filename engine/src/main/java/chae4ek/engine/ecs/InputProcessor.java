@@ -219,6 +219,11 @@ public final class InputProcessor implements com.badlogic.gdx.InputProcessor {
   }
 
   @Override
+  public boolean touchCancelled(final int i, final int i1, final int i2, final int i3) {
+    return true;
+  }
+
+  @Override
   public boolean touchDragged(final int screenX, final int screenY, final int pointer) {
     return true;
   }

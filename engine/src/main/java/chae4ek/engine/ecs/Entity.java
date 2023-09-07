@@ -135,12 +135,10 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
       final Component[] array = ((ComponentArray) getted).array;
       for (final Component comp : array)
         if (comp != null) {
-          @SuppressWarnings("unchecked")
           final T tcomp = (T) comp;
           return tcomp;
         }
     }
-    @SuppressWarnings({"unchecked", "ConstantConditions"})
     final T tcomp = (T) getted;
     return tcomp;
   }
@@ -166,7 +164,6 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
       return null;
     }
     if (getted.getClass() != ComponentArray.class) {
-      @SuppressWarnings("unchecked")
       final T component = (T) getted;
       return new SingleIterator<>(component);
     }
@@ -256,7 +253,6 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
       } else {
         ((Component) getted).bind(this);
       }
-      @SuppressWarnings("unchecked")
       final Class<? extends Component> compClass = (Class<? extends Component>) clazz;
       components.put(compClass, getted);
     }
@@ -387,7 +383,6 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
       public E next() {
         while (comps.array[index] == null) ++index;
         ++count;
-        @SuppressWarnings("unchecked")
         final E e = (E) comps.array[index++];
         return e;
       }

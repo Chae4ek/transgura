@@ -8,10 +8,7 @@ import chae4ek.transgura.ecs.entity.SolidBlock;
 import chae4ek.transgura.util.resources.ResourceLoader;
 import chae4ek.transgura.util.resources.TextureType;
 import chae4ek.transgura.util.resources.TextureType.AtlasType;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 public class MainMenu extends Scene {
 
@@ -38,12 +35,5 @@ public class MainMenu extends Scene {
     new Chandelier(128f, 128f, 9);
 
     new Player(150f, 100f);
-
-    try (final DataOutputStream out =
-        new DataOutputStream(Gdx.files.local("saves/world0").write(false, 8192))) {
-      // saveWorld(out);
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
   }
 }

@@ -1,13 +1,10 @@
 package chae4ek.engine.ecs;
 
-import chae4ek.engine.util.serializers.WorldSerializer;
 import com.badlogic.gdx.utils.ObjectSet;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 
 public final class EntityManager {
 
-  private ObjectSet<Entity> entities = new ObjectSet<>();
+  private final ObjectSet<Entity> entities = new ObjectSet<>();
 
   /**
    * Add an entity to this enitity manager
@@ -29,24 +26,5 @@ public final class EntityManager {
 
   Iterable<Entity> entityIterable() {
     return entities;
-  }
-
-  void serialize(final DataOutputStream out) {
-    WorldSerializer.serialize(out, entities.size);
-    for (final Entity entity : entities) WorldSerializer.serialize(out, entity);
-  }
-
-  void deserialize(final DataInputStream in) {
-    int size = WorldSerializer.deserialize(in);
-    final ObjectSet<Entity> entitiesNew = new ObjectSet<>(size);
-    for (final Entity entity : entities) {
-      entity.destroy();
-      if (size > 0) {
-        --size;
-        entitiesNew.add(WorldSerializer.deserialize(in));
-      }
-    }
-    for (; size > 0; --size) entitiesNew.add(WorldSerializer.deserialize(in));
-    entities = entitiesNew;
   }
 }

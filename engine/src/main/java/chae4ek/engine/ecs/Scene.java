@@ -5,14 +5,10 @@ import chae4ek.engine.util.GameSettings;
 import chae4ek.engine.util.collision.CollisionListener;
 import chae4ek.engine.util.debug.DebugRenderManager;
 import chae4ek.engine.util.exceptions.GameAlert;
-import chae4ek.engine.util.serializers.WorldSerializer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 public abstract class Scene {
 
@@ -72,24 +68,6 @@ public abstract class Scene {
       systemManager.fixedUpdateAll();
     }
     renderManager.renderAll();
-  }
-
-  /** Save current scene */
-  public void saveWorld(final DataOutputStream out) throws IOException {
-    WorldSerializer.cleanSerializedCache();
-    entityManager.serialize(out);
-    WorldSerializer.cleanSerializedCache();
-
-    out.writeFloat(sceneLifetimeInSec);
-  }
-
-  /** Load current scene */
-  public void loadWorld(final DataInputStream in) throws IOException {
-    WorldSerializer.cleanDeserializedCache();
-    entityManager.deserialize(in);
-    WorldSerializer.cleanDeserializedCache();
-
-    sceneLifetimeInSec = in.readFloat();
   }
 
   public void softDispose() {

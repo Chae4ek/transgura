@@ -55,7 +55,7 @@ public class Player extends Entity {
     scene.camera.position.set(Gdx.graphics.getWidth() >> 1, Gdx.graphics.getHeight() >> 1, 0f);
     scene.b2dWorld.setGravity(new Vector2(0, -9.81f * GameSettings.reversePPM));
     scene.rayHandler.setAmbientLight(0.45f);
-    RayHandler.isDiffuse = true;
+    RayHandler.useDiffuseLight(true);
   }
 
   public Player(final float x, final float y) {
@@ -126,7 +126,7 @@ public class Player extends Entity {
 
     addComponent(
         new Menu(),
-        new PointLight(body, new Color(0.75f, 0.75f, 0.75f, 0.75f), 15f),
+        new PointLight(body, new Color(0.75f, 0.75f, 0.75f, 0.75f), 20f),
         // new Vignette(999),
         new AnimatedSprites(100, idle),
         new PlayerController(),

@@ -1,13 +1,13 @@
 package chae4ek.transgura.scenes;
 
 import chae4ek.engine.ecs.Scene;
+import chae4ek.transgura.ecs.component.TiledSprite;
 import chae4ek.transgura.ecs.entity.Chandelier;
 import chae4ek.transgura.ecs.entity.PhantomBlock;
 import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.ecs.entity.SolidBlock;
 import chae4ek.transgura.third_party.ldtk.Converter;
 import chae4ek.transgura.third_party.ldtk.LDtk;
-import chae4ek.transgura.third_party.ldtk.LayerInstance;
 import chae4ek.transgura.util.resources.ResourceLoader;
 import chae4ek.transgura.util.resources.TextureType;
 import chae4ek.transgura.util.resources.TextureType.AtlasType;
@@ -47,7 +47,7 @@ public class MainMenu extends Scene {
     new SolidBlock(32f, 0f, 27, 1, castleTop);
     new SolidBlock(0f, 32f, 1, 4, castleRight);
     new SolidBlock(0f, 0f, castleRTconvexCorner);
-    new PhantomBlock(0f, 0f, 5, 5, brickWall, -1);
+    // new PhantomBlock(0f, 0f, 5, 5, brickWall, -1);
 
     new SolidBlock(0f, 192f, 27, 1, castleBottom);
     new Chandelier(128f, 128f, 9);
@@ -56,27 +56,33 @@ public class MainMenu extends Scene {
 
     // LDtk world loading
 
-    final LDtk ldtk = readWorld();
-    final LayerInstance layer = ldtk.getLevels()[0].getLayerInstances()[0];
+    final AtlasRegion intGridAR = ResourceLoader.loadAtlasRegion(TextureType.GRASS_LEVEL_0);
+    final PhantomBlock bg = new PhantomBlock(0f, 0f, 1, 1, intGridAR, -1);
+    bg.getComponent(TiledSprite.class).scale = 2;
 
-    final int[] intGrid = layer.getIntGridCsv();
-    final int gridHeight = layer.getCHei();
-    final int gridWidth = layer.getCWid();
-    final int[][] grid = new int[gridHeight][gridWidth];
-    for (int i = 0, x = 0, y = gridHeight - 1; i < intGrid.length; ++i, ++x) {
-      if (x == gridWidth) {
-        x = 0;
-        --y;
-      }
-      grid[y][x] = intGrid[i];
-    }
+    // TODO: make algorithm for creating colliders by chain shapes
 
-    for (int y = 0; y < gridHeight; ++y) {
-      for (int x = 0; x < gridWidth; ++x) {
-        if (grid[y][x] != 0) {
-          new SolidBlock(32f * x, 32f * y, wood);
-        }
-      }
-    }
+    // final LDtk ldtk = readWorld();
+    // final LayerInstance layer = ldtk.getLevels()[0].getLayerInstances()[0];
+
+    // final int[] intGrid = layer.getIntGridCsv();
+    // final int gridHeight = layer.getCHei();
+    // final int gridWidth = layer.getCWid();
+    // final int[][] grid = new int[gridHeight][gridWidth];
+    // for (int i = 0, x = 0, y = gridHeight - 1; i < intGrid.length; ++i, ++x) {
+    //   if (x == gridWidth) {
+    //     x = 0;
+    //     --y;
+    //   }
+    //   grid[y][x] = intGrid[i];
+    // }
+    //
+    // for (int y = 0; y < gridHeight; ++y) {
+    //   for (int x = 0; x < gridWidth; ++x) {
+    //     if (grid[y][x] != 0) {
+    //       new ConcaveShape(32f * x, 32f * y, wood);
+    //     }
+    //   }
+    // }
   }
 }

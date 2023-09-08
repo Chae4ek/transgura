@@ -20,8 +20,10 @@ public final class GameConfig {
   public static int zOrderForUIRendering = 10000000;
 
   public static boolean isBox2DDebugRendererOn;
+
   /** Whether to throw an exception at the WARN log level */
   public static boolean isWARNThrowOn;
+
   /** Whether to log a stack trace at the WARN log level */
   public static boolean isWARNStackTraceOn;
 

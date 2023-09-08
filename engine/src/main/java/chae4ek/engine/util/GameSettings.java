@@ -51,8 +51,10 @@ public final class GameSettings {
   public static boolean renderLights = true;
 
   public static final boolean isBox2DDebugRendererOn = GameConfig.isBox2DDebugRendererOn;
+
   /** Whether to throw an exception at the WARN log level */
   public static boolean isWARNThrowOn = GameConfig.isWARNThrowOn;
+
   /** Whether to log a stack trace at the WARN log level */
   public static boolean isWARNStackTraceOn = GameConfig.isWARNStackTraceOn;
 }

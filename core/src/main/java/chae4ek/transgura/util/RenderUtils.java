@@ -14,7 +14,8 @@ public class RenderUtils {
       final boolean flipY,
       final float angle,
       final float originPivotOffsetX,
-      final float originPivotOffsetY) {
+      final float originPivotOffsetY,
+      final float scale) {
     final int width = atlasRegion.getRegionWidth();
     final int height = atlasRegion.getRegionHeight();
     final int halfWidth = width >> 1;
@@ -27,8 +28,8 @@ public class RenderUtils {
         halfHeight + originPivotOffsetY,
         width,
         height,
-        1f,
-        1f,
+        scale,
+        scale,
         angle,
         atlasRegion.getRegionX(),
         atlasRegion.getRegionY(),

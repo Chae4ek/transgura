@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum TextureType {
+  GRASS_LEVEL_0(AtlasType.GRASS_BIOME, "grass_level0"),
+
   TEST_BLOCK(AtlasType.TEST, "test_block"),
   WOOD(AtlasType.TEST, "wood"),
   BRICK_WALL(AtlasType.TEST, "brick_wall"),
@@ -59,6 +61,7 @@ public enum TextureType {
   }
 
   public enum AtlasType {
+    GRASS_BIOME("atlas/grass_biome.atlas"),
     TEST("atlas/test_textures.atlas"),
     OLD_MAN("atlas/old_man.atlas"),
     DECOR("atlas/decor.atlas"),

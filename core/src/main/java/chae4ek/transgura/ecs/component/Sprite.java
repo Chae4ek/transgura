@@ -14,6 +14,7 @@ public class Sprite extends RenderComponent {
   public float angle;
   public float originPivotOffsetX;
   public float originPivotOffsetY;
+  public float scale = 1f;
   private PhysicalBody stickToThis;
 
   public Sprite(final AtlasRegion textureType) {
@@ -52,6 +53,6 @@ public class Sprite extends RenderComponent {
 
   public void draw(final float x, final float y) {
     RenderUtils.draw(
-        atlasRegion, x, y, flipX, flipY, angle, originPivotOffsetX, originPivotOffsetY);
+        atlasRegion, x, y, flipX, flipY, angle, originPivotOffsetX, originPivotOffsetY, scale);
   }
 }

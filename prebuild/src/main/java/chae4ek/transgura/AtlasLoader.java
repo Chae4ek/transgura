@@ -4,31 +4,27 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
 public class AtlasLoader {
+
+  private final Settings settings = new Settings();
+
   public static void main(final String[] args) {
-    final Settings settings = new Settings();
+    final AtlasLoader loader = new AtlasLoader();
 
-    settings.maxWidth = 512;
-    settings.maxHeight = 512;
+    loader.settings.maxWidth = 512;
+    loader.settings.maxHeight = 512;
 
+    loader.process("test_textures");
+    loader.process("old_man");
+    loader.process("castle");
+    loader.process("decor");
+    loader.process("grass_biome");
+  }
+
+  private void process(final String name) {
     TexturePacker.process(
         settings,
-        "prebuild/src/main/resources/rawTextures/test",
+        "prebuild/src/main/resources/rawTextures/" + name,
         "core/src/main/resources/atlas",
-        "test_textures");
-    TexturePacker.process(
-        settings,
-        "prebuild/src/main/resources/rawTextures/old_man",
-        "core/src/main/resources/atlas",
-        "old_man");
-    TexturePacker.process(
-        settings,
-        "prebuild/src/main/resources/rawTextures/castle",
-        "core/src/main/resources/atlas",
-        "castle");
-    TexturePacker.process(
-        settings,
-        "prebuild/src/main/resources/rawTextures/decor",
-        "core/src/main/resources/atlas",
-        "decor");
+        name);
   }
 }

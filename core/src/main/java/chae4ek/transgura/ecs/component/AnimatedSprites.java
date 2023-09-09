@@ -12,6 +12,7 @@ public class AnimatedSprites extends RenderComponent {
   public boolean flipX;
   public boolean flipY;
   public float scale = 1f;
+  public boolean centered;
   private ARAnimation animation;
 
   public AnimatedSprites(final int zOrder, final ARAnimation animation) {
@@ -28,6 +29,6 @@ public class AnimatedSprites extends RenderComponent {
     final Position pos = getParent().getComponent(Position.class);
     final Vector2 vec = pos.getVec();
     final AtlasRegion atlasRegion = animation.getKeyFrame(Game.getScene().getSceneLifetimeInSec());
-    RenderUtils.draw(atlasRegion, vec.x, vec.y, flipX, flipY, 0f, 0f, 0f, scale);
+    RenderUtils.draw(atlasRegion, vec.x, vec.y, flipX, flipY, 0f, 0f, 0f, scale, centered);
   }
 }

@@ -29,18 +29,23 @@ public class SolidBlock extends Entity {
   }
 
   public SolidBlock(final float x, final float y, final AtlasRegion texture) {
-    super(new Position(x, y), new Sprite(ZORDER, texture));
+    final Sprite sprite = new Sprite(ZORDER, texture);
+    sprite.centered = true;
+    addComponent(new Position(x, y), sprite);
     create(x, y);
   }
 
   public SolidBlock(final float x, final float y, final AnimatedSprites animatedSprites) {
     super(new Position(x, y), animatedSprites);
+    animatedSprites.centered = true;
     create(x, y);
   }
 
   public SolidBlock(
       final float x, final float y, final int countX, final int countY, final AtlasRegion texture) {
-    super(new Position(x, y), new TiledSprite(ZORDER, texture, countX, countY));
+    final TiledSprite tiledSprite = new TiledSprite(ZORDER, texture, countX, countY);
+    tiledSprite.centered = true;
+    addComponent(new Position(x, y), tiledSprite);
 
     center.set((countX - 1) * 16 * reversePPM, (countY - 1) * 16 * reversePPM);
     shape.setAsBox(16 * countX * reversePPM, 16 * countY * reversePPM, center, 0f);

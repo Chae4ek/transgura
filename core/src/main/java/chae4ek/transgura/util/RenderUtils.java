@@ -15,11 +15,12 @@ public class RenderUtils {
       final float angle,
       final float originPivotOffsetX,
       final float originPivotOffsetY,
-      final float scale) {
+      final float scale,
+      final boolean centered) {
     final int width = atlasRegion.getRegionWidth();
     final int height = atlasRegion.getRegionHeight();
-    final int halfWidth = width >> 1;
-    final int halfHeight = height >> 1;
+    final int halfWidth = centered ? width >> 1 : 0;
+    final int halfHeight = centered ? height >> 1 : 0;
     RenderManager.spriteBatch.draw(
         atlasRegion.getTexture(),
         x * GameSettings.reverseRenderScale - halfWidth + atlasRegion.offsetX,

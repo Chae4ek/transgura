@@ -8,6 +8,7 @@ import chae4ek.engine.util.GameSettings;
 import chae4ek.transgura.ecs.component.AnimatedSprites;
 import chae4ek.transgura.ecs.component.PointLight;
 import chae4ek.transgura.ecs.component.Position;
+import chae4ek.transgura.ecs.component.shaders.Vignette;
 import chae4ek.transgura.ecs.system.Camera;
 import chae4ek.transgura.ecs.system.Menu;
 import chae4ek.transgura.ecs.system.PhysicalBody;
@@ -54,8 +55,8 @@ public class Player extends Entity {
     final Scene scene = Game.getScene();
     scene.camera.position.set(Gdx.graphics.getWidth() >> 1, Gdx.graphics.getHeight() >> 1, 0f);
     scene.b2dWorld.setGravity(new Vector2(0, -9.81f * GameSettings.reversePPM));
-    scene.rayHandler.setAmbientLight(0.45f);
-    RayHandler.useDiffuseLight(true);
+    scene.rayHandler.setAmbientLight(0.7f);
+    RayHandler.useDiffuseLight(false);
   }
 
   public Player(final float x, final float y) {
@@ -71,6 +72,10 @@ public class Player extends Entity {
     for (final AtlasRegion region : runFrames) region.offsetY = 4f;
     run = new ARAnimation(0.08f, runFrames);
     run.setPlayMode(PlayMode.LOOP);
+
+    final AnimatedSprites animation =
+        new AnimatedSprites(GameSettings.zOrderForUIRendering + 100, idle);
+    animation.centered = true;
 
     final BodyDef bodyDef = PhysicalBody.createBodyDef(BodyType.DynamicBody, x, y);
     bodyDef.linearDamping = 2.2f;
@@ -126,9 +131,9 @@ public class Player extends Entity {
 
     addComponent(
         new Menu(),
-        new PointLight(body, new Color(0.75f, 0.75f, 0.75f, 0.75f), 20f),
-        // new Vignette(999),
-        new AnimatedSprites(100, idle),
+        new PointLight(body, new Color(0.75f, 0.75f, 0.75f, 0.75f), 10f),
+        new Vignette(999),
+        animation,
         new PlayerController(),
         new PlayerGodModController(),
         new Position(x, y),

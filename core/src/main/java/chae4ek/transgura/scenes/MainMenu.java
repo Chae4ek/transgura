@@ -1,34 +1,16 @@
 package chae4ek.transgura.scenes;
 
 import chae4ek.engine.ecs.Scene;
-import chae4ek.transgura.ecs.component.TiledSprite;
-import chae4ek.transgura.ecs.entity.Chandelier;
-import chae4ek.transgura.ecs.entity.PhantomBlock;
 import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.ecs.entity.SolidBlock;
-import chae4ek.transgura.third_party.ldtk.Converter;
 import chae4ek.transgura.third_party.ldtk.LDtk;
+import chae4ek.transgura.util.ldtk.LDtkLoader;
 import chae4ek.transgura.util.resources.ResourceLoader;
 import chae4ek.transgura.util.resources.TextureType;
 import chae4ek.transgura.util.resources.TextureType.AtlasType;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class MainMenu extends Scene {
-
-  private LDtk readWorld() {
-    try {
-      final byte[] data = Files.readAllBytes(Path.of("saves/world.ldtk"));
-      final String jsonData = new String(data, StandardCharsets.UTF_8);
-      return Converter.fromJsonString(jsonData);
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
 
   public MainMenu() {
     ResourceLoader.loadAtlases(AtlasType.TEST, AtlasType.CASTLE, AtlasType.DECOR);
@@ -40,49 +22,23 @@ public class MainMenu extends Scene {
     final AtlasRegion castleRTconvexCorner =
         ResourceLoader.loadAtlasRegion(TextureType.CASTLE_RT_CONVEX_CORNER);
 
-    new SolidBlock(96f, 96f, wood);
-    new SolidBlock(192f, 96f, wood);
-    new SolidBlock(192f, 128f, wood);
+    // new SolidBlock(96f, 96f, wood);
+    // new SolidBlock(192f, 96f, wood);
+    // new SolidBlock(192f, 128f, wood);
 
     new SolidBlock(32f, 0f, 27, 1, castleTop);
-    new SolidBlock(0f, 32f, 1, 4, castleRight);
-    new SolidBlock(0f, 0f, castleRTconvexCorner);
+    // new SolidBlock(0f, 32f, 1, 4, castleRight);
+    // new SolidBlock(0f, 0f, castleRTconvexCorner);
     // new PhantomBlock(0f, 0f, 5, 5, brickWall, -1);
 
-    new SolidBlock(0f, 192f, 27, 1, castleBottom);
-    new Chandelier(128f, 128f, 9);
+    // new SolidBlock(0f, 192f, 27, 1, castleBottom);
+    // new Chandelier(128f, 128f, 9);
 
     new Player(150f, 100f);
 
     // LDtk world loading
-
-    final AtlasRegion intGridAR = ResourceLoader.loadAtlasRegion(TextureType.GRASS_LEVEL_0);
-    final PhantomBlock bg = new PhantomBlock(0f, 0f, 1, 1, intGridAR, -1);
-    bg.getComponent(TiledSprite.class).scale = 2;
-
-    // TODO: make algorithm for creating colliders by chain shapes
-
-    // final LDtk ldtk = readWorld();
-    // final LayerInstance layer = ldtk.getLevels()[0].getLayerInstances()[0];
-
-    // final int[] intGrid = layer.getIntGridCsv();
-    // final int gridHeight = layer.getCHei();
-    // final int gridWidth = layer.getCWid();
-    // final int[][] grid = new int[gridHeight][gridWidth];
-    // for (int i = 0, x = 0, y = gridHeight - 1; i < intGrid.length; ++i, ++x) {
-    //   if (x == gridWidth) {
-    //     x = 0;
-    //     --y;
-    //   }
-    //   grid[y][x] = intGrid[i];
-    // }
-    //
-    // for (int y = 0; y < gridHeight; ++y) {
-    //   for (int x = 0; x < gridWidth; ++x) {
-    //     if (grid[y][x] != 0) {
-    //       new ConcaveShape(32f * x, 32f * y, wood);
-    //     }
-    //   }
-    // }
+    LDtkLoader.loadBackgroundTexture();
+    final LDtk ldtk = LDtkLoader.readLDtkFromFile("saves/world.ldtk");
+    LDtkLoader.loadCollisions(ldtk);
   }
 }

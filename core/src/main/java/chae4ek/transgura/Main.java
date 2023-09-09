@@ -12,7 +12,7 @@ import org.slf4j.MDC;
 
 public final class Main {
   public static void main(final String[] args) {
-    MDC.put("time", new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss").format(new Date()));
+    MDC.put("time", new SimpleDateFormat("yyyy.MM.dd-HH_mm_ss").format(new Date()));
     run(MainMenu::new);
   }
 

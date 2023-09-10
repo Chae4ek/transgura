@@ -148,7 +148,7 @@ public class RenderManager {
     spriteBatch.setProjectionMatrix(PROJECTION_MATRIX);
 
     frontFrameBuffer.begin();
-    Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1f);
+    Gdx.gl.glClearColor(0.4156f, 0.8235f, 0.9137f, 1f);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     spriteBatch.begin();
 

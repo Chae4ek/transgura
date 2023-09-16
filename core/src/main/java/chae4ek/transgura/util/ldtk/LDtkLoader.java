@@ -1,9 +1,12 @@
 package chae4ek.transgura.util.ldtk;
 
+import chae4ek.engine.util.GameSettings;
 import chae4ek.transgura.ecs.component.TiledSprite;
 import chae4ek.transgura.ecs.entity.CollisionOutline;
 import chae4ek.transgura.ecs.entity.PhantomBlock;
+import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.third_party.ldtk.Converter;
+import chae4ek.transgura.third_party.ldtk.EntityInstance;
 import chae4ek.transgura.third_party.ldtk.EnumTagValue;
 import chae4ek.transgura.third_party.ldtk.LDtk;
 import chae4ek.transgura.third_party.ldtk.LayerInstance;
@@ -41,10 +44,24 @@ public class LDtkLoader {
   }
 
   public static void loadCollisions(final LDtk ldtk) {
+    // collision layer
     final LayerInstance layer = ldtk.getLevels()[0].getLayerInstances()[0];
+    // entity layer
+    final LayerInstance entityLayer = ldtk.getLevels()[0].getLayerInstances()[1];
 
     final int height = layer.getCHei();
     final int width = layer.getCWid();
+
+    for (final EntityInstance entity : entityLayer.getEntityInstances()) {
+      if (entity.getIdentifier().equals("Player")) {
+        new Player(
+            (entity.getPx()[0] / 8 + 0.5f) * GameSettings.PPM,
+            (height - 1 - entity.getPx()[1] / 8 + 0.5f) * GameSettings.PPM);
+      }
+      if (entity.getIdentifier().equals("Exit")) {
+        // TODO
+      }
+    }
 
     final Point[][] grid = new Point[height + 1][width + 1];
     for (int y = 0; y <= height; ++y) {

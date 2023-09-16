@@ -1,7 +1,6 @@
 package chae4ek.transgura.scenes;
 
 import chae4ek.engine.ecs.Scene;
-import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.ecs.entity.SolidBlock;
 import chae4ek.transgura.third_party.ldtk.LDtk;
 import chae4ek.transgura.util.ldtk.LDtkLoader;
@@ -34,7 +33,7 @@ public class MainMenu extends Scene {
     // new SolidBlock(0f, 192f, 27, 1, castleBottom);
     // new Chandelier(128f, 128f, 9);
 
-    new Player(150f, 100f);
+    // new Player(150f, 100f);
 
     // LDtk world loading
     LDtkLoader.loadBackgroundTexture();

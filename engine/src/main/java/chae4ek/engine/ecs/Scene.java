@@ -61,10 +61,12 @@ public abstract class Scene {
   final void update(int fixedUpdateCount) {
     sceneLifetimeInSec += Game.getDeltaTime();
 
-    b2dWorld.step(GameSettings.timeStepForPhysics, 6, 2);
+    // FIXME: timeStepForPhysics depends on fixedDeltaTime. it should not be so
+    if (fixedUpdateCount > 0) b2dWorld.step(GameSettings.timeStepForPhysics, 6, 2);
     systemManager.updateAndOneFixedUpdate(fixedUpdateCount > 0);
     while (--fixedUpdateCount > 0) {
       InputProcessor.postUpdate(); // updating just pressed/released keys
+      b2dWorld.step(GameSettings.timeStepForPhysics, 6, 2);
       systemManager.fixedUpdateAll();
     }
     renderManager.renderAll();

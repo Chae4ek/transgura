@@ -32,7 +32,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Player extends Entity {
@@ -44,10 +43,6 @@ public class Player extends Entity {
 
   public static int PLAYER_DASH = Buttons.RIGHT;
   public static int GOD_MOD = Keys.G;
-
-  public static float SPEED = 0.3f;
-  public static float JUMP_FORCE = 0.85f;
-  public static float DASH_FORCE = 5.5f;
 
   // TODO(?): animation resource
   public final ARAnimation idle;
@@ -81,7 +76,7 @@ public class Player extends Entity {
     animation.centered = true;
 
     final BodyDef bodyDef = PhysicalBody.createBodyDef(BodyType.DynamicBody, x, y);
-    bodyDef.linearDamping = 2.2f;
+    bodyDef.linearDamping = 20.2f;
     bodyDef.gravityScale = 0f;
     final PolygonShape shape = new PolygonShape();
     final float size = 0.5f;
@@ -120,9 +115,8 @@ public class Player extends Entity {
 
     shape.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, size), 0f);
     fixture = body.createFixture(shape, 1f);
-    fixture.setFriction(0f);
-    fixture.setRestitution(0.3f);
-    fixture.setUserData(new EntityData(this, "PLAYER"));
+    fixture.setSensor(true);
+    fixture.setUserData(new EntityData(this, "PLAYER_TOP"));
     filter.categoryBits = 2;
     fixture.setFilterData(filter);
 
@@ -133,9 +127,12 @@ public class Player extends Entity {
     filter.categoryBits = 2;
     fixture.setFilterData(filter);
 
-    final MassData massData = body.getMassData();
-    massData.mass = 0.73851955f;
-    body.setMassData(massData);
+    shape.setAsBox(size2 - corner - 0.005f, 0.45f, new Vector2(0f, offsetY - size - 0.4f), 0f);
+    fixture = body.createFixture(shape, 1f);
+    fixture.setSensor(true);
+    fixture.setUserData(new EntityData(this, "PLAYER_PRE_BOTTOM"));
+    filter.categoryBits = 2;
+    fixture.setFilterData(filter);
 
     shape.dispose();
 

@@ -7,11 +7,14 @@ import chae4ek.transgura.ecs.component.AnimatedSprites;
 import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.util.collision.CollisionProcessor;
 import chae4ek.transgura.util.collision.EntityData;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 
 public class PlayerGodModController extends System {
+
+  public float speed = 20;
 
   public PlayerGodModController() {
     super(false);
@@ -38,7 +41,7 @@ public class PlayerGodModController extends System {
 
   @Override
   public void fixedUpdate() {
-    final Entity player = getParent();
+    final Player player = (Player) getParent();
     final AnimatedSprites animation = player.getComponent(AnimatedSprites.class);
     final Body body = player.getComponent(PhysicalBody.class).getBody();
 
@@ -47,20 +50,25 @@ public class PlayerGodModController extends System {
     final boolean up = InputProcessor.isKeyDown(Player.PLAYER_UP);
     final boolean down = InputProcessor.isKeyDown(Player.PLAYER_DOWN);
 
+    final Vector2 appliedVelocity = body.getLinearVelocity();
+
     if (right && !left) {
       animation.flipX = false;
-      body.applyLinearImpulse(Player.SPEED, 0f, 0f, 0f, true);
+      appliedVelocity.x = speed;
     }
     if (!right && left) {
       animation.flipX = true;
-      body.applyLinearImpulse(-Player.SPEED, 0f, 0f, 0f, true);
+      appliedVelocity.x = -speed;
     }
 
     if (up && !down) {
-      body.applyLinearImpulse(0f, Player.SPEED, 0f, 0f, true);
+      appliedVelocity.y = speed;
     }
     if (!up && down) {
-      body.applyLinearImpulse(0f, -Player.SPEED, 0f, 0f, true);
+      appliedVelocity.y = -speed;
     }
+
+    body.setLinearVelocity(appliedVelocity);
+    animation.setAnimation(player.idle);
   }
 }

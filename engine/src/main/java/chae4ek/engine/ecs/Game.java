@@ -21,7 +21,7 @@ public final class Game implements ApplicationListener {
   }
 
   /**
-   * @return the time between the current frame and the previous one
+   * @return the time between the current frame and the previous one in seconds
    */
   public static float getDeltaTime() {
     return deltaTime;

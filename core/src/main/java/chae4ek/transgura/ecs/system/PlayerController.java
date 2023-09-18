@@ -136,7 +136,7 @@ public class PlayerController extends System implements CollisionSubscriber {
 
     if (isTouchingRoof) {
       isJumping = false; // preventing floating when player hits the roof
-      appliedVelocity.y = 0;
+      appliedVelocity.y = Math.min(0, velocity.y); // FIXME: sliding on the roof
     }
 
     if (isJumping) {

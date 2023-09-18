@@ -10,8 +10,8 @@ public class AtlasLoader {
   public static void main(final String[] args) {
     final AtlasLoader loader = new AtlasLoader();
 
-    loader.settings.maxWidth = 512;
-    loader.settings.maxHeight = 512;
+    // loader.settings.maxWidth = 512;
+    // loader.settings.maxHeight = 512;
 
     loader.process("test_textures");
     loader.process("old_man");

@@ -20,7 +20,7 @@ public class InteractableObject extends Entity {
 
   public InteractableObject(
       final float x, final float y, final AtlasRegion texture, final String tag) {
-    final Sprite sprite = new Sprite(texture);
+    final Sprite sprite = new Sprite(-2, texture);
     sprite.scale = 2;
 
     final BodyDef bodyDef = PhysicalBody.createBodyDef(BodyType.StaticBody, x, y);

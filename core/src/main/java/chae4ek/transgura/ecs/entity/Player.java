@@ -84,32 +84,34 @@ public class Player extends Entity {
     final float size = 0.5f;
     final float size2 = size - 0.2f;
     final float corner = 0.02f;
+    final float corner2 = 0.1f;
     final float offsetY = 0.05f;
     shape.set(
         new float[] {
           // top
           -size2,
-          size - corner,
-          -size2 + corner,
+          size - corner2,
+          -size2 + corner2,
           size,
-          size2 - corner,
+          size2 - corner2,
           size,
           size2,
-          size - corner,
+          size - corner2,
           // bottom
           size2,
-          corner - size + offsetY,
-          size2 - corner,
+          corner2 - size + offsetY,
+          size2 - corner2,
           -size + offsetY,
-          corner - size2,
+          corner2 - size2,
           -size + offsetY,
           -size2,
-          corner - size + offsetY
+          corner2 - size + offsetY
         });
     final PhysicalBody physicalBody = new PhysicalBody(bodyDef);
     final Body body = physicalBody.getBody();
     Fixture fixture = body.createFixture(shape, 1f);
     fixture.setFriction(0f);
+    fixture.setRestitution(0f);
     fixture.setUserData(new EntityData(this, "PLAYER"));
     final Filter filter = new Filter();
     filter.categoryBits = 2;
@@ -146,16 +148,8 @@ public class Player extends Entity {
         new PlayerController(),
         new PlayerGodModController(),
         new Position(x, y),
-        new Camera(),
+        new Camera(x, y),
         new Particles(false, false, ResourceLoader.loadParticleEffect(ParticlesType.BLUE)),
         physicalBody);
-  }
-
-  @Override
-  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
-    preLoadScene();
-    super.deserialize(deserializer);
-    for (final AtlasRegion region : idle.getKeyFrames()) region.offsetY = 4f;
-    for (final AtlasRegion region : run.getKeyFrames()) region.offsetY = 4f;
   }
 }

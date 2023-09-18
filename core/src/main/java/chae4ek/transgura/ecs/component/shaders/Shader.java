@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public abstract class Shader extends RenderComponent {
 
-  private transient ShaderProgram shaderProgram;
+  private final transient ShaderProgram shaderProgram;
   private final String vertexShader;
   private final String fragmentShader;
 
@@ -15,12 +15,6 @@ public abstract class Shader extends RenderComponent {
     shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
     this.vertexShader = vertexShader;
     this.fragmentShader = fragmentShader;
-  }
-
-  @Override
-  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
-    super.deserialize(deserializer);
-    shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
   }
 
   public abstract void setUp(ShaderProgram shader);

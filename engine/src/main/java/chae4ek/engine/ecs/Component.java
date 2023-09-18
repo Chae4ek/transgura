@@ -2,9 +2,8 @@ package chae4ek.engine.ecs;
 
 import chae4ek.engine.util.debug.CallOnce;
 import chae4ek.engine.util.exceptions.GameAlert;
-import chae4ek.engine.util.serializers.HierarchicallySerializable;
 
-public abstract class Component implements HierarchicallySerializable {
+public abstract class Component {
 
   private static final GameAlert gameAlert = new GameAlert(Component.class);
 
@@ -105,15 +104,5 @@ public abstract class Component implements HierarchicallySerializable {
       return;
     }
     this.isEnabled = isEnabled;
-  }
-
-  @Override
-  public void serialize(final DefaultSerializer serializer) throws Exception {
-    serializer.writeThis();
-  }
-
-  @Override
-  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
-    deserializer.readTo(this);
   }
 }

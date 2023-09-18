@@ -22,7 +22,7 @@ public class PlayerController extends System implements CollisionSubscriber {
 
   public float speedScale = 180;
   public Vector2 maxSpeed = new Vector2(50, 50);
-  public float maxJumpHeight = 22;
+  public float maxJumpHeight = 21.5f;
   public float maxJumpTime = 0.3f;
   public float normalGravityScale = 0.5f;
   public float maxIntermediateHeight = 10;
@@ -155,7 +155,8 @@ public class PlayerController extends System implements CollisionSubscriber {
     final float gravityScale = isJumping ? normalGravityScale : fallingGravityScale;
 
     if (isOnGround && !isJumping) {
-      appliedVelocity.y = 0; // preventing quick fall off a corner edge
+      // preventing quick fall off the slope and faster climbing up the slope
+      appliedVelocity.y = Math.max(0, velocity.y);
     } else {
       appliedVelocity.y -=
           computeVelocity(gravityScale, maxJumpHeight, maxJumpTime * maxJumpTime)
@@ -203,7 +204,7 @@ public class PlayerController extends System implements CollisionSubscriber {
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_TOP", "GROUND")) {
       ++touchedRoofs;
     }
-    if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_BOTTOM", "EXIT")) {
+    if (CollisionProcessor.isFixturesCollision(contact, "PLAYER", "EXIT")) {
       java.lang.System.out.println("EXIT");
     }
   }
@@ -219,11 +220,5 @@ public class PlayerController extends System implements CollisionSubscriber {
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_TOP", "GROUND")) {
       --touchedRoofs;
     }
-  }
-
-  @Override
-  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
-    super.deserialize(deserializer);
-    Game.getScene().collisionListener.addCollisionSubscriber(this);
   }
 }

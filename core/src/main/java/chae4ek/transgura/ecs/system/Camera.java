@@ -22,8 +22,9 @@ public class Camera extends System {
   private final Vector2 lerpPosition = new Vector2();
   private int zoomIndex = 2;
 
-  public Camera() {
+  public Camera(final float x, final float y) {
     Game.getScene().camera.zoom = pixelPerfectZoom[zoomIndex];
+    lerpPosition.set(x, y);
   }
 
   @Override

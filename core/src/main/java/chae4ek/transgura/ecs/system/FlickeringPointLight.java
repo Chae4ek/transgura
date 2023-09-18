@@ -6,7 +6,6 @@ import chae4ek.engine.ecs.System;
 
 public class FlickeringPointLight extends System {
 
-  // TODO: serialization
   private final transient PointLight pointLight;
   private final float randomSeed;
   private final float distanceOrigin;

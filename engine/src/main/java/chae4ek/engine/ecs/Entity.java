@@ -2,11 +2,10 @@ package chae4ek.engine.ecs;
 
 import chae4ek.engine.util.debug.CallOnce;
 import chae4ek.engine.util.exceptions.GameAlert;
-import chae4ek.engine.util.serializers.HierarchicallySerializable;
 import com.badlogic.gdx.utils.ObjectMap;
 import java.util.Iterator;
 
-public class Entity implements Iterable<Component>, HierarchicallySerializable {
+public class Entity implements Iterable<Component> {
 
   private static final GameAlert gameAlert = new GameAlert(Entity.class);
 
@@ -232,33 +231,6 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
     };
   }
 
-  @Override
-  public void serialize(final DefaultSerializer serializer) throws Exception {
-    serializer.writeInt(components.size);
-    for (final Object comp : components.values()) serializer.write(comp);
-    serializer.writeThis();
-  }
-
-  @Override
-  public void deserialize(final DefaultDeserializer deserializer) throws Exception {
-    int size = deserializer.readInt();
-    components = new ObjectMap<>(size);
-    for (; size > 0; --size) {
-      final Object getted = deserializer.read();
-      Class<?> clazz = getted.getClass();
-      if (clazz == ComponentArray.class) {
-        final ComponentArray comps = (ComponentArray) getted;
-        clazz = comps.array[0].getClass();
-        for (int i = 0; i < comps.size; ++i) comps.array[i].bind(this);
-      } else {
-        ((Component) getted).bind(this);
-      }
-      final Class<? extends Component> compClass = (Class<? extends Component>) clazz;
-      components.put(compClass, getted);
-    }
-    deserializer.readTo(this);
-  }
-
   private static final class SingleIterator<E> implements Iterator<E> {
 
     private E element;
@@ -288,7 +260,7 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
     }
   }
 
-  private static final class ComponentArray implements HierarchicallySerializable {
+  private static final class ComponentArray {
 
     private Component[] array = new Component[4];
     private int size;
@@ -344,24 +316,6 @@ public class Entity implements Iterable<Component>, HierarchicallySerializable {
 
     public <T> Iterator<T> iterator() {
       return new ComponentIterator<>(this);
-    }
-
-    @Override
-    public void serialize(final DefaultSerializer serializer) throws Exception {
-      serializer.writeInt(size);
-      for (int i = 0, count = size; count > 0; ++i) {
-        if (array[i] != null) {
-          --count;
-          serializer.write(array[i]);
-        }
-      }
-    }
-
-    @Override
-    public void deserialize(final DefaultDeserializer deserializer) throws Exception {
-      size = deserializer.readInt();
-      array = new Component[size];
-      for (int i = 0; i < size; ++i) array[i] = (Component) deserializer.read();
     }
 
     private static final class ComponentIterator<E> implements Iterator<E> {

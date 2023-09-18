@@ -93,10 +93,24 @@ public class LDtkLoader {
       final boolean isTop = Arrays.stream(enumTags[2].getTileIds()).anyMatch(id -> id == tileId);
       final boolean isBottom = Arrays.stream(enumTags[3].getTileIds()).anyMatch(id -> id == tileId);
 
+      final boolean isLeftTop =
+          Arrays.stream(enumTags[4].getTileIds()).anyMatch(id -> id == tileId);
+      final boolean isRightTop =
+          Arrays.stream(enumTags[5].getTileIds()).anyMatch(id -> id == tileId);
+      final boolean isLeftBottom =
+          Arrays.stream(enumTags[6].getTileIds()).anyMatch(id -> id == tileId);
+      final boolean isRightBottom =
+          Arrays.stream(enumTags[7].getTileIds()).anyMatch(id -> id == tileId);
+
       if (isLeft) grid[y + 1][x].addAdjacent(grid[y][x]);
       if (isRight) grid[y][x + 1].addAdjacent(grid[y + 1][x + 1]);
       if (isTop) grid[y + 1][x + 1].addAdjacent(grid[y + 1][x]);
       if (isBottom) grid[y][x].addAdjacent(grid[y][x + 1]);
+
+      if (isLeftTop) grid[y + 1][x + 1].addAdjacent(grid[y][x]);
+      if (isRightTop) grid[y][x + 1].addAdjacent(grid[y + 1][x]);
+      if (isLeftBottom) grid[y + 1][x].addAdjacent(grid[y][x + 1]);
+      if (isRightBottom) grid[y][x].addAdjacent(grid[y + 1][x + 1]);
     }
 
     for (int y = 0; y <= height; ++y) {

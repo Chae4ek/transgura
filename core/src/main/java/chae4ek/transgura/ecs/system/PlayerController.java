@@ -22,7 +22,7 @@ public class PlayerController extends System implements CollisionSubscriber {
 
   public float speedScale = 180;
   public Vector2 maxSpeed = new Vector2(50, 50);
-  public float maxJumpHeight = 20;
+  public float maxJumpHeight = 22;
   public float maxJumpTime = 0.3f;
   public float normalGravityScale = 0.5f;
   public float maxIntermediateHeight = 10;
@@ -123,8 +123,7 @@ public class PlayerController extends System implements CollisionSubscriber {
     isCoyoteTimeStarted = true;
 
     if (isOnGround && !isJumping) {
-      appliedVelocity.y = 0; // preventing quick fall off the edge
-      coyoteTime = 0.040f; // in seconds
+      coyoteTime = 0.04f; // in seconds
       isCoyoteTimeStarted = false;
     }
 
@@ -155,9 +154,13 @@ public class PlayerController extends System implements CollisionSubscriber {
   private void applyVerticalVelocity() {
     final float gravityScale = isJumping ? normalGravityScale : fallingGravityScale;
 
-    appliedVelocity.y -=
-        computeVelocity(gravityScale, maxJumpHeight, maxJumpTime * maxJumpTime)
-            * GameSettings.fixedDeltaTime;
+    if (isOnGround && !isJumping) {
+      appliedVelocity.y = 0; // preventing quick fall off a corner edge
+    } else {
+      appliedVelocity.y -=
+          computeVelocity(gravityScale, maxJumpHeight, maxJumpTime * maxJumpTime)
+              * GameSettings.fixedDeltaTime;
+    }
 
     if (!isJumping) { // when jump is interrupted
       final float smoothVelocity =

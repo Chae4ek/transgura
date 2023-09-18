@@ -3,6 +3,7 @@ package chae4ek.transgura.util.ldtk;
 import chae4ek.engine.util.GameSettings;
 import chae4ek.transgura.ecs.component.TiledSprite;
 import chae4ek.transgura.ecs.entity.CollisionOutline;
+import chae4ek.transgura.ecs.entity.InteractableObject;
 import chae4ek.transgura.ecs.entity.PhantomBlock;
 import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.third_party.ldtk.Converter;
@@ -52,14 +53,20 @@ public class LDtkLoader {
     final int height = layer.getCHei();
     final int width = layer.getCWid();
 
+    final AtlasRegion exitAR = ResourceLoader.loadAtlasRegion(TextureType.GRASS_LEVEL_EXIT);
+
     for (final EntityInstance entity : entityLayer.getEntityInstances()) {
       if (entity.getIdentifier().equals("Player")) {
         new Player(
             (entity.getPx()[0] / 8 + 0.5f) * GameSettings.PPM,
-            (height - 1 - entity.getPx()[1] / 8 + 0.5f) * GameSettings.PPM);
+            (height - 1 - entity.getPx()[1] / 8 + 1.5f) * GameSettings.PPM);
       }
       if (entity.getIdentifier().equals("Exit")) {
-        // TODO
+        new InteractableObject(
+            (entity.getPx()[0] / 8) * GameSettings.PPM,
+            (height - 1 - entity.getPx()[1] / 8 + 1) * GameSettings.PPM,
+            exitAR,
+            "EXIT");
       }
     }
 

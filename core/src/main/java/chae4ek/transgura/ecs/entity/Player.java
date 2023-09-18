@@ -1,5 +1,6 @@
 package chae4ek.transgura.ecs.entity;
 
+import box2dLight.Light;
 import box2dLight.RayHandler;
 import chae4ek.engine.ecs.Entity;
 import chae4ek.engine.ecs.Game;
@@ -29,6 +30,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -57,6 +59,7 @@ public class Player extends Entity {
     scene.b2dWorld.setGravity(new Vector2(0, -9.81f * GameSettings.reversePPM));
     scene.rayHandler.setAmbientLight(0.9f);
     RayHandler.useDiffuseLight(false);
+    Light.setGlobalContactFilter((short) 1, (short) 0, (short) 1);
   }
 
   public Player(final float x, final float y) {
@@ -111,17 +114,24 @@ public class Player extends Entity {
     Fixture fixture = body.createFixture(shape, 1f);
     fixture.setFriction(0f);
     fixture.setUserData(new EntityData(this, "PLAYER"));
+    final Filter filter = new Filter();
+    filter.categoryBits = 2;
+    fixture.setFilterData(filter);
 
     shape.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, size), 0f);
     fixture = body.createFixture(shape, 1f);
     fixture.setFriction(0f);
     fixture.setRestitution(0.3f);
     fixture.setUserData(new EntityData(this, "PLAYER"));
+    filter.categoryBits = 2;
+    fixture.setFilterData(filter);
 
     shape.setAsBox(size2 - corner - 0.005f, 0.01f, new Vector2(0f, offsetY - size), 0f);
     fixture = body.createFixture(shape, 1f);
     fixture.setSensor(true);
     fixture.setUserData(new EntityData(this, "PLAYER_BOTTOM"));
+    filter.categoryBits = 2;
+    fixture.setFilterData(filter);
 
     final MassData massData = body.getMassData();
     massData.mass = 0.73851955f;

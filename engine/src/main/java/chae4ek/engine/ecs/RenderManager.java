@@ -49,6 +49,7 @@ public class RenderManager {
 
   public static void setNewFrameBuffer(final int width, final int height) {
     if (frontFrameBuffer.getWidth() == width && frontFrameBuffer.getHeight() == height) return;
+    if (width == 0 || height == 0) return;
     frontFrameBuffer.dispose();
     frontFrameBuffer = new FrameBuffer(Format.RGBA8888, width, height, false, false);
     Game.getScene().rayHandler.resizeFBO(width >> 2, height >> 2);

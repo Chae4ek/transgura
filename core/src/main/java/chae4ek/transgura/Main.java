@@ -21,8 +21,9 @@ public final class Main {
 
     config.setTitle("Transgura");
     config.setWindowedMode(848, 477);
+    // config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
     config.useVsync(false);
-    config.setForegroundFPS(500);
+    config.setForegroundFPS(120);
 
     GameConfig.mainScene = scene;
     GameConfig.resourceManager = ResourceLoader::new;

@@ -7,6 +7,7 @@ import chae4ek.engine.ecs.Game;
 import chae4ek.engine.ecs.Scene;
 import chae4ek.engine.util.GameSettings;
 import chae4ek.transgura.ecs.component.AnimatedSprites;
+import chae4ek.transgura.ecs.component.Particles;
 import chae4ek.transgura.ecs.component.PointLight;
 import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.component.shaders.Vignette;
@@ -17,6 +18,7 @@ import chae4ek.transgura.ecs.system.PlayerController;
 import chae4ek.transgura.ecs.system.PlayerGodModController;
 import chae4ek.transgura.util.ARAnimation;
 import chae4ek.transgura.util.collision.EntityData;
+import chae4ek.transgura.util.resources.ParticlesType;
 import chae4ek.transgura.util.resources.ResourceLoader;
 import chae4ek.transgura.util.resources.TextureType;
 import chae4ek.transgura.util.resources.TextureType.AtlasType;
@@ -145,7 +147,7 @@ public class Player extends Entity {
         new PlayerGodModController(),
         new Position(x, y),
         new Camera(),
-        // new Particles(true, ResourceLoader.loadParticleEffect(ParticlesType.BLUE)),
+        new Particles(false, false, ResourceLoader.loadParticleEffect(ParticlesType.BLUE)),
         physicalBody);
   }
 

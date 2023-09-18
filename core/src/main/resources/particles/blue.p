@@ -2,25 +2,25 @@ Blue
 - Delay -
 active: false
 - Duration - 
-lowMin: 2000.0
-lowMax: 2000.0
+lowMin: 50.0
+lowMax: 50.0
 - Count - 
 min: 0
 max: 100
 - Emission - 
-lowMin: 0.0
-lowMax: 0.0
-highMin: 500.0
-highMax: 550.0
+lowMin: 200.0
+lowMax: 200.0
+highMin: 200.0
+highMax: 200.0
 relative: false
 scalingCount: 3
 scaling0: 0.0
-scaling1: 0.41573033
+scaling1: 0.4509804
 scaling2: 0.0
 timelineCount: 3
 timeline0: 0.0
-timeline1: 0.13746959
-timeline2: 0.2739726
+timeline1: 0.09589041
+timeline2: 0.20547946
 - Life - 
 lowMin: 0.0
 lowMax: 0.0
@@ -64,8 +64,8 @@ timeline0: 0.0
 - X Scale - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 15.0
-highMax: 30.0
+highMin: 5.0
+highMax: 10.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -75,8 +75,8 @@ timeline0: 0.0
 active: false
 - Velocity - 
 active: true
-lowMin: -15.0
-lowMax: -200.0
+lowMin: -10.0
+lowMax: -30.0
 highMin: 0.0
 highMax: 0.0
 relative: false

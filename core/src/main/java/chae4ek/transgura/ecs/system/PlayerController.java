@@ -7,6 +7,7 @@ import chae4ek.engine.ecs.System;
 import chae4ek.engine.util.GameSettings;
 import chae4ek.engine.util.collision.CollisionSubscriber;
 import chae4ek.transgura.ecs.component.AnimatedSprites;
+import chae4ek.transgura.ecs.component.Particles;
 import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.util.collision.CollisionProcessor;
 import chae4ek.transgura.util.collision.EntityData;
@@ -83,6 +84,7 @@ public class PlayerController extends System implements CollisionSubscriber {
   @Override
   public void fixedUpdate() {
     final Player player = (Player) getParent();
+    final Particles dashParticles = player.getComponent(Particles.class);
     final AnimatedSprites animation = player.getComponent(AnimatedSprites.class);
     final Body body = player.getComponent(PhysicalBody.class).getBody();
 
@@ -102,6 +104,7 @@ public class PlayerController extends System implements CollisionSubscriber {
 
     if (dash) {
       dash = false;
+      dashParticles.particleEffect.start();
       // TODO: make it smoother. do interpolation?
       appliedVelocity.x += xAxis * 100f;
     }

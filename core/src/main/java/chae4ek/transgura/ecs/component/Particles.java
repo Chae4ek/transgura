@@ -9,17 +9,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Particles extends RenderComponent {
 
-  private final boolean loop;
-  private final ParticleEffect particleEffect;
+  public final boolean loop;
+  public final ParticleEffect particleEffect;
 
-  public Particles(final boolean loop, final ParticleEffect particleEffect) {
+  public Particles(final boolean loop, final boolean start, final ParticleEffect particleEffect) {
     this.loop = loop;
     this.particleEffect = particleEffect;
-    particleEffect.start();
-  }
-
-  public ParticleEffect getParticleEffect() {
-    return particleEffect;
+    if (start) particleEffect.start();
   }
 
   @Override

@@ -1,7 +1,10 @@
 package chae4ek.transgura.third_party.ldtk;
 
+import chae4ek.transgura.third_party.ldtk.customdes.FieldInstanceDes;
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize(using = FieldInstanceDes.class)
 public class FieldInstance {
   private String identifier;
   private TilesetRectangle tile;

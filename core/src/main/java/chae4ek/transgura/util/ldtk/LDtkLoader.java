@@ -7,6 +7,7 @@ import chae4ek.transgura.ecs.entity.CollisionOutline;
 import chae4ek.transgura.ecs.entity.Door;
 import chae4ek.transgura.ecs.entity.PhantomBlock;
 import chae4ek.transgura.ecs.entity.Player;
+import chae4ek.transgura.ecs.entity.Spike;
 import chae4ek.transgura.third_party.ldtk.Converter;
 import chae4ek.transgura.third_party.ldtk.EntityInstance;
 import chae4ek.transgura.third_party.ldtk.EnumTagValue;
@@ -32,8 +33,12 @@ public class LDtkLoader {
   private static final GameAlert gameAlert = new GameAlert(LDtkLoader.class);
 
   public static void loadBackgroundTexture() {
+    final AtlasRegion spikesGridAR = ResourceLoader.loadAtlasRegion(TextureType.GRASS_LEVEL_SPIKES);
+    PhantomBlock bg = new PhantomBlock(0f, 0f, 1, 1, spikesGridAR, -1);
+    bg.getComponent(TiledSprite.class).scale = 2;
+
     final AtlasRegion intGridAR = ResourceLoader.loadAtlasRegion(TextureType.GRASS_LEVEL_0);
-    final PhantomBlock bg = new PhantomBlock(0f, 0f, 1, 1, intGridAR, -1);
+    bg = new PhantomBlock(0f, 0f, 1, 1, intGridAR, -1);
     bg.getComponent(TiledSprite.class).scale = 2;
   }
 
@@ -49,13 +54,12 @@ public class LDtkLoader {
   }
 
   public static void loadCollisions(final LDtk ldtk) {
-    // collision layer
-    final LayerInstance layer = ldtk.getLevels()[0].getLayerInstances()[0];
-    // entity layer
+    final LayerInstance collisionLayer = ldtk.getLevels()[0].getLayerInstances()[0];
     final LayerInstance entityLayer = ldtk.getLevels()[0].getLayerInstances()[1];
+    final LayerInstance spikesLayer = ldtk.getLevels()[0].getLayerInstances()[2];
 
-    final int height = layer.getCHei();
-    final int width = layer.getCWid();
+    final int height = collisionLayer.getCHei();
+    final int width = collisionLayer.getCWid();
 
     final AtlasRegion exitAR = ResourceLoader.loadAtlasRegion(TextureType.GRASS_LEVEL_EXIT);
 
@@ -91,12 +95,21 @@ public class LDtkLoader {
       }
     }
 
+    // spikes
+    for (final TileInstance tile : spikesLayer.getAutoLayerTiles()) {
+      final int x = tile.getPx()[0] / 8; // 8 = grid size in pixels
+      final int y = height - 1 - tile.getPx()[1] / 8;
+      final boolean flipY = tile.getF() == 2;
+      new Spike(x * GameSettings.PPM, y * GameSettings.PPM, flipY);
+    }
+
     // final EnumDefinition[] enums = ldtk.getDefs().getEnums();
     final TilesetDefinition[] tilesets = ldtk.getDefs().getTilesets();
     final EnumTagValue[] enumTags = tilesets[1].getEnumTags();
-    // final int[] intGrid = layer.getIntGridCsv();
-    final TileInstance[] autoLayerTiles = layer.getAutoLayerTiles();
+    // final int[] intGrid = collisionLayer.getIntGridCsv();
+    final TileInstance[] autoLayerTiles = collisionLayer.getAutoLayerTiles();
 
+    // ground
     for (final TileInstance tile : autoLayerTiles) {
       final int tileId = tile.getT();
       final int x = tile.getPx()[0] / 8; // 8 = grid size in pixels

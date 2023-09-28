@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum TextureType {
-  GRASS_LEVEL_0(AtlasType.GRASS_BIOME, "grass_level0"),
+  GRASS_LEVEL_0(AtlasType.GRASS_BIOME, "Collision"),
+  GRASS_LEVEL_SPIKES(AtlasType.GRASS_BIOME, "Spikes"),
   GRASS_LEVEL_EXIT(AtlasType.GRASS_BIOME, "exit"),
 
   TEST_BLOCK(AtlasType.TEST, "test_block"),

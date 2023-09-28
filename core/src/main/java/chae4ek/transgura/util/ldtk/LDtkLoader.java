@@ -1,14 +1,16 @@
 package chae4ek.transgura.util.ldtk;
 
 import chae4ek.engine.util.GameSettings;
+import chae4ek.engine.util.exceptions.GameAlert;
 import chae4ek.transgura.ecs.component.TiledSprite;
 import chae4ek.transgura.ecs.entity.CollisionOutline;
-import chae4ek.transgura.ecs.entity.InteractableObject;
+import chae4ek.transgura.ecs.entity.Door;
 import chae4ek.transgura.ecs.entity.PhantomBlock;
 import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.third_party.ldtk.Converter;
 import chae4ek.transgura.third_party.ldtk.EntityInstance;
 import chae4ek.transgura.third_party.ldtk.EnumTagValue;
+import chae4ek.transgura.third_party.ldtk.GridPoint;
 import chae4ek.transgura.third_party.ldtk.LDtk;
 import chae4ek.transgura.third_party.ldtk.LayerInstance;
 import chae4ek.transgura.third_party.ldtk.TileInstance;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class LDtkLoader {
+
+  private static final GameAlert gameAlert = new GameAlert(LDtkLoader.class);
 
   public static void loadBackgroundTexture() {
     final AtlasRegion intGridAR = ResourceLoader.loadAtlasRegion(TextureType.GRASS_LEVEL_0);
@@ -62,11 +66,21 @@ public class LDtkLoader {
             (height - 1 - entity.getPx()[1] / 8 + 1.5f) * GameSettings.PPM);
       }
       if (entity.getIdentifier().equals("Exit")) {
-        new InteractableObject(
+        final String type = entity.getFieldInstances()[0].getType();
+        if (!type.equals("Point")) continue;
+        final GridPoint gridPoint = (GridPoint) entity.getFieldInstances()[0].getValue();
+        if (gridPoint == null) {
+          gameAlert.warn(
+              "Door doesn't have target point at {} {}", entity.getPx()[0], entity.getPx()[1]);
+          continue;
+        }
+        new Door(
             (entity.getPx()[0] / 8) * GameSettings.PPM,
             (height - 1 - entity.getPx()[1] / 8 + 1) * GameSettings.PPM,
             exitAR,
-            "EXIT");
+            "EXIT",
+            gridPoint.getCx() + 0.5f,
+            height - 1 - gridPoint.getCy() + 0.5f);
       }
     }
 

@@ -46,6 +46,8 @@ public class Player extends Entity {
   public static int PLAYER_DASH = Buttons.RIGHT;
   public static int GOD_MOD = Keys.G;
 
+  public static int INTERACTION = Keys.E;
+
   // TODO(?): animation resource
   public final ARAnimation idle;
   public final ARAnimation run;

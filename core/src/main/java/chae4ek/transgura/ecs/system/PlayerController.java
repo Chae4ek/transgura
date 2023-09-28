@@ -8,7 +8,9 @@ import chae4ek.engine.util.GameSettings;
 import chae4ek.engine.util.collision.CollisionSubscriber;
 import chae4ek.transgura.ecs.component.AnimatedSprites;
 import chae4ek.transgura.ecs.component.Particles;
+import chae4ek.transgura.ecs.entity.Door;
 import chae4ek.transgura.ecs.entity.Player;
+import chae4ek.transgura.util.EventListener;
 import chae4ek.transgura.util.collision.CollisionProcessor;
 import chae4ek.transgura.util.collision.EntityData;
 import com.badlogic.gdx.math.MathUtils;
@@ -48,12 +50,18 @@ public class PlayerController extends System implements CollisionSubscriber {
   private float coyoteTime;
   private boolean dash;
 
+  private EventListener<Player> interactionSub;
+
   public PlayerController() {
     Game.getScene().collisionListener.addCollisionSubscriber(this);
   }
 
   @Override
   public void update() {
+    if (InputProcessor.isKeyJustDownNow(Player.INTERACTION)) {
+      if (interactionSub != null) interactionSub.run((Player) getParent());
+    }
+
     if (!isJumpButtonJustPressed) {
       isJumpButtonJustPressed = InputProcessor.isKeyJustDownNow(Player.PLAYER_UP);
     }
@@ -205,7 +213,8 @@ public class PlayerController extends System implements CollisionSubscriber {
       ++touchedRoofs;
     }
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER", "EXIT")) {
-      java.lang.System.out.println("EXIT");
+      final EntityData entityData = CollisionProcessor.getEntityData(contact, "EXIT");
+      interactionSub = (Door) entityData.parent;
     }
   }
 
@@ -219,6 +228,9 @@ public class PlayerController extends System implements CollisionSubscriber {
     }
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER_TOP", "GROUND")) {
       --touchedRoofs;
+    }
+    if (CollisionProcessor.isFixturesCollision(contact, "PLAYER", "EXIT")) {
+      interactionSub = null;
     }
   }
 }

@@ -6,6 +6,7 @@ import chae4ek.engine.ecs.Entity;
 import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.component.Sprite;
 import chae4ek.transgura.ecs.system.PhysicalBody;
+import chae4ek.transgura.util.EventListener;
 import chae4ek.transgura.util.collision.EntityData;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -16,10 +17,21 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
-public class InteractableObject extends Entity {
+public class Door extends Entity implements EventListener<Player> {
 
-  public InteractableObject(
-      final float x, final float y, final AtlasRegion texture, final String tag) {
+  public final float toX;
+  public final float toY;
+
+  public Door(
+      final float x,
+      final float y,
+      final AtlasRegion texture,
+      final String tag,
+      final float toX,
+      final float toY) {
+    this.toX = toX;
+    this.toY = toY;
+
     final Sprite sprite = new Sprite(-2, texture);
     sprite.scale = 2;
 
@@ -38,5 +50,13 @@ public class InteractableObject extends Entity {
     fixture.setUserData(new EntityData(this, tag));
 
     addComponent(new Position(x, y), physicalBody, sprite);
+  }
+
+  @Override
+  public void run(final Player player) {
+    final Body body = player.getComponent(PhysicalBody.class).getBody();
+    body.setTransform(toX, toY, 0);
+    // body.setLinearVelocity(0, 0);
+    body.setAwake(true);
   }
 }

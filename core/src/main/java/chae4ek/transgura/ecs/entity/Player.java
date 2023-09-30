@@ -10,6 +10,7 @@ import chae4ek.transgura.ecs.component.AnimatedSprites;
 import chae4ek.transgura.ecs.component.Particles;
 import chae4ek.transgura.ecs.component.PointLight;
 import chae4ek.transgura.ecs.component.Position;
+import chae4ek.transgura.ecs.component.Text;
 import chae4ek.transgura.ecs.component.shaders.Vignette;
 import chae4ek.transgura.ecs.system.Camera;
 import chae4ek.transgura.ecs.system.Menu;
@@ -75,8 +76,7 @@ public class Player extends Entity {
     run = new ARAnimation(0.08f, runFrames);
     run.setPlayMode(PlayMode.LOOP);
 
-    final AnimatedSprites animation =
-        new AnimatedSprites(GameSettings.zOrderForUIRendering + 100, idle);
+    final AnimatedSprites animation = new AnimatedSprites(GameSettings.zOrderForUIRendering, idle);
     animation.centered = true;
 
     final BodyDef bodyDef = PhysicalBody.createBodyDef(BodyType.DynamicBody, x, y);
@@ -142,11 +142,15 @@ public class Player extends Entity {
 
     shape.dispose();
 
+    final Text hint = new Text(GameSettings.zOrderForUIRendering, "E", -4, 26);
+    hint.setStickToBody(physicalBody);
+
     addComponent(
         new Menu(),
         new PointLight(body, new Color(0.75f, 0.75f, 0.75f, 0.75f), 5f),
         new Vignette(999),
         animation,
+        hint,
         new PlayerController(),
         new PlayerGodModController(),
         new Position(x, y),

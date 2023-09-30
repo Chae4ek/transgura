@@ -26,6 +26,13 @@
       <artifactId>engine</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <!-- Free type fonts for LibGDX -->
+    <dependency>
+      <groupId>com.badlogicgames.gdx</groupId>
+      <artifactId>gdx-freetype-platform</artifactId>
+      <version>${gdx.version}</version>
+      <classifier>natives-desktop</classifier>
+    </dependency>
     <!-- For LDtk -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

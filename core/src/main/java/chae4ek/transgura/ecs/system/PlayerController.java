@@ -8,6 +8,7 @@ import chae4ek.engine.util.GameSettings;
 import chae4ek.engine.util.collision.CollisionSubscriber;
 import chae4ek.transgura.ecs.component.AnimatedSprites;
 import chae4ek.transgura.ecs.component.Particles;
+import chae4ek.transgura.ecs.component.Text;
 import chae4ek.transgura.ecs.entity.Door;
 import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.scenes.MainMenu;
@@ -216,6 +217,7 @@ public class PlayerController extends System implements CollisionSubscriber {
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER", "EXIT")) {
       final EntityData entityData = CollisionProcessor.getEntityData(contact, "EXIT");
       interactionSub = (Door) entityData.parent;
+      getParent().getComponent(Text.class).isDrawn = true; // show hint 'E'
     }
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER", "SPIKE")) {
       if (isEnabled()) Game.setScene(MainMenu::new);
@@ -235,6 +237,7 @@ public class PlayerController extends System implements CollisionSubscriber {
     }
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER", "EXIT")) {
       interactionSub = null;
+      getParent().getComponent(Text.class).isDrawn = false; // hide hint 'E'
     }
   }
 }

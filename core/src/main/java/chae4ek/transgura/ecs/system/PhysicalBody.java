@@ -44,7 +44,9 @@ public class PhysicalBody extends System {
 
   @Override
   protected void onDestroy() {
-    Game.getScene().b2dWorld.destroyBody(body);
+    Game.getScene()
+        .systemManager
+        .addDeferredEvent(() -> Game.getScene().b2dWorld.destroyBody(body));
   }
 
   public Body getBody() {

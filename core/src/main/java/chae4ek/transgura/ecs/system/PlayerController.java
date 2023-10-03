@@ -9,6 +9,7 @@ import chae4ek.engine.util.collision.CollisionSubscriber;
 import chae4ek.transgura.ecs.component.AnimatedSprites;
 import chae4ek.transgura.ecs.component.Particles;
 import chae4ek.transgura.ecs.component.Text;
+import chae4ek.transgura.ecs.entity.Coin;
 import chae4ek.transgura.ecs.entity.Door;
 import chae4ek.transgura.ecs.entity.Player;
 import chae4ek.transgura.scenes.MainMenu;
@@ -221,6 +222,10 @@ public class PlayerController extends System implements CollisionSubscriber {
     }
     if (CollisionProcessor.isFixturesCollision(contact, "PLAYER", "SPIKE")) {
       if (isEnabled()) Game.setScene(MainMenu::new);
+    }
+    if (CollisionProcessor.isFixturesCollision(contact, "PLAYER", "COIN")) {
+      final EntityData entityData = CollisionProcessor.getEntityData(contact, "COIN");
+      ((Coin) entityData.parent).run((Player) getParent());
     }
   }
 

@@ -55,7 +55,8 @@ public final class SystemManager {
     }
   }
 
-  private void addDeferredEvent(final Runnable event) {
+  /** Deffers the event to run it after all updates and fixed updates */
+  public void addDeferredEvent(final Runnable event) {
     if (eventCount == deferredEvents.length) {
       final Runnable[] events = deferredEvents;
       deferredEvents = new Runnable[(int) (eventCount * 1.75f)];

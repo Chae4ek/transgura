@@ -18,6 +18,7 @@ public class AtlasLoader {
     loader.process("castle");
     loader.process("decor");
     loader.process("grass_biome");
+    loader.process("coin");
   }
 
   private void process(final String name) {

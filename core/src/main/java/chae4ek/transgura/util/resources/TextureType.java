@@ -9,6 +9,8 @@ public enum TextureType {
   GRASS_LEVEL_SPIKES(AtlasType.GRASS_BIOME, "Spikes"),
   GRASS_LEVEL_EXIT(AtlasType.GRASS_BIOME, "exit"),
 
+  COIN(AtlasType.COIN, "coin"),
+
   TEST_BLOCK(AtlasType.TEST, "test_block"),
   WOOD(AtlasType.TEST, "wood"),
   BRICK_WALL(AtlasType.TEST, "brick_wall"),
@@ -63,6 +65,7 @@ public enum TextureType {
   }
 
   public enum AtlasType {
+    COIN("atlas/coin.atlas"),
     GRASS_BIOME("atlas/grass_biome.atlas"),
     TEST("atlas/test_textures.atlas"),
     OLD_MAN("atlas/old_man.atlas"),

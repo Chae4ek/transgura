@@ -21,7 +21,7 @@ public abstract class Scene {
   public final CollisionListener collisionListener;
 
   final EntityManager entityManager;
-  final SystemManager systemManager;
+  public final SystemManager systemManager;
   final RenderManager renderManager;
 
   private float sceneLifetimeInSec;

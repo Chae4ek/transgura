@@ -11,6 +11,7 @@ import chae4ek.transgura.ecs.component.Particles;
 import chae4ek.transgura.ecs.component.PointLight;
 import chae4ek.transgura.ecs.component.Position;
 import chae4ek.transgura.ecs.component.Text;
+import chae4ek.transgura.ecs.component.TextCoinCount;
 import chae4ek.transgura.ecs.component.shaders.Vignette;
 import chae4ek.transgura.ecs.system.Camera;
 import chae4ek.transgura.ecs.system.Menu;
@@ -155,6 +156,7 @@ public class Player extends Entity {
         new PlayerGodModController(),
         new Position(x, y),
         new Camera(x, y),
+        new TextCoinCount(),
         new Particles(false, false, ResourceLoader.loadParticleEffect(ParticlesType.BLUE)),
         physicalBody);
   }

@@ -5,6 +5,7 @@ import static chae4ek.engine.util.GameSettings.reversePPM;
 import chae4ek.engine.ecs.Entity;
 import chae4ek.transgura.ecs.component.AnimatedSprites;
 import chae4ek.transgura.ecs.component.Position;
+import chae4ek.transgura.ecs.component.TextCoinCount;
 import chae4ek.transgura.ecs.system.PhysicalBody;
 import chae4ek.transgura.util.ARAnimation;
 import chae4ek.transgura.util.EventListener;
@@ -51,7 +52,7 @@ public class Coin extends Entity implements EventListener<Player> {
 
   @Override
   public void run(final Player player) {
-    // TODO: add coin
+    player.getComponent(TextCoinCount.class).coinCount++;
     destroy();
   }
 }

@@ -2,6 +2,7 @@ package chae4ek.transgura.util.ldtk;
 
 import chae4ek.engine.util.GameSettings;
 import chae4ek.engine.util.exceptions.GameAlert;
+import chae4ek.transgura.ecs.component.TextCoinCount;
 import chae4ek.transgura.ecs.component.TiledSprite;
 import chae4ek.transgura.ecs.entity.Coin;
 import chae4ek.transgura.ecs.entity.CollisionOutline;
@@ -75,6 +76,7 @@ public class LDtkLoader {
             (entity.getPx()[0] / 8) * GameSettings.PPM,
             (height - 1 - entity.getPx()[1] / 8 + 1) * GameSettings.PPM,
             "COIN");
+        TextCoinCount.coinMax++;
       }
       if (entity.getIdentifier().equals("Exit")) {
         final String type = entity.getFieldInstances()[0].getType();

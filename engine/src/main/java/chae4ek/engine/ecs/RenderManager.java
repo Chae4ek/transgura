@@ -23,6 +23,12 @@ public class RenderManager {
           GameSettings.defaultSpriteBatchSize,
           new ShaderProgram(GameSettings.defaultVertexShader, GameSettings.defaultFragmentShader));
 
+  /** Sprite batch for drawing HDU interface (it's not affected by projection matrix) */
+  public static final SpriteBatch hudBatch =
+      new SpriteBatch(
+          GameSettings.defaultSpriteBatchSize,
+          new ShaderProgram(GameSettings.defaultVertexShader, GameSettings.defaultFragmentShader));
+
   /** Sprite batch for shaders or post-processing */
   public static final SpriteBatch shaderBatch =
       new SpriteBatch(
@@ -31,6 +37,7 @@ public class RenderManager {
 
   public static final Matrix4 SHADER_MATRIX_IDENTITY = new Matrix4();
   public static final Matrix4 PROJECTION_MATRIX = new Matrix4();
+  public static final Matrix4 PROJECTION_UI_MATRIX = new Matrix4();
   public static final Matrix4 LIGHTS_MATRIX = new Matrix4();
 
   static {
@@ -86,6 +93,7 @@ public class RenderManager {
     frontFrameBuffer.dispose();
     backFrameBuffer.dispose();
     spriteBatch.dispose();
+    hudBatch.dispose();
     shaderBatch.dispose();
   }
 
@@ -147,6 +155,11 @@ public class RenderManager {
     PROJECTION_MATRIX.set(camera.combined).scl(GameSettings.renderScale);
     LIGHTS_MATRIX.set(camera.combined).scl(GameSettings.PPM);
     spriteBatch.setProjectionMatrix(PROJECTION_MATRIX);
+
+    PROJECTION_UI_MATRIX
+        .set(camera.combined)
+        .setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    hudBatch.setProjectionMatrix(PROJECTION_UI_MATRIX);
 
     frontFrameBuffer.begin();
     Gdx.gl.glClearColor(0.4156f, 0.8235f, 0.9137f, 1f);

@@ -40,6 +40,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Player extends Entity {
 
+  public static Vector2 RIP_POSITION = new Vector2();
+
   public static int PLAYER_LEFT = Keys.A;
   public static int PLAYER_RIGHT = Keys.D;
   public static int PLAYER_UP = Keys.W;

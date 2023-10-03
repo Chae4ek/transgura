@@ -65,11 +65,16 @@ public class LDtkLoader {
 
     final AtlasRegion exitAR = ResourceLoader.loadAtlasRegion(TextureType.GRASS_LEVEL_EXIT);
 
+    TextCoinCount.coinMax = 0;
     for (final EntityInstance entity : entityLayer.getEntityInstances()) {
       if (entity.getIdentifier().equals("Player")) {
         new Player(
             (entity.getPx()[0] / 8 + 0.5f) * GameSettings.PPM,
             (height - 1 - entity.getPx()[1] / 8 + 1.5f) * GameSettings.PPM);
+      }
+      if (entity.getIdentifier().equals("RIP")) {
+        Player.RIP_POSITION.set(
+            (entity.getPx()[0] / 8 + 0.5f), (height - 1 - entity.getPx()[1] / 8 + 1.5f));
       }
       if (entity.getIdentifier().equals("Coin")) {
         new Coin(

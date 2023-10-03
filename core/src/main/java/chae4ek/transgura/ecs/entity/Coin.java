@@ -38,7 +38,7 @@ public class Coin extends Entity implements EventListener<Player> {
     final Body body = physicalBody.getBody();
 
     final PolygonShape shape = new PolygonShape();
-    shape.setAsBox(16 * reversePPM, 16 * reversePPM, new Vector2(0.5f, 0.5f), 0);
+    shape.setAsBox(14 * reversePPM, 14 * reversePPM, new Vector2(0.5f, 0.5f), 0);
     final Fixture fixture = body.createFixture(shape, 0f);
     shape.dispose();
     fixture.setSensor(true);

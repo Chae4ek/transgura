@@ -27,7 +27,7 @@ public final class Main {
 
     GameConfig.mainScene = scene;
     GameConfig.resourceManager = ResourceLoader::new;
-    GameConfig.isBox2DDebugRendererOn = true;
+    GameConfig.isBox2DDebugRendererOn = false;
 
     new Lwjgl3Application(new Game(), config);
   }
